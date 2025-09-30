@@ -1,0 +1,60 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor Admin as ad
+participant "HomePage" as home <<application>>
+participant ListAppointments as page
+participant appointmentRoute as route
+participant IAppointmentController as con1
+participant appointmentController as con2
+participant IAppointmentService as ser1
+participant appointmentService as ser2
+participant IAppointmentRepo as repo1
+participant appointmentRepo as repo2
+
+
+ad -> home: List all appointments
+activate home 
+home -> page: /Appointment/ListAppointments
+activate page
+page -> route: GET /api/appointments
+activate route
+route -> con1: getAllAppointments
+activate con1
+con1 -> con2: getAllAppointments
+activate con2
+con2 -> ser1: getAllAppointments
+activate ser1
+ser1 -> ser2: getAllAppointments
+activate ser2
+ser2 -> repo1: findAll
+activate repo1
+repo1 -> repo2: findAll
+activate repo2
+repo2 --> repo1: 200 OK
+deactivate repo2
+repo1 --> ser2: 200 OK
+deactivate repo1
+ser2 --> ser1: 200 OK
+deactivate ser2
+ser1 --> con2: 200 OK
+deactivate ser1
+con2 --> con1: 200 OK
+deactivate con2
+con1 --> route: 200 OK
+deactivate con1
+route --> page: 200 OK
+deactivate route
+page --> home: 200 OK
+deactivate page
+home --> ad: List of appointments
+deactivate home
+
+
+
+
+
+
+@enduml

@@ -1,0 +1,35 @@
+@startuml   
+    class User{}
+
+    class Patient{}
+
+    class Staff{}
+    
+    class Appointment{}
+
+    class SurgeryRoom{}
+
+    class OperatingRequests{}
+
+    class OperationType{}
+
+
+    User "0..1" -- "1" Patient : can be
+    
+    User "1" -- "0..1" Staff : is
+
+    Staff "1" -- "*" OperatingRequests : doctor
+    Appointment "1" -- "1" OperatingRequests
+
+    SurgeryRoom "1" -- "*" Appointment
+
+    Staff "1" --- "*" Specialization : has
+    OperationType "*" -- "*" Specialization
+   OperationType "*" -- "*" OperatingRequests
+    
+    Patient "1" - "*" Appointment
+
+
+
+    
+    @enduml

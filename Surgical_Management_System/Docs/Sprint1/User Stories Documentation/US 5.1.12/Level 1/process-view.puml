@@ -1,0 +1,18 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title System Sequence Diagram
+autonumber
+
+
+participant "System" as sy <<system>>
+
+
+activate sy
+?o-> sy: POST /api/registerUser
+sy->sy: linkUser(userId)
+<-- sy: 201 Created (Staff JSON)
+deactivate sy
+
+
+@enduml

@@ -1,0 +1,46 @@
+@startuml US 6.2.15
+
+title Sequence Diagram - US 6.2.15 - Delete Operation Request
+
+actor "Doctor" as user
+participant "RegisterHealtcarePatient" as pag <<Page>>
+participant "DeleteOperationRequestButton" as form <<Component>>
+participant "PatientController" as con <<BackOffice>>
+
+user -> pag : http://localhost:3000/Staff/ListOperationRequestPage
+activate user
+    activate pag
+    loop for each opRequest
+        pag -> form : calls component sharing opRequestId
+        activate form
+            form --> pag: button
+        deactivate form
+    end        
+        pag-->user : Page Loaded    
+        user -> pag: user Selects the opRequests he wants to delete
+        pag -> form : handleRemove()
+        activate form
+        form --> pag : Confirm("Are you Sure")
+        
+        pag --> user: Asks if user is sure about deletion
+        user -> pag : User Confirms
+        pag -> form : true 
+        alt docId is defined on localStorage
+           form -> con : DELETE https://backofficeUrl/api/OperationRequest/${localStorage.getItem('docId')}/${localStorage.getItem('accessToken')}/${id}
+           activate con
+           con --> form : response
+           deactivate con
+        end
+        alt OpRequestDeleted
+            form --> pag : alert("Request deleted successfully")
+            pag --> user : Alert with message "Request deleted successfully" \nreloads Page
+        else 
+            form --> pag : alert("Error deleting request")
+            pag --> user : Alert with message "Error deleting Request"
+        end
+        deactivate form
+        
+    deactivate pag
+deactivate user
+
+@enduml

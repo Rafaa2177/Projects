@@ -1,0 +1,11 @@
+@startuml
+actor Doctor
+participant "System" as OC
+
+
+Doctor -> OC: requestOperation(operationData)
+activate OC
+
+OC --> Doctor: OK("Operation Created")
+deactivate OC
+@enduml

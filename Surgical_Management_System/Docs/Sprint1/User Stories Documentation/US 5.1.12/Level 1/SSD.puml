@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title System Sequence Diagram
+autonumber
+
+actor Admin as ad
+participant "System" as sy 
+
+
+ad -> sy: Asks to create a new staff profile
+activate ad
+activate sy
+sy --> ad: Asks for the staff's information (first name, last name,\n email, phone number, specialization)
+ad -> sy: Provides the staff's information
+sy --> ad: 201 Created
+deactivate sy
+deactivate ad
+
+
+@enduml

@@ -1,0 +1,60 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor Admin as ad
+participant "HomePage" as home <<application>>
+participant ListSpecializationPage as page
+participant specializationRoute as route
+participant ISpecializationController as con1
+participant specializationController as con2
+participant ISpecializationService as ser1
+participant specializationService as ser2
+participant ISpecializationRepo as repo1
+participant specializationRepo as repo2
+
+
+ad -> home: List all specializations
+activate home 
+home -> page: /Specialization/ListSpecializationPage
+activate page
+page -> route: GET /api/specialization
+activate route
+route -> con1: getSpecialization
+activate con1
+con1 -> con2: getSpecialization
+activate con2
+con2 -> ser1: getSpecialization
+activate ser1
+ser1 -> ser2: getSpecialization
+activate ser2
+ser2 -> repo1: findByDomainId
+activate repo1
+repo1 -> repo2: findByDomainId
+activate repo2
+repo2 --> repo1: 200 OK
+deactivate repo2
+repo1 --> ser2: 200 OK
+deactivate repo1
+ser2 --> ser1: 200 OK
+deactivate ser2
+ser1 --> con2: 200 OK
+deactivate ser1
+con2 --> con1: 200 OK
+deactivate con2
+con1 --> route: 200 OK
+deactivate con1
+route --> page: 200 OK
+deactivate route
+page --> home: 200 OK
+deactivate page
+home --> ad: List of specializations
+deactivate home
+
+
+
+
+
+
+@enduml

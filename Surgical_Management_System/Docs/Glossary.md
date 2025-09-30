@@ -1,0 +1,108 @@
+# Glossary of Surgical Appointment and Resource Management Project
+
+## Introduction
+
+The scope of this project is to develop a prototype system for chirurgic requests, appointment,
+and resource management. Therefore, it is important to have a glossary of terms and definitions, so that all stakeholders can have a common understanding of the project.
+## Glossary
+
+
+### A
+
+#### Admin 
+The User responsible for managing the system, registering other users, editing profiles and ensuring the system´s well functioning.
+
+#### Appointment
+An operation previoulsy scheduled between a patient, a team of staff and a room. It´s linked to a request.
+
+#### ARQSI (Arquitetura de Computadores)
+Curricular Unit of Computer Arquiteture, in the 5th semester of the bachelor´s.
+
+#### ASIST (Administração de Sistemas)
+Curricular Unit of Systems Administration, in the 5th semester of the bachelor´s.
+
+
+### B
+
+#### BackOffice
+The module responsible for managing the system´s database, administratively.
+
+#### Backoffice User
+User registered by the admin in the IAM through an out-of-band process.
+
+#### BCP (Business Continuity Plan)
+A plan that ensures that critical business functions will continue to operate despite serious incidents or disasters.
+
+
+### C
+
+#### Chirurgic Request
+A request made by a doctor to schedule an operation. It includes a unique ID, doctor and patient´s ID, operation type ID, priority and deadline.
+
+#### C#
+A programming language used to develop the system.
+
+
+### D
+
+#### Doctor
+Healthcare professional responsible for performing surgeries and requesting operations.
+
+
+### G
+
+#### GDPR (General Data Protection Regulation)  
+A regulation that protects the personal data of individuals in the European Union.
+
+#### GESTA (Gestão)
+Curricular Unit of Management, in the 5th semester of the bachelor´s.
+
+### I
+
+#### IAM (Identity and Access Management)
+A framework of policies and technologies for ensuring that the right people in an enterprise have the appropriate access to technology resources.
+
+#### ICU
+Type of Surgery Room. 
+
+
+### M
+
+#### Medical Staff
+Professionals responsible for performing surgeries, such as doctors, nurses or technicians.
+
+#### Module
+A distinct component of the system that performs a specific function.
+
+
+### O
+
+#### Operating Room
+A room where surgeries are performed.
+
+#### Operation Type
+The category and specialization of surgery that will be performed.
+
+
+### P
+
+#### Patient
+An individual receiving medical care.
+
+#### Patient User 
+User that self-registered using IAM.
+
+#### Priority
+The level of urgency of a chirurgic request.
+
+#### Prolog
+A logic programming language associated with artificial intelligence and computational linguistics.
+
+
+### S
+
+#### SGRAI (Sistemas gráficos e interação)
+Curricular Unit of Graphic Systems and Interaction, in the 5th semester of the bachelor´s.
+
+#### Surgery Room
+Room used in healthcare facilities for operations, such as operation rooms, consultation rooms, ICU. It has a number, capacity, assigned equipment, current status and maintenance slots

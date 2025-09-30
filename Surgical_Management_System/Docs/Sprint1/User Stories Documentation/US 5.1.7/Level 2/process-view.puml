@@ -1,0 +1,22 @@
+@startuml process-view
+autonumber
+
+participant SYS as "System" <<system>>
+participant DB as "DB" <<database>>
+participant Auth0 as "Auth0" <<IAM>>
+
+
+?o-> SYS : POST /api/patients
+activate SYS
+SYS -> Auth0 : POST /api/patients
+activate Auth0
+Auth0 --> SYS : 201 Created 
+deactivate Auth0
+SYS->DB : link user with patients
+activate DB
+DB-->SYS:success
+deactivate DB 
+<-- SYS : 201 Created (Patient JSON)
+deactivate SYS
+
+@enduml

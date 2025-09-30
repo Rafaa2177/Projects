@@ -1,0 +1,55 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor Admin as ad
+participant "HomePage" as home <<application>>
+participant "InactivateStaffPage" as inactivate <<application>>
+participant "InactivateStaffForm" as form <<application>>
+participant "StaffsController" as con <<application>>
+participant "StaffsService" as ser <<service>>
+participant "IStaffRepository" as repo1 <<interface>>
+participant "StaffsRepository" as repo <<repository>>
+participant "Staff" as staff <<entity>>
+
+ad -> home : Click deactivate Staff
+activate ad
+activate home
+home -> inactivate: /Staff/InactivateStaffPage
+activate inactivate
+inactivate -> form: InactivateStaffForm(handleSubmit)
+activate form
+form -> con: PUT /api/staffs/inactivate/{email}
+activate con
+con -> ser: InactivateAsync(email)
+activate ser
+ser -> repo1: FindByEmailAsync(email)
+activate repo1
+repo1 -> repo: FindByEmailAsync(email)
+activate repo
+repo --> repo1: Email
+deactivate repo
+repo1 --> ser: Email
+deactivate repo1
+ser -> staff: MarkAsInactive()
+activate staff
+staff --> ser: 200 OK
+deactivate staff
+ser --> con: 200 OK
+deactivate ser
+con --> form: 200 OK
+deactivate con
+form --> inactivate: 200 OK
+deactivate form
+inactivate --> home: 200 OK
+deactivate inactivate
+home --> ad: Staff successfully deactivate
+deactivate home
+
+
+
+
+
+
+@enduml

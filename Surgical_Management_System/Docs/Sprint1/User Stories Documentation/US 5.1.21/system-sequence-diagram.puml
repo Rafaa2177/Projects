@@ -1,0 +1,25 @@
+@startuml ssd
+title System Sequence Diagram - US 5.1.21
+
+actor Admin
+actor System
+
+Admin -> System: Request to edit existing operation type
+activate System
+System -> Admin: Display list of existing operation types
+deactivate System
+Admin -> System: Select operation type to edit
+activate System
+System -> Admin: Display selected operation type details
+deactivate System
+Admin -> System: Submit updated operation type details (name, required staff, duration)
+activate System
+System -> System: Validates changes (operation name uniqueness, valid input)
+alt Operation name is unique
+    System -> System: Logs the update of the operation type
+    System -> Admin: Confirms successful update
+else Operation name is not unique
+    System -> Admin: Error - Operation name already exists
+end
+deactivate System
+@enduml

@@ -1,0 +1,36 @@
+@startuml System Sequence Diagram
+
+
+title System Sequence Diagram
+
+
+actor "Backoffice User" as bu 
+participant "System" as sy 
+
+bu -> sy: Inserts the user credentials
+activate bu
+activate sy
+sy -> sy: Validates the user credentials
+
+alt Correct information 
+sy -> bu: Login successful
+
+else Incorrect information
+loop 5 times
+sy -> bu: Login failed
+bu -> sy: Inserts the user credentials
+
+end
+sy -> bu: The account was locked, an email was sent to the adm
+end
+deactivate sy
+deactivate bu
+
+
+
+
+
+
+
+
+@enduml

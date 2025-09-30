@@ -1,0 +1,20 @@
+@startuml process-view
+
+autonumber
+title Sequence Diagram
+
+participant SYS as "System" <<system>>
+participant DB as "DB" <<database>>
+
+
+?o-> SYS : POST /api/registerUser
+activate SYS
+
+SYS->DB : link user with staff
+activate DB
+DB-->SYS:success
+deactivate DB 
+<-- SYS : 201 Created (Staff JSON)
+deactivate SYS
+
+@enduml

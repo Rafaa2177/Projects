@@ -1,0 +1,17 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title System Sequence Diagram
+autonumber
+
+
+participant "System" as sy <<system>>
+
+
+?o-> sy: GET /api/operation
+activate sy
+<-- sy: 200 OK
+deactivate sy
+
+
+@enduml

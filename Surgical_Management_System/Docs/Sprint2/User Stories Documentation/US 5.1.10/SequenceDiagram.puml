@@ -1,0 +1,47 @@
+@startuml
+title Sequence Diagram - US 5.1.10 - Delete Patient Profile 
+
+actor "Admin" as admin
+participant "Page" as page <<applicaion>>
+participant "DeletePacientPage" as pacientPage <<application>>
+participant "PacientForm" as form <<applicaion>>
+participant "PatientController" as con <<application>>
+participant "PatientService" as service <<domain>>
+participant "PatientRepository" as repo <<repository>>
+participant "AuditService" as audit <<service>>
+
+activate admin
+admin -> page: Navigate to delete patient profile page
+activate page 
+
+page -> pacientPage : Load delete patient profile page
+activate pacientPage
+
+pacientPage -> form : PatientForm(handleSubmit)
+activate form
+form-> con: Delete /api/patients/email/${email}
+activate con 
+con -> service: Create(dto)
+activate service
+service -> repo1: AddAsync(dto)
+activate repo1
+repo1 -> repo: FindByEmailAsync(dto.Email)
+activate repo
+repo --> repo1: Email
+deactivate repo
+repo1 --> service: Email
+deactivate repo1
+service -> patient: Patient(dto)
+activate patient
+patient --> service: Success
+deactivate patient
+service -> repo: DeleteAsync(patientProfile)
+activate repo
+repo --> service: 200 OK Created
+deactivate repo
+service -> con: 200 OK Created
+deactivate service
+<-- con: 200 OK Created
+deactivate con
+
+@enduml

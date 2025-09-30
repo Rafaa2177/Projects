@@ -1,0 +1,20 @@
+[
+  {
+    "id": 2,
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "fullName": "Jane Smith",
+    "email": "jane.smith@example.com",
+    "phoneNumber": "987654321",
+    "dateOfBirth": "1990-07-20"
+  },
+  {
+    "id": 3,
+    "firstName": "Emma",
+    "lastName": "Johnson",
+    "fullName": "Emma Johnson",
+    "email": "emma.johnson@example.com",
+    "phoneNumber": "956789123",
+    "dateOfBirth": "1987-11-30"
+  }
+]

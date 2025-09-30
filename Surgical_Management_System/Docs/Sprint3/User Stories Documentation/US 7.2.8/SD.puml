@@ -1,0 +1,58 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor Admin as ad
+participant "HomePage" as home <<application>>
+participant CreateAppointment as page
+participant AppointmentForm as form
+participant appointmentsRoute as route
+participant IAppointmentController as con1
+participant appointmentController as con2
+participant IAppointmentService as ser1
+participant appointmentService as ser2
+participant appointment as domain
+
+
+ad -> home: Create a new Appointment
+activate home 
+home -> page: /Appointment/CreateAppointment
+activate page
+page -> form: AppointmentForm
+activate form
+form -> route: POST /api/appointments
+activate route
+route -> con1: createAppointment
+activate con1
+con1 -> con2: createAppointment
+activate con2
+con2 -> ser1: createAppointment
+activate ser1
+ser1 -> ser2: createAppointment
+activate ser2
+ser2 -> domain: create
+activate domain
+domain --> ser2: 201 Created
+deactivate domain
+ser2 --> ser1: 201 Created
+deactivate ser2
+ser1 --> con2: 201 Created
+deactivate ser1
+con2 --> con1: 201 Created
+deactivate con2
+con1 --> route: 201 Created
+deactivate con1
+route --> form: 201 Created
+deactivate route
+form --> page: 201 Created
+deactivate form
+page --> home: 201 Created
+deactivate page
+home --> ad: Appointment successfully created
+
+
+
+
+
+@enduml

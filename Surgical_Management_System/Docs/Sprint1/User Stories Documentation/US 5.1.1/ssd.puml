@@ -1,0 +1,15 @@
+@startuml
+actor Admin
+participant "System" as Sys
+
+Admin -> Sys: POST /register
+activate Sys
+
+alt User Created
+    Sys -> Admin: Ok("User devidamente Registado, verifique o email registado")
+else User Not Created
+    Sys -> Admin: BadRequest("Erro ao registar o utilizador")
+end
+
+deactivate Sys
+@enduml

@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+<PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel> 
+  </PropertyGroup>
+ 
+  <ItemGroup>
+    
+    <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.3.0" />
+    
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational.Design" Version="1.1.6" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="Moq" Version="4.20.72" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+    <PackageReference Include="SendGrid" Version="9.29.3" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+  </ItemGroup>
+ 
+  <ItemGroup>
+    <Compile Remove="Migrations\20241024175702_DbInit.cs" />
+    <Compile Remove="Migrations\20241024175702_DbInit.Designer.cs" />
+  </ItemGroup>
+ 
+  <ItemGroup>
+    <Folder Include="Docs\Sprint1\" />
+    <Folder Include="frontend\projeto5\src\app\patient\" />
+    <Folder Include="frontend\projeto5\src\test\" />
+    <Folder Include="frontend\projeto5\__tests__\pages\" />
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+ 
+  <ItemGroup>
+    <None Remove="frontend\projeto5\src\app\teste.tsx" />
+    <None Remove="frontend\projeto5\src\app\Watch.html" />
+    <None Remove="frontend\projeto5\src\app\watch.js" />
+    <None Remove="frontend\projeto5\src\app\patient\page.tsx" />
+    <None Remove="frontend\projeto5\__tests__\components\OperationRequests\UpdateOperationRequestButton.test.js" />
+    <None Include="Docs\Sprint3\Requirements\Level 3\.NET\implementationView.puml" />
+    <None Include="Docs\Sprint3\Requirements\Level 3\.NET\logic-view.puml" />
+  </ItemGroup>
+ 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="frontend\cypress\fixtures\example.json" />
+  </ItemGroup>
+ 
+
+
+</Project>

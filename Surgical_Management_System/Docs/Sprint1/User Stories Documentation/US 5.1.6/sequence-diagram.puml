@@ -1,0 +1,48 @@
+@startuml US 5.1.6
+
+title Sequence Diagram
+
+actor "Backoffice User" as user
+participant "LoginController" as con
+participant "AuthenticationService" as service
+participant "RoleService" as role
+
+user -> con: validateCredentials(username, password)
+activate user
+activate con
+
+con -> service: verifyCredentials(username, password)
+activate service
+
+alt Correct information 
+
+    service -> role: getRole(username)
+    activate role
+    role --> service: role
+    deactivate role
+
+    service --> con: role
+    deactivate service
+
+    con -> user: Login successful and display of the information according to the role 
+    deactivate con
+
+else Incorrect information
+    
+    loop 5 times
+
+        con -> service: verifyCredentials(username, password)
+        activate service
+        service --> con: wrong credentials
+        deactivate service
+        con -> user: wrong credentials
+        user -> con: validateCredentials(username, password)
+
+    end
+    con -> user: The account was locked, an email was sent to the admin
+    deactivate con
+end
+
+deactivate user
+
+@enduml

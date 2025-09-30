@@ -1,0 +1,59 @@
+@startuml 
+top to bottom direction 
+skinparam rectangle {
+    BackgroundColor #ADD8E6
+    BorderColor Black
+}
+skinparam package {
+    BackgroundColor #ADD8E6
+    BorderColor Black
+}
+skinparam defaultFontName Arial
+
+package " Node " {
+
+    package "Infrastructure" {
+        package "Routes" as Routes
+        package " " as Persistence
+        package " " as DataSchema
+        
+    }
+
+    package "Interface Adapters" {
+        package " " as Controllers
+        package " " as Mappers
+        package " " as Repositories
+        
+    }
+    
+    package "Application Services/Use Case Services"{
+    package " " as AppServices 
+    }
+    
+    package Entities/Core/Domain {
+    package " " as Services 
+    package " " as ValueObjects
+    package " " as Aggregates
+    
+    }
+    
+  
+
+    Routes ..> Controllers
+    Persistence ..> DataSchema
+    Repositories ..> Persistence
+    Repositories ..> Mappers
+    Controllers ..> AppServices
+    Repositories ..|> AppServices
+    Mappers ..> Aggregates
+    Mappers ..> ValueObjects
+    AppServices ..> Services
+    AppServices ..> Aggregates
+    AppServices ..> ValueObjects
+    
+    
+    
+
+}
+
+@enduml

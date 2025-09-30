@@ -1,0 +1,33 @@
+@startuml ssd
+title System Sequence Diagram - US 5.1.11 
+
+actor Admin
+actor System
+
+Admin -> System: Request to list/search profile types by attribute
+activate System
+System --> Admin : Display all atributes
+deactivate System
+Admin -> System : Select an attribute
+activate System
+System -> Admin: Display list of all patient profiles by choosen attribute
+deactivate System
+Admin -> System: Select a patient profile to view details
+activate System
+System -> Admin: Display patien profile details 
+deactivate System
+Admin -> System: Choose to edit or remove the patient profile
+activate System
+alt Admin chooses to edit
+    System -> System: Display edit form with current details
+    System -> System: Save updated patient profile details
+    System -> Admin: display operation success
+else Admin chooses to remove
+    System -> Admin: Show confirmation prompt
+    Admin -> System: Confirm removal
+    System -> System: Remove patient profile
+    System -> System: Log removal of patient profile 
+    System -> Admin: display operation success
+end
+deactivate System
+@enduml

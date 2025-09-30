@@ -1,0 +1,46 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+
+skinparam classAttributeIconSize 0
+
+left to right direction
+
+
+class PatientDTO {
+    +id
+    +name 
+    +email
+    
+}
+
+
+class ProfileController{
++deletePatientProfile(patientId: Long)
+
+}
+
+class ProfileService{
++deleteProfile(patientDTO: PatientDTO)
+}
+
+class ProfileRepository{
++ findById(patientId: Long), delete(patientId: Long)
+}
+
+class AuditService{
++logDeletion(patientDTO: PatientDTO)
+}
+
+
+ProfileController -> ProfileService 
+ProfileController -> PatientDTO 
+ProfileService -> ProfileRepository
+ProfileService -> AuditService
+ProfileRepository -> PatientDTO
+
+
+
+@enduml

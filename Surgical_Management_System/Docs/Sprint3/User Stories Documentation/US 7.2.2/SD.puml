@@ -1,0 +1,58 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor Admin as ad
+participant "HomePage" as home <<application>>
+participant CreateAllergyPage as page
+participant AllergyForm as form
+participant allergiesRoute as route
+participant IAllergiesController as con1
+participant allergiesController as con2
+participant IAllergiesService as ser1
+participant allergiesService as ser2
+participant allergies as domain
+
+
+ad -> home: Create a new Allergy 
+activate home 
+home -> page: /Allergy/CreateAllergyPage
+activate page
+page -> form: AllergyForm(handleSubmit)
+activate form
+form -> route: POST /api/allergies
+activate route
+route -> con1: createAllergy
+activate con1
+con1 -> con2: createAllergy
+activate con2
+con2 -> ser1: createAllergy
+activate ser1
+ser1 -> ser2: createAllergy
+activate ser2
+ser2 -> domain: create
+activate domain
+domain --> ser2: 201 Created
+deactivate domain
+ser2 --> ser1: 201 Created
+deactivate ser2
+ser1 --> con2: 201 Created
+deactivate ser1
+con2 --> con1: 201 Created
+deactivate con2
+con1 --> route: 201 Created
+deactivate con1
+route --> form: 201 Created
+deactivate route
+form --> page: 201 Created
+deactivate form
+page --> home: 201 Created
+deactivate page
+home --> ad: Allergy susccessfully created
+
+
+
+
+
+@enduml

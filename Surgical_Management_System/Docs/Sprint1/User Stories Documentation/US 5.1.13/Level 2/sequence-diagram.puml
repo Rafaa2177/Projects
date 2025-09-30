@@ -1,0 +1,45 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant "StaffsController" as con <<application>>
+participant "StaffsService" as ser <<service>>
+participant "IStaffRepository" as repo1 <<interface>>
+participant "StaffsRepository" as repo <<repository>>
+participant "EmailService" as ser2 <<service>>
+
+?o-> con: PUT /api/staffs/email/{email}
+activate con
+con -> ser: UpdateAsync(email,dto)
+activate ser
+ser -> repo1: FindByEmailAsync(email)
+activate repo1
+repo1 -> repo: FindByEmailAsync(email)
+activate repo
+repo --> repo1: Email
+deactivate repo
+repo1 --> ser: Email
+deactivate repo1
+ser -> repo: UpdateAsync(dto)
+activate repo
+repo --> ser: 200 OK
+deactivate repo
+ser -> con: 200 OK
+con -> ser: SendEmailAsync(email)
+ser -> ser2: SendEmailAsync(email)
+activate ser2
+ser2 --> ser: 200 OK
+deactivate ser2
+ser --> con: 200 OK
+deactivate ser
+<-- con: 200 OK
+deactivate con
+
+
+
+
+
+
+
+@enduml

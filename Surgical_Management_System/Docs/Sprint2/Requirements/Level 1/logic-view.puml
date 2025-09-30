@@ -1,0 +1,27 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+!define COLOR #ADD8E6 
+
+skinparam  component {
+    BackgroundColor COLOR
+}
+
+skinparam interface {
+    BackgroundColor COLOR
+    BorderColor black
+}
+
+component "<<component>>\n<<system (C4)>>\n    Sistema" as comp
+
+
+[comp] -- "filesystem API"
+"Admin" -- [comp]
+"Staff" -- [comp]
+"Patient" -- [comp]
+[comp] --( "Auth0"
+"SendGrid" )-- [comp]
+
+
+
+@enduml

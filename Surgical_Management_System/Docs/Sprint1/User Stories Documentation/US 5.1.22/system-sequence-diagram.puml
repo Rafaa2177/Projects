@@ -1,0 +1,25 @@
+@startuml ssd
+title System Sequence Diagram - US 5.1.22 
+
+actor Admin
+actor System
+
+Admin -> System: Request to deactivate or remove operation type
+activate System
+System -> Admin: Display list of existing operation types
+deactivate System
+Admin -> System: Select operation type and action (deactivate or remove)
+activate System
+alt Admin chooses to deactivate
+    System -> System: Mark operation type as inactive
+    System -> System: Logs the operation type status change
+    System -> Admin: Confirms successful deactivation
+else Admin chooses to remove
+    System -> Admin: Show confirmation prompt
+    Admin -> System: Confirm removal
+    System -> System: Remove operation type
+    System -> System: Logs the operation type removal
+    System -> Admin: Confirms successful removal
+end
+deactivate System
+@enduml

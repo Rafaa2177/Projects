@@ -1,0 +1,35 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+title US-5.1.15: System Sequence Diagram
+autonumber
+
+actor "Admin" as ad
+participant "System" as sys
+
+ad -> sys: Requests to view all the staff
+activate sys
+activate ad
+
+sys --> ad: Shows all the staff
+ad -> sys: Requests to use filters to search for staff
+sys --> ad: Asks to put the filters (name, specialization or email)
+ad -> sys: Puts the filters
+sys --> ad: Shows the staff according to the filters
+ad -> sys: Selects a staff
+sys --> ad: Asks if the admin wants to edit or remove the staff
+
+alt Edit
+    ad -> sys: Requests to edit the staff
+    sys --> ad: Shows the staff's information
+    ad -> sys: Edits the staff's information
+    sys --> ad: Confirms the changes
+else Remove
+    ad -> sys: Requests to remove the staff
+    sys --> ad: Confirms the removal
+end
+
+
+
+@enduml

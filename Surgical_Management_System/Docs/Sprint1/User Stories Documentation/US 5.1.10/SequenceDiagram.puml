@@ -1,0 +1,89 @@
+@startuml
+title Sequence Diagram - US 5.1.10 - Delete Patient Profile 
+
+actor "Admin" as admin
+participant "EditProfileUI" as ui <<presentation>>
+participant "ProfileController" as con <<application>>
+participant "ProfileService" as service <<domain>>
+participant "ProfileRepository" as repo <<repository>>
+participant "AuditService" as audit <<service>>
+
+activate admin
+admin -> ui: Request to search for patient profile
+
+activate ui
+ui -> con: searchProfiles(searchCriteriaDTO)
+activate con
+
+con -> service: getProfilesByCriteria(searchCriteriaDTO)
+activate service
+
+service -> repo: findProfiles(searchCriteriaDTO)
+activate repo
+repo --> service: profileListDTO
+deactivate repo
+
+service --> con: profileListDTO
+deactivate service
+
+con --> ui: profileListDTO
+deactivate con
+
+ui --> admin: Display list of profiles
+deactivate ui
+
+admin -> ui: Select profile to delete
+activate ui
+ui -> con: selectProfileToDelete(profileId)
+activate con
+
+con -> service: getProfile(profileId)
+activate service
+
+service -> repo: findById(profileId)
+activate repo
+repo --> service: PatientDTO
+deactivate repo
+
+service --> con: PatientDTO
+deactivate service
+
+con --> ui: PatientDTO
+deactivate con
+
+ui --> admin: Displays patient data (PatientDTO)
+deactivate ui
+
+admin -> ui: Request to delete the profile
+activate ui
+ui --> admin : Show confirmation prompt
+deactivate ui
+
+admin -> ui: Confirm removal
+activate ui
+ui -> con: deleteProfile(PatientDTO)
+activate con
+
+con -> service: validateDeleteRequest(patientId)
+activate service
+
+service -> repo: deleteById(patientId)
+activate repo
+repo --> service: deleteConfirmation
+deactivate repo
+
+service -> audit: logProfileDeletion(PatientDTO)
+activate audit
+deactivate audit
+
+
+service --> con: deletionSuccess
+deactivate service
+
+con --> ui: deletionSuccess
+deactivate con
+
+ui --> admin: Confirms deletion success
+deactivate ui
+
+@enduml

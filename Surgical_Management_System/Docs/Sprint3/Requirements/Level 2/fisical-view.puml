@@ -1,0 +1,36 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+top to bottom direction
+
+skinparam component {
+    BackgroundColor #ADD8E6
+}
+skinparam node {
+    BackgroundColor #ADD8E6
+}
+
+node "localhost:3001" as lh {
+component "<<component>>\nBrowser"{
+    component "<<component>>\n    Frontend" as fe
+}
+}
+
+node "localhost:5001" as s {
+component "<<component>>\n   BackOffice" as backoffice
+component "<<component>>\n    Planning" as plan
+component "        <<component>>\nBusinessContinuityPlan" as bcp
+component "   <<component>>\n 3DVisualization" as 3d
+}
+
+node "localhost:4000" as lh2 {
+component "<<component>>\n BackOffice" as backoffice2
+
+}
+
+lh --> lh2: http
+lh --> s: https
+
+
+@enduml

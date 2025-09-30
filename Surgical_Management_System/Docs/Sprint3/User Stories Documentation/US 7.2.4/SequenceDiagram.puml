@@ -1,0 +1,60 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title Create a new Medical Condition
+
+autonumber
+
+actor Admin as ad
+participant "HomePage" as home <<application>>
+participant CreateMedicalConditionPage as page
+participant MedicalConditionForm as form
+participant medicalConditionRoute as route
+participant IMedicalConditionsController as con1
+participant medicalConditionsController as con2
+participant IMedicalConditionService as ser1
+participant medicalConditionService as ser2
+participant medicalCondition as domain
+
+
+ad -> home: Create a new Medical Condition 
+activate home 
+home -> page: /medicalConditions/CreateMedicalConditionPage
+activate page
+page -> form: MedicalConditionForm(handleSubmit)
+activate form
+form -> route: POST /api/medicalConditions
+activate route
+route -> con1: createMedicalCondition
+activate con1
+con1 -> con2: createMedicalCondition
+
+activate con2
+con2 -> ser1: createMedicalCondition
+activate ser1
+ser1 -> ser2: createMedicalCondition
+activate ser2
+ser2 -> domain: create
+activate domain
+domain --> ser2: 201 Created
+deactivate domain
+ser2 --> ser1: 201 Created
+deactivate ser2
+ser1 --> con2: 201 Created
+deactivate ser1
+con2 --> con1: 201 Created
+deactivate con2
+con1 --> route: 201 Created
+deactivate con1
+route --> form: 201 Created
+deactivate route
+form --> page: 201 Created
+deactivate form
+page --> home: 201 Created
+deactivate page
+home --> ad: Medical Condition susccessfully created
+
+
+
+
+
+@enduml

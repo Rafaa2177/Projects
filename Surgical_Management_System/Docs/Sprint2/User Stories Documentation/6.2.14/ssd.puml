@@ -1,0 +1,29 @@
+@startuml US 6.2.14
+
+title System Sequence Diagram - US 6.2.14 - Create Operation Request
+
+actor "Doctor" as user
+participant "System" as system
+
+user -> system: Navigate to create operation request page
+activate user
+activate system
+
+system -> user: Display operation request form
+deactivate system
+
+user -> system: Enter operation request details
+activate system
+
+system -> user: Display success message
+deactivate system
+
+user -> system: Redirect to operation request list page
+activate system
+
+system -> user: Display operation request list
+deactivate system
+
+deactivate user
+
+@enduml

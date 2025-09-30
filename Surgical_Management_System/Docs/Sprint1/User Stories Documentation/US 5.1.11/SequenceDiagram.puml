@@ -1,0 +1,68 @@
+@startuml sd
+title Sequence Diagram - US 5.1.11 - List/Search Patient Profiles
+
+actor "Admin" as admin
+participant "PatientUI" as ui <<presentation>>
+participant "PatientController" as con <<application>>
+participant "PatientService" as service <<domain>>
+participant "PatientRepository" as repo <<repository>>
+
+activate admin
+admin -> ui: Request to list or search patient profiles by an attribute
+ui --> admin : ask to select an attribute
+admin -> ui : select an attribute 
+
+activate ui
+ui -> con: requestPatientProfile(searchQuery)
+activate con
+
+con -> service: getPatientProfile(searchQuery)
+activate service
+
+service -> repo: findPatientProfile(searchQuery)
+activate repo
+repo --> service: matchingPatientProile
+deactivate repo
+
+service --> con: matchingPatientProile
+deactivate service
+
+con --> ui: Display list of patient profiles
+deactivate con
+
+ui --> admin: Display list of patient profiles or search results
+deactivate ui
+
+admin -> ui: Select a patient profile to view details
+activate ui
+ui -> con: requestPatientProfileDetails(operationTypeId)
+activate con
+
+con -> service: getPatientDetails(operationTypeId)
+activate service
+service -> repo: findById(operationTypeId)
+activate repo
+repo --> service: patientProfileDetails
+deactivate repo
+
+service --> con: patientProfileDetails
+deactivate service
+
+con --> ui: Display patient profile details (name, required staff, duration, status)
+deactivate con
+
+ui --> admin: Display patient profile details
+deactivate ui
+
+admin -> ui: Choose to edit or remove patient profile
+activate ui
+alt Admin chooses to edit
+ui -> ui: US 5.1.9/sequence-diagram.puml
+else Admin chooses to delete 
+ui -> ui: US 5.1.10/sequence-diagram.puml
+deactivate con
+end 
+ui --> admin: Confirms result (success or error)
+deactivate ui
+
+@enduml

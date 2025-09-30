@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title System Sequence Diagram
+autonumber
+
+
+participant "System" as sy <<system>>
+
+
+?o-> sy: POST /api/patients
+activate sy
+sy -> ad: POST /api/patients
+activate ad
+ad --> sy: 201 Created
+deactivate ad
+<-- sy: 201 Created
+deactivate sy
+
+
+@enduml

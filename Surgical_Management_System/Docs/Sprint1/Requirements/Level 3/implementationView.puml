@@ -1,0 +1,46 @@
+@startuml
+top to bottom direction 
+skinparam rectangle {
+    BackgroundColor #ADD8E6
+    BorderColor Black
+}
+skinparam package {
+    BackgroundColor #ADD8E6
+    BorderColor Black
+}
+skinparam defaultFontName Arial
+
+package " Sistema " {
+
+    package "Infrastructure" {
+        package "Routes" as Routes
+        package "Persistence" as Persistence
+    }
+
+    package "Interface Adapters" {
+        package "Controllers" as Controllers
+        package "Repositories" as Repositories
+    }
+    
+    package "Application Services/Use Case Services"{
+    package " " as AppServices 
+    }
+    
+    package Entities/Core/Domain {
+    package "Services" as Services 
+    package "Aggregates" as Aggregates 
+    }
+
+    Routes ..> Controllers 
+    Repositories ..> Persistence 
+    Controllers ..> AppServices
+    Repositories ..|> AppServices
+    
+    AppServices ..> Services
+    AppServices ..> Aggregates
+    
+    
+    
+}
+
+@enduml

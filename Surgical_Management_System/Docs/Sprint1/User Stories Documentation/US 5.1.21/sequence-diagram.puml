@@ -1,0 +1,86 @@
+@startuml sd
+title Sequence Diagram - US 5.1.21 - Edit Existing Operation Type
+
+actor "Admin" as admin
+participant "OperationTypeUI" as ui <<presentation>>
+participant "OperationController" as con <<application>>
+participant "OperationService" as service <<domain>>
+participant "OperationRepository" as repo <<repository>>
+participant "AuditService" as audit <<service>>
+
+activate admin
+admin -> ui: Request to edit existing operation type
+
+activate ui
+ui -> con: requestExistingOperationTypes()
+activate con
+
+con -> service: getExistingOperationTypes()
+activate service
+
+service -> repo: findAllOperationTypes()
+activate repo
+repo --> service: existingOperationNames
+deactivate repo
+
+service --> con: existingOperationNames
+deactivate service
+
+con --> ui: existingOperationNames
+deactivate con
+
+ui --> admin: Display list of existing operation types to select
+deactivate ui
+
+admin -> ui: Select operation type to edit
+activate ui
+ui -> con: requestOperationDetails(operationTypeId)
+activate con
+
+con -> service: getOperationDetails(operationTypeId)
+activate service
+service -> repo: findById(operationTypeId)
+activate repo
+repo --> service: operationDetails
+deactivate repo
+
+service --> con: operationDetails
+deactivate service
+
+con --> ui: Display operation type details
+deactivate con
+
+ui --> admin: Display current operation type details
+deactivate ui
+
+admin -> ui: Submit updated operation type details (name, required staff, duration)
+activate ui
+ui -> con: submitUpdatedOperationDetails(updatedOperationDetails)
+activate con
+
+con -> service: validateOperationName(updatedOperationDetails.name)
+activate service
+service -> repo: findByName(updatedOperationDetails.name)
+activate repo
+alt Operation name is unique or unchanged
+    repo --> service: no conflicting operation
+    deactivate repo
+    service -> repo: update(operationDetails)
+    activate repo
+    repo --> service: operationUpdatedConfirmation
+    deactivate repo
+    service -> audit: logOperationTypeUpdate(updatedOperationDetails)
+    service --> con: operationUpdateResult
+else Operation name is not unique
+    repo --> service: existing operation with same name found
+    deactivate repo
+    service --> con: operationUpdateResult
+end
+
+deactivate service
+con --> ui: operationUpdateResult(operatingUpdateResult)
+deactivate con
+ui --> admin: Confirms result (success or error)
+deactivate ui
+
+@enduml

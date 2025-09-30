@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title System Sequence Diagram
+autonumber
+
+
+participant "System" as sy <<system>>
+
+
+?o-> sy: PUT /api/editStaff
+activate sy
+sy -> ad: PUT /api/editStaff
+activate ad
+ad --> sy: 200 OK
+deactivate ad
+<-- sy: 200 OK
+deactivate sy
+
+
+@enduml

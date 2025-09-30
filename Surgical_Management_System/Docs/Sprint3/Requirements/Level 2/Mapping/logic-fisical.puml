@@ -1,0 +1,105 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+top to bottom direction
+
+skinparam component {
+    BackgroundColor #ADD8E6
+}
+skinparam node {
+    BackgroundColor #ADD8E6
+}
+
+node "localhost:3001" as lh {
+component "<<component>>\nBrowser"{
+    component "<<component>>\n    Frontend" as fe
+}
+}
+
+node "localhost:5001" as s {
+component "<<component>>\n   BackOffice" as backoffice
+component "<<component>>\n    Planning" as plan
+component "        <<component>>\nBusinessContinuityPlan" as bcp
+component "   <<component>>\n 3DVisualization" as 3d
+}
+
+node "localhost:4000" as lh2 {
+component "<<component>>\n BackOffice" as backoffice2
+
+}
+
+component "<<component>>\n<<system (C4)>>\nSistema" as comp1 {
+    port " " as P1
+    port " " as P13
+    component "    <<component>>\n  <<container (C4)>>\nPlanning" as plan1 {
+    port " " as P9
+    }
+    component "   <<component>>\n <<container (C4)>>\n     BackOffice" as ba1{
+    port " " as P10
+    port " " as P12
+    }    
+    component "    <<component>>\n  <<container (C4)>>\n  3dVisualization" as 3d1{
+    port " " as P6
+    port " " as P7
+    }
+    component "       <<component>>\n     <<container (C4)>>\nBusinessContinuityPlan" as bcp1{
+    port " " as P8
+    }
+    component "     <<component>>\n   <<container (C4)>>\n   Visualization (UI)" as fe1{
+    portout " " as P2
+    portout " " as P3
+    portout " " as P4
+    portout " " as P5
+    portin " " as P11
+    portin " " as P15
+    }
+    
+   component "    <<component>>\n   <<container (C4)>>\n BackOfficeNode" as node1 {
+    portout " " as P14
+    
+}
+
+"Planning API" -- P9 
+"BackOffice API" -- P10
+"3dVisualization API" -- P7
+"BusinessContinuityPlan API" -- P8
+"BackOfficeNode API" -- P14
+"BackOfficeNode API" )-- P15
+
+P14 --( "BackOffice API"
+
+P5 --( "BackOffice API"
+P4 --( "Planning API"
+P3 --( "3dVisualization API"
+P2 -( "BusinessContinuityPlan API"
+
+P6 --( "Planning API"
+
+
+P11 -- P1
+}
+
+"Auth0" )-up- P13
+"Patient" -up- P1
+"Staff" -- P1
+"Admin" -- P1
+"SendGrid" )-- P13
+P13 - P12
+"MongoDB" )-- P13
+
+
+lh --> lh2: http
+lh --> s: https
+
+fe ..> fe1 : <<manifest>>
+plan1 <.. plan : <<manifest>>
+backoffice2 ..> node1 : <<manifest>>
+backoffice ..> ba1 : <<manifest>>
+bcp1 <.. bcp : <<manifest>>
+3d1 <.. 3d : <<manifest>>
+
+
+
+
+@enduml

@@ -1,0 +1,19 @@
+@startuml process-view
+
+autonumber
+title Sequence Diagram
+
+participant SYS as "System" <<system>>
+participant DB as "DB" <<database>>
+
+
+?o-> SYS : GET api/operation
+activate SYS
+SYS->DB : list operation requisitions
+activate DB
+DB-->SYS: success
+deactivate DB 
+<-- SYS : 200 OK
+deactivate SYS
+
+@enduml

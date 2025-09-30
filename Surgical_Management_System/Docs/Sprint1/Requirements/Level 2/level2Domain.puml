@@ -1,0 +1,72 @@
+@startuml   
+    class User{
+        -username : String
+        -role : Enum
+        -email : String
+    }
+
+    class Patient{
+        +FirstName: String
+        +LastName: String
+        +FullName: String
+        +DateOfBirth: Date
+        +Gender: Gender
+        +medicalRecordNumber : PatientId
+        +Email : String
+        +PhoneNumber: Long
+        +MedicalConditions: String
+        +EmergencyContact: Long
+        +Appointments : String
+    }
+
+    class Staff{
+        +FirstName: String
+        +LastName: String
+        +FullName: String
+        +LicenseNumber : StaffId
+        +Email : String
+        +PhoneNumber: Long
+        +TimeSlots: List<TimeSlots>
+        +Role: Enum
+    }
+    
+    class Appointment{
+        +id : AppointmentId
+        +requestId: Integer
+        +dateAndTime: Date
+        +status: Enum
+    }
+
+    class SurgeryRoom{}
+
+    class OperatingRequests{
+        +Id: OperationRequestId
+        +PatientId: PatientId
+        +doctorId: StaffId
+        +OperationTypeId: Integer
+        +OperationDate: DateTime
+        +priority: String
+    }
+
+    class OperationType{}
+
+
+    User "0..1" -- "1" Patient : can be
+    
+    User "1" -- "0..1" Staff : is
+
+    Staff "1" -- "*" OperatingRequests : doctor
+    Appointment "1" -- "1" OperatingRequests
+
+    SurgeryRoom "1" -- "*" Appointment
+
+    Staff "1" --- "*" Specialization : has
+    OperationType "*" -- "*" Specialization
+   OperationType "*" -- "*" OperatingRequests
+    
+    Patient "1" - "*" Appointment
+    
+
+
+    
+@enduml

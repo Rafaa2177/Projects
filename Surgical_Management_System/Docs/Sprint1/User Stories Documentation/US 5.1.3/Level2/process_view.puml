@@ -1,0 +1,15 @@
+@startuml process-view
+autonumber
+participant SYS as "System" <<system>>
+participant Auth0 as "Auth0" <<IAM>>
+?o-> SYS : POST /api/registerUser
+activate SYS
+SYS -> Auth0 : POST /api/registerUser
+activate Auth0
+Auth0 --> SYS : 201 Created (User JSON)
+deactivate Auth0
+SYS->SYS : linkUser(userId)
+<-- SYS : 201 Created (Patient JSON)
+deactivate SYS
+
+@enduml

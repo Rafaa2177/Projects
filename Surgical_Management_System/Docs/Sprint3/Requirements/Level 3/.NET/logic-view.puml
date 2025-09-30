@@ -1,0 +1,93 @@
+@startuml implementation_view
+
+top to bottom direction
+
+interface "API" as API
+interface "Auth0 API" as Auth0
+interface "SendGrid" as SendGrid
+interface "Database API" as DB_API
+
+component "BackendWebApplication" as APP <<component>> <<container (C4)>> {
+  portin " " as P1
+  portin " " as P2
+  portout " " as P3
+  portin " " as P5
+
+  Interface "Controller API" as CTRL_API
+  Interface "Data Model API" as DATA_API
+
+'  Componentes de baixo nível
+    folder "Frameworks & Drivers Layer" #CCFFFF {
+    component "Persistence" as PERSISTENCE <<component>> {
+    }
+    component "Routing" as ROUTE <<component>> {
+    }
+  }
+
+  component "Data Model" as DATA <<component>> {
+  }
+  component "DTO" as DTO <<component>> {
+  }
+
+  Interface "App Services API" AS SRV_API
+  Interface "DTO API" AS DTO_API
+  Interface "Repo API" AS REPO_API
+  Interface "Model API" AS MODEL_API
+  Interface "Persistence API" AS PERSISTENCE_API
+
+
+'Interações externas
+  folder "Interface Adapters Layer" #CCFFCC {
+    component "Controller" as CTRL <<component>> {
+    }
+    component "Repository" as REPO <<component>> {
+    }
+  }
+
+'Componente para organizar a lógica de negócio da aplicação
+  folder "Application Business Rules" #CC8080 {
+    component "Application Service" as SRV <<component>> {
+    }
+  }
+
+'Camada + alta que contém o modelo de domínio
+  folder "Enterprise Business Rules" #FFC080 {
+    component "Domain Model (DDD)" as MODEL <<component>> {
+    }
+  }
+}
+
+API -- P1
+P2 --up( DB_API
+
+ROUTE --- P1
+PERSISTENCE -- P2
+P3 --( Auth0 
+P3 --( SendGrid
+ROUTE --( DTO_API
+
+ROUTE --( CTRL_API
+CTRL -up- CTRL_API
+PERSISTENCE -- PERSISTENCE_API
+REPO -up-( PERSISTENCE_API 
+PERSISTENCE --( DATA_API 
+REPO -up-( DATA_API 
+DATA -down- DATA_API 
+
+CTRL --( SRV_API
+SRV -up- SRV_API
+SRV -- P3
+CTRL --( DTO_API
+DTO -up- DTO_API
+
+REPO -- REPO_API
+SRV -up-( REPO_API 
+
+SRV --( MODEL_API 
+REPO --( MODEL_API 
+MODEL -up- MODEL_API 
+
+
+P5 -- CTRL
+
+@enduml

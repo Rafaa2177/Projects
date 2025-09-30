@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+left to right direction
+
+:Admin: as Admin
+:Doctor: as Doctor
+
+
+Admin --> (US 7.2.2)
+Admin --> (US 7.2.4)
+Admin --> (US 7.2.10)
+Admin --> (US 7.2.11)
+Admin --> (US 7.2.12)
+Admin --> (US 7.2.13)
+Admin --> (US 7.2.15)
+
+
+Doctor --> (US 7.2.3)
+Doctor --> (US 7.2.5)
+Doctor --> (US 7.2.6)
+Doctor --> (US 7.2.7)
+Doctor --> (US 7.2.8)
+Doctor --> (US 7.2.9)
+Doctor --> (US 7.2.14)
+
+
+@enduml

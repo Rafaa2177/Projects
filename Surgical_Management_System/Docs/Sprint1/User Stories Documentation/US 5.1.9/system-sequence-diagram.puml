@@ -1,0 +1,22 @@
+@startuml ssd
+title System Sequence Diagram - US 5.1.9
+
+actor Admin
+actor System
+
+Admin -> System: Request to edit an existing profile
+activate System
+System -> System: Validates the request
+System -> Admin: Displays the list of profiles to be edited
+deactivate System
+Admin -> System: Selects the profile to be edited
+activate System
+System -> Admin: Displays the profile´s information
+deactivate System
+Admin -> System: Edits the profile´s information
+activate System
+System -> System: Logs the changes in editing the profile
+System -> Admin: Confirms the changes   
+deactivate System
+
+@enduml

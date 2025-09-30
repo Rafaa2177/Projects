@@ -1,0 +1,20 @@
+[
+  {
+    "fullName": "John Doe",
+    "licenseNumber": { "value": "94c7f947-c547-494d-889c-a99c283a68cf" },
+    "specialization": "Cardiology",
+    "phoneNumber": "123-456-7890",
+    "email": "john.doe@example.com",
+    "role": 0,
+    "active": false
+  },
+  {
+    "fullName": "Jane Smith",
+    "licenseNumber": { "value": "9eac1d6d-7439-40b1-af5b-0d8181ad8be7" },
+    "specialization": "Neurology",
+    "phoneNumber": "987-654-3210",
+    "email": "jane.smith@example.com",
+    "role": 1,
+    "active": true
+  }
+]

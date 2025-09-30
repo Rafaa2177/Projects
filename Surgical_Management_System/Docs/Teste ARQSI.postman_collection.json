@@ -1,0 +1,254 @@
+{
+	"info": {
+		"_postman_id": "fc51fe26-9659-4c60-9f7a-12c8bc5d85e3",
+		"name": "Teste ARQSI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29639510"
+	},
+	"item": [
+		{
+			"name": "IAM EXTERNO",
+			"item": [
+				{
+					"name": "login paciente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"oaoajso@gmail.com\",\n    \"password\": \"Password123@\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/login",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registar Um paciente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"oaoajso@gmail.com\",\n    \"password\": \"Password123@\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/RegisterPatient",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"RegisterPatient"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Patient",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"FirstName\" : \"User\",\n    \"LastName\" : \"Teste\",\n    \"FullName\" : \"Name de Teste\",\n    \"DateOfBirth\": \"2004/07/26\",\n    \"Email\" : \"oaoajso@gmail.com\",\n    \"PhoneNumber\" : 923456789,\n    \"Gender\" :\"Male\",\n    \"EmergencyContact\" : 913456789,\n    \"RecordNumber\" : \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/Patients",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"Patients"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Apagar um Paciente",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/patients/deletePatientAccount/eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImtKV1BFVGl5VVQyOGtoQzIwNUR3QyJ9.eyJodHRwczovL2V4YW1wbGUuY29tL3JvbGVzIjpbIlBhdGllbnQiXSwiaHR0cHM6Ly9leGFtcGxlLmNvbS9lbWFpbCI6Im9hb2Fqc29AZ21haWwuY29tIiwiaXNzIjoiaHR0cHM6Ly9wcm9qZXRvNS1ncnVwby5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjcxZWFjM2FjNzVjY2E5YzAzMDdlODYzIiwiYXVkIjoiaHR0cHM6Ly9wcm9qZXRvNS1ncnVwby5ldS5hdXRoMC5jb20vYXBpL3YyLyIsImlhdCI6MTczMDA2MzQzMSwiZXhwIjoxNzMwMTQ5ODMxLCJzY29wZSI6InJlYWQ6Y3VycmVudF91c2VyIHVwZGF0ZTpjdXJyZW50X3VzZXJfbWV0YWRhdGEgZGVsZXRlOmN1cnJlbnRfdXNlcl9tZXRhZGF0YSBjcmVhdGU6Y3VycmVudF91c2VyX21ldGFkYXRhIGNyZWF0ZTpjdXJyZW50X3VzZXJfZGV2aWNlX2NyZWRlbnRpYWxzIGRlbGV0ZTpjdXJyZW50X3VzZXJfZGV2aWNlX2NyZWRlbnRpYWxzIHVwZGF0ZTpjdXJyZW50X3VzZXJfaWRlbnRpdGllcyIsImd0eSI6InBhc3N3b3JkIiwiYXpwIjoiOGpsVzVJZ0pURTVSOEdTWnhSa2FqYVBqQU9iWlM0NVoifQ.gw6RWGuInFR7i9I5pteN1_v0EO1yPYIY9dnBloDuNYy88VLtFhlAa3cRMB4Frqk3Mcz5Qb6kAh6WDaBM79v7QKuMAiDEqlR98KGSdNZIe6MIuIJ1ftDR4hOSalLmSVUCQD-I5T8JFugiM6AXqlr4ChpHgTT75LNwvf7651yBvVMXX2Eh2MG2CJZAXG0_dS7lGV7NO7gBMXkvrTpZTXdk-JMvI6BVSF4am2edAulXRrtn9wjAYIeXZkIQmJpjKuF_KY5IWbm56NUJUFzP7LMjUmKfe7hFsTL79PbvSXb5b_uaRI0oUNTJJfKgfam4uAArlv34vjLS3WbzAoZnDDESpw",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"patients",
+								"deletePatientAccount",
+								"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImtKV1BFVGl5VVQyOGtoQzIwNUR3QyJ9.eyJodHRwczovL2V4YW1wbGUuY29tL3JvbGVzIjpbIlBhdGllbnQiXSwiaHR0cHM6Ly9leGFtcGxlLmNvbS9lbWFpbCI6Im9hb2Fqc29AZ21haWwuY29tIiwiaXNzIjoiaHR0cHM6Ly9wcm9qZXRvNS1ncnVwby5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjcxZWFjM2FjNzVjY2E5YzAzMDdlODYzIiwiYXVkIjoiaHR0cHM6Ly9wcm9qZXRvNS1ncnVwby5ldS5hdXRoMC5jb20vYXBpL3YyLyIsImlhdCI6MTczMDA2MzQzMSwiZXhwIjoxNzMwMTQ5ODMxLCJzY29wZSI6InJlYWQ6Y3VycmVudF91c2VyIHVwZGF0ZTpjdXJyZW50X3VzZXJfbWV0YWRhdGEgZGVsZXRlOmN1cnJlbnRfdXNlcl9tZXRhZGF0YSBjcmVhdGU6Y3VycmVudF91c2VyX21ldGFkYXRhIGNyZWF0ZTpjdXJyZW50X3VzZXJfZGV2aWNlX2NyZWRlbnRpYWxzIGRlbGV0ZTpjdXJyZW50X3VzZXJfZGV2aWNlX2NyZWRlbnRpYWxzIHVwZGF0ZTpjdXJyZW50X3VzZXJfaWRlbnRpdGllcyIsImd0eSI6InBhc3N3b3JkIiwiYXpwIjoiOGpsVzVJZ0pURTVSOEdTWnhSa2FqYVBqQU9iWlM0NVoifQ.gw6RWGuInFR7i9I5pteN1_v0EO1yPYIY9dnBloDuNYy88VLtFhlAa3cRMB4Frqk3Mcz5Qb6kAh6WDaBM79v7QKuMAiDEqlR98KGSdNZIe6MIuIJ1ftDR4hOSalLmSVUCQD-I5T8JFugiM6AXqlr4ChpHgTT75LNwvf7651yBvVMXX2Eh2MG2CJZAXG0_dS7lGV7NO7gBMXkvrTpZTXdk-JMvI6BVSF4am2edAulXRrtn9wjAYIeXZkIQmJpjKuF_KY5IWbm56NUJUFzP7LMjUmKfe7hFsTL79PbvSXb5b_uaRI0oUNTJJfKgfam4uAArlv34vjLS3WbzAoZnDDESpw"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obter o id de um Role",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/getRole",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"getRole"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Paciente",
+			"item": [
+				{
+					"name": "Crair um doutor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\" : \"banheirasraladas21@gmail.com\",\n    \"role\" : \"Doctor\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/register",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "OperationRequests",
+			"item": [
+				{
+					"name": "Criar um Operation request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"PatientId\": null,\n    \"DoctorId\" : \"oaoajso@gmail.com\",\n    \"OperationType\" : \"Tipo de Operação\",\n    \"OperationDate\" : \"2025-04-27\",\n    \"Priority\" : \"Muitissima Prioridade\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/OperationRequest/",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"OperationRequest",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar um Op Request",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Id\" : \"8e4fd89f-f8d3-45a3-8a1d-90fb23f2eb43\",\n    \"PatientId\": null,\n    \"DoctorId\" : \"oaoajso@gmail.com\",\n    \"OperationType\" : \"Tipo de Operação\",\n    \"OperationDate\" : \"2026-04-27\",\n    \"Priority\" : \"Muitissima Prioridade\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/OperationRequest/",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"OperationRequest",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete de um OpRequest",
+					"request": {
+						"method": "DELETE",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

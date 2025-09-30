@@ -1,0 +1,123 @@
+@startuml
+
+' Define entities
+package "User" {
+    class User {}
+    class username\n<<ValueObject>>{}
+    Enum role\n<<ValueObject>>{}
+    class email\n<<Identifier>>{}   
+
+}
+
+package "Patient"{
+    class Patient {
+        +String firstName
+        +String lastName
+        +String fullName
+        +Date dateOfBirth
+        +String gender
+        +Guid mrn
+        +String email
+        +String phoneNumber
+        +List medicalConditions
+        +String emergencyContact
+        +List appointmentHistory
+    }
+    class firstName\n<<ValueObject>>{}
+    class lastName\n<<ValueObject>>{}
+    class fullName\n<<ValueObject>>{}
+    class dateOfBirth\n<<ValueObject>>{}
+    class gender\n<<ValueObject>>{}
+    class mrn\n<<Identifier>>{}
+    class medicalConditions\n<<ValueObject>>{}
+    class emergencyContact\n<<ValueObject>>{}
+    class appointmentHistory\n<<ValueObject>>{}
+
+}
+
+package "Staff"{
+    class Staff{
+        +String firstName
+        +String lastName
+        +String fullName
+        +Guid licenseNumber
+        +Enum specialization
+        +String email
+        +String phoneNumber
+        +List timeSlots
+    }
+    class firstName\n<<ValueObject>>{}
+    class lastName\n<<ValueObject>>{}
+    class fullName\n<<ValueObject>>{}
+    class licenseNumber\n<<Identifier>>{}
+    class specialization\n<<ValueObject>>{}
+    class email\n<<ValueObject>>{}
+    class phoneNumber\n<<ValueObject>>{}
+    class timeSlots\n<<ValueObject>>{}
+}
+
+package "OperatingRequest"{
+    class OperatingRequest{
+        +Guid id
+        +Patient patientId
+        +Staff doctorId
+        +OperatingType optId
+        +Date deadline
+        +Enum priority
+    }
+    class id\n<<Identifier>>{}
+    class patientId\n<<ValueObject>>{}
+    class doctorId\n<<ValueObject>>{}
+    class optId\n<<ValueObject>>{}
+    class deadline\n<<ValueObject>>{}
+    Enum priority\n<<ValueObject>>{}
+}
+
+package "OperatingType"{
+    class OperatingType{
+        +Guid id
+        +String name
+        +List requiredStaff
+        +Date duration
+    }
+    class id\n<<Identifier>>{}
+    class name\n<<ValueObject>>{}
+    class requiredStaff\n<<ValueObject>>{}
+    class duration\n<<ValueObject>>{}
+}
+
+package "Appointment"{
+
+
+    class Appointment{
+        +Guid id
+        +Request requestId
+        +Room roomId
+        +Date date
+        +Enum status
+   }
+
+    class id\n<<Identifier>>{}
+    class requestId\n<<ValueObject>>{}
+    class romId\n<<ValueObject>>{}
+    class requestId\n<<ValueObject>>{}
+    class requestId\n<<ValueObject>>{}
+
+}
+
+package "SurgeryRoom"{
+    class SurgeryRoom{
+        +Guid roomNumber
+        +enum type
+        +int capacity
+        +List assignedEquipment
+        +Enum status
+        +List maintenanceSlots
+    }
+
+}
+
+' Define relationships
+
+
+@enduml

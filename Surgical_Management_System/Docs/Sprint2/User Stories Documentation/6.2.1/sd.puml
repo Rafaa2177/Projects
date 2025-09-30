@@ -1,0 +1,32 @@
+@startuml US 6.2.1
+
+title Sequence Diagram - US 6.2.1 - Register For HealtCare Application
+
+actor "Patient" as user
+participant "RegisterHealtcarePatient" as pag <<Page>>
+participant "RegisterPatientForm" as form <<Component>>
+participant "PatientController" as con <<BackOffice>>
+
+user -> pag : http://localhost:3000/Patient/RegisterHealthcarePatient
+activate user
+    activate pag
+        pag -> form : calls component
+        activate form
+            form --> pag: form
+        deactivate form
+        pag-->user : Page Loaded    
+        user -> pag: user writes his info and clicks on register button
+        pag -> pag : handleSubmit
+        pag -> con : https://backofficeUrl/RegisterPatient
+        activate con
+        con-->pag: response
+        deactivate con
+        alt Success
+           pag-->user : Shows success message (User registered)
+        else Error
+           pag-->user : Shows error message (User not registered)
+        end
+    deactivate pag
+deactivate user
+
+@enduml

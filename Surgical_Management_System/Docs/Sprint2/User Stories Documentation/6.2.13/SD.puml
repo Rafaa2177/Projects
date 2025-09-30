@@ -1,0 +1,147 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor Admin as ad
+participant "HomePage" as home <<application>>
+participant "ListStaffPage" as activate <<application>>
+participant "ListStaffForm" as form <<application>>
+participant "StaffsController" as con <<application>>
+participant "StaffsService" as ser <<service>>
+participant "IStaffRepository" as repo1 <<interface>>
+participant "StaffsRepository" as repo <<repository>>
+
+ad -> home : Click List Staff
+activate ad
+activate home
+home -> activate: /Staff/ListStaffPage
+activate activate
+activate -> form: ListStaffForm(handleSubmit)
+activate form
+
+alt Without filters
+form -> con: GET /api/staffs
+activate con
+con -> ser: GetAllNonActiveAndActiveAsync()
+activate ser
+ser -> repo1: GetAllNonActiveAndActiveAsync()
+activate repo1
+repo1 -> repo: GetAllNonActiveAndActiveAsync()
+activate repo
+repo --> repo1: 200 OK
+deactivate repo
+repo1 --> ser: 200 OK
+deactivate repo1
+ser --> con: 200 OK
+deactivate ser
+form <-- con: 200 OK
+deactivate con
+form --> activate: 200 OK
+deactivate form
+activate --> home: 200 OK
+deactivate activate
+home --> ad: List of staffs
+deactivate home
+
+
+else With full name
+form -> con: GET /api/staffs/name/{firstName}/{lastName}
+activate con
+con -> ser: GetByNameAsync(firstName,lastName)
+activate ser
+ser -> repo1: FindByNameAsync(firstName,lastName)
+activate repo1
+repo1 -> repo: FindByNameAsync(firstName,lastName)
+activate repo
+repo --> repo1: 200 OK
+deactivate repo
+repo1 --> ser: 200 OK
+deactivate repo1
+ser --> con: 200 OK
+deactivate ser
+form <-- con: 200 OK
+deactivate con
+form --> activate: 200 OK
+deactivate form
+activate --> home: 200 OK
+deactivate activate
+home --> ad: List of staffs
+deactivate home
+
+else With email
+form -> con: GET /api/staffs/email/{email}
+activate con
+con -> ser: GetByEmailAsync(email)
+activate ser
+ser -> repo1: FindByEmailAsync(email)
+activate repo1
+repo1 -> repo: FindByEmailAsync(email)
+activate repo
+repo --> repo1: 200 OK
+deactivate repo
+repo1 --> ser: 200 OK
+deactivate repo1
+ser --> con: 200 OK
+deactivate ser
+form <-- con: 200 OK
+deactivate con
+form --> activate: 200 OK
+deactivate form
+activate --> home: 200 OK
+deactivate activate
+home --> ad: List of staffs
+deactivate home
+
+else With specialization
+form -> con: GET /api/staffs/specialization/{specialization}
+activate con
+con -> ser: GetBySpecializationAsync(specialization)
+activate ser
+ser -> repo1: FindBySpecializationAsync(specialization)
+activate repo1
+repo1 -> repo: FindBySpecializationAsync(specialization)
+activate repo
+repo --> repo1: 200 OK
+deactivate repo
+repo1 --> ser: 200 OK
+deactivate repo1
+ser --> con: 200 OK
+deactivate ser
+form <-- con: 200 OK
+deactivate con
+form --> activate: 200 OK
+deactivate form
+activate --> home: 200 OK
+deactivate activate
+home --> ad: List of staffs
+deactivate home
+
+else With license number 
+form -> con: GET /api/staffs/id/{licenseNumber}
+activate con
+con -> ser: GetByIdAsync(licenseNumber)
+activate ser
+ser -> repo1: FindByLicenseNumberAsync(licenseNumber)
+activate repo1
+repo1 -> repo: FindByLicenseNumberAsync(licenseNumber)
+activate repo
+repo --> repo1: 200 OK
+deactivate repo
+repo1 --> ser: 200 OK
+deactivate repo1
+ser --> con: 200 OK
+deactivate ser
+form <-- con: 200 OK
+deactivate con
+form --> activate: 200 OK
+deactivate form
+activate --> home: 200 OK
+deactivate activate
+home --> ad: List of staffs
+deactivate home
+
+end
+
+
+@enduml

@@ -1,0 +1,24 @@
+@startuml ssd
+title System Sequence Diagram - US 5.1.8
+
+actor Admin
+actor System
+
+Admin -> System: Request to create a new patient profile 
+activate System
+System -> System: Validates the request
+System --> Admin: Ask the patient data(first name, last name, date of birth,\ncontact information, gender and emergency contact )
+deactivate System
+Admin -> System: insert required data information
+activate System
+
+System --> Admin: Displays the entered answers and ask to confirm 
+deactivate System
+
+ Admin ->  System: Confirms the answers 
+ activate System
+
+System --> Admin: Display operation success
+deactivate System
+
+@enduml

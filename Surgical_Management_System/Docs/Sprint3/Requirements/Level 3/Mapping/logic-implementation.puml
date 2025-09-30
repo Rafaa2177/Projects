@@ -1,0 +1,154 @@
+@startuml implementation_view
+
+top to bottom direction
+
+interface "API" as API
+interface "Database API" as DB_API
+
+skinparam rectangle {
+    BackgroundColor #ADD8E6
+    BorderColor Black
+}
+skinparam package {
+    BackgroundColor #ADD8E6
+    BorderColor Black
+}
+
+component "BackendWebApplication" as APP <<component>> <<container (C4)>> {
+  portin " " as P1
+  portin " " as P2
+  portout " " as P3
+
+
+
+  Interface "Controller API" as CTRL_API
+
+
+'  Componentes de baixo nível
+    folder "Frameworks & Drivers Layer" #CCFFFF {
+    component "Persistence" as PERSISTENCE <<component>> {
+    }
+    component " DataSchema " as ROUTE <<component>> {
+    }
+    component " Routes " as ROUTE1 <<component>> {
+    
+    }
+  }
+
+
+
+  Interface "App Services API" AS SRV_API
+  Interface "Repo API" AS REPO_API
+  Interface "Model API" AS MODEL_API
+  Interface "Persistence API" AS PERSISTENCE_API
+  Interface "DTO API" AS DTO_API
+
+
+'Interações externas
+  folder "Interface Adapters Layer" #CCFFCC {
+    component "Controller" as CTRL <<component>> {
+    }
+    component "Repository" as REPO <<component>> {
+    }
+    component "Mappers" as REPO <<component>> {
+    }
+  }
+
+
+'Componente para organizar a lógica de negócio da aplicação
+  folder "Application Business Rules" #CC8080 {
+    component "Application Service" as SRV <<component>> {
+    }
+    component "Application Service" as SRV <<component>> {
+        }
+  }
+
+'Camada + alta que contém o modelo de domínio
+  folder "Enterprise Business Rules" #FFC080 {
+    component "ValueObjects" as MODEL <<component>> {
+    }
+    component "Aggregates" as Aggregates1 <<component>>{
+    }
+     component "Services" as Services1 <<component>>{
+        }
+  }
+  component "DTO" as DTO <<component>> {
+ }
+ 
+}
+
+package "Node" {
+   package "Infrastructure" {
+          package "Routes" as Routes
+          package " " as Persistence
+          package " " as DataSchema
+          
+  }
+      
+    package "Interface Adapters" {
+    package " " as Controllers
+    package " " as Mappers
+    package " " as Repositories
+    
+    }
+    
+    package "Application Services/Use Case Services"{
+    package " " as AppServices 
+    }
+              
+    package "Entities/Core/Domain"{
+        package " " as Services 
+        package " " as ValueObjects
+        package " " as Aggregates
+        
+        }
+                  
+}
+
+API -- P1
+P2 --up( DB_API
+"MongoDB" )-- P3
+
+ROUTE -- P3
+
+ROUTE --- P1
+PERSISTENCE -- P2
+
+
+ROUTE --( CTRL_API
+CTRL -up- CTRL_API
+PERSISTENCE -- PERSISTENCE_API
+REPO -up-( PERSISTENCE_API 
+
+
+DTO_API )-- DTO
+DTO_API -- CTRL
+
+
+CTRL --( SRV_API
+SRV -up- SRV_API
+
+
+
+REPO -- REPO_API
+SRV -up-( REPO_API 
+
+SRV --( MODEL_API 
+REPO --( MODEL_API 
+MODEL -up- MODEL_API 
+MODEL_API -up- Aggregates1
+MODEL_API -up- Services1
+
+
+Aggregates1 ..> Aggregates: <<manifest>>
+Services1 ..> Services: <<manifest>>
+ValueObjects <.. MODEL : <<manifest>>
+SRV ..> AppServices: <<manifest>>
+CTRL ..> Controllers: <<manifest>>
+REPO ..> Repositories: <<manifest>>
+PERSISTENCE ..> Persistence: <<manifest>>
+ROUTE ..> DataSchema: <<manifest>>
+ROUTE1 ..> Routes: <<manifest>>
+"Interface Adapters Layer" ..> Mappers: <<manifest>>
+
+@enduml

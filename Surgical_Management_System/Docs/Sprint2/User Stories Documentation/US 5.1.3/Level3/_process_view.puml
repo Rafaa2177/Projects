@@ -1,0 +1,62 @@
+@startuml process-view
+autonumber
+participant SYS as "LoginController" <<application>>
+participant ser as "PatientService" <<service>>
+participant ser2 as "UserService" <<service>>
+participant repo as "PatientRepository" <<repository>>
+participant Auth0 as "Auth0" <<IAM>>
+?o-> SYS : POST /api/registerPatient
+activate SYS
+SYS->ser : GetByEmailAsync(dto.Email)
+activate ser
+ser->repo:FindByEmailAsync(email)
+activate repo
+
+repo -->ser: Patient
+deactivate repo
+ser-->SYS: PatientDto
+deactivate ser
+
+SYS->ser2: RegisterPatient(dto)
+activate ser2
+ser2->Auth0: POST https://projeto5-grupo.eu.auth0.com/dbconnections/signup
+activate Auth0
+Auth0-->ser2: 201 Created
+deactivate Auth0
+ser2-->SYS: 201 Created
+deactivate ser2
+SYS-> ser2 : GetManagementApiToken()
+activate ser2
+ser2 -> Auth0: POST https://{domain}/api/v2/
+activate Auth0
+Auth0-->ser2: ManagementToken
+deactivate Auth0
+ser2-->SYS: ManagementToken
+deactivate ser2
+SYS->ser2: GetRoleIdByNameAsync(RoleName, ManagementToken)
+activate ser2
+ser2->Auth0:GET https://{Environment.GetEnvironmentVariable("_domain")}/api/v2/roles?name_filter={Uri.EscapeDataString(roleName)}
+activate Auth0
+Auth0-->ser2: RoleId
+deactivate Auth0
+ser2-->SYS: RoleId
+SYS->ser2: GetUserIdByEmailAsync(dto.Email, ManagementToken)
+activate ser2
+ser2->Auth0: GET https://{Environment.GetEnvironmentVariable("_domain")}/api/v2/users-by-email?email={Uri.EscapeDataString(email)}
+activate Auth0
+Auth0-->ser2: UserId
+deactivate Auth0
+ser2-->SYS: UserId
+deactivate ser2
+SYS->ser2: AddRoleToUserAsync(UserId, RoleId, ManagementToken)
+activate ser2
+ser2->Auth0: POST https://{Environment.GetEnvironmentVariable("_domain")}/api/v2/users/{userId}/roles
+activate Auth0
+Auth0-->ser2: 201 Created
+deactivate Auth0
+ser2-->SYS: 201 Created
+deactivate ser2
+<-- SYS : 201 Created (Patient JSON)
+deactivate SYS
+
+@enduml

@@ -1,0 +1,19 @@
+@startuml process-view
+
+autonumber
+title Sequence Diagram
+
+participant SYS as "System" <<system>>
+participant DB as "DB" <<database>>
+
+
+?o-> SYS : PATCH /api/staffs
+activate SYS
+SYS->DB : deactivate staff
+activate DB
+DB-->SYS: success
+deactivate DB 
+<-- SYS : 200 OK
+deactivate SYS
+
+@enduml

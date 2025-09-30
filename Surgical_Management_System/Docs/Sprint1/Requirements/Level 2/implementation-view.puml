@@ -1,0 +1,16 @@
+@startuml
+
+skinparam package {
+    BackgroundColor #ADD8E6
+}
+
+package "Sistema" {
+    
+    package " " as BackOfficeWebApplication
+   
+
+   
+
+}
+
+@enduml

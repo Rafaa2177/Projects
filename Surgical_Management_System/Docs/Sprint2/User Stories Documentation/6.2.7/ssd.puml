@@ -1,0 +1,32 @@
+@startuml US 6.2.7
+
+title System Sequence Diagram - US 6.2.7 - Edit Patient Profile
+
+actor "Admin" as admin
+participant "System" as system
+
+admin -> system: Navigate to list operation requests page
+activate admin
+activate system
+
+admin -> system: Select patient to edit
+
+
+system -> admin: Display patient profile form
+deactivate system
+
+admin -> system: Enter updated patient details
+activate system
+
+system -> admin: Display success message
+deactivate system
+
+admin -> system: Redirect to list operation requests page
+activate system
+
+system -> admin: Display updated list of operation requests
+deactivate system
+
+deactivate admin
+
+@enduml

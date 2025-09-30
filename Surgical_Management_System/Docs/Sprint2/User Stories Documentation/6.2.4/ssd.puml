@@ -1,0 +1,33 @@
+@startuml US 6.2.4
+
+title System Sequence Diagram - US 6.2.4 - Login
+
+actor "Backoffice User" as user
+participant "System" as system
+
+user -> system: Navigate to login page
+activate user
+activate system
+
+user -> system: Enter credentials (username, password)
+
+alt Correct information
+    system -> user: Login successful and role
+    deactivate system
+    user -> system: Redirect to appropriate page based on role
+    activate system
+    system -> user: Display information according to the role
+    deactivate system
+else Incorrect information
+    loop 5 times
+        system -> user: wrong credentials
+        activate system
+        user -> system: Enter credentials (username, password)
+    end
+    system -> user: The account was locked, an email was sent to the admin
+    deactivate system
+end
+
+deactivate user
+
+@enduml

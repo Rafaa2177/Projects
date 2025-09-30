@@ -1,0 +1,109 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant "StaffsController" as con <<application>>
+participant "StaffsService" as ser <<service>>
+participant "IStaffRepository" as repo1 <<interface>>
+participant "StaffsRepository" as repo <<repository>>
+
+
+alt Without filters
+?o-> con: GET /api/staffs
+activate con
+con -> ser: GetAllNonActiveAndActiveAsync()
+activate ser
+ser -> repo1: GetAllNonActiveAndActiveAsync()
+activate repo1
+repo1 -> repo: GetAllNonActiveAndActiveAsync()
+activate repo
+repo --> repo1: 200 OK
+deactivate repo
+repo1 --> ser: 200 OK
+deactivate repo1
+ser --> con: 200 OK
+deactivate ser
+<-- con: 200 OK
+deactivate con
+
+
+else With full name
+?o-> con: GET /api/staffs/name/{firstName}/{lastName}
+activate con
+con -> ser: GetByNameAsync(firstName,lastName)
+activate ser
+ser -> repo1: FindByNameAsync(firstName,lastName)
+activate repo1
+repo1 -> repo: FindByNameAsync(firstName,lastName)
+activate repo
+repo --> repo1: 200 OK
+deactivate repo
+repo1 --> ser: 200 OK
+deactivate repo1
+ser --> con: 200 OK
+deactivate ser
+<-- con: 200 OK
+deactivate con
+
+
+else With email
+?o-> con: GET /api/staffs/email/{email}
+activate con
+con -> ser: GetByEmailAsync(email)
+activate ser
+ser -> repo1: FindByEmailAsync(email)
+activate repo1
+repo1 -> repo: FindByEmailAsync(email)
+activate repo
+repo --> repo1: 200 OK
+deactivate repo
+repo1 --> ser: 200 OK
+deactivate repo1
+ser --> con: 200 OK
+deactivate ser
+<-- con: 200 OK
+deactivate con
+
+
+else With specialization
+?o-> con: GET /api/staffs/specialization/{specialization}
+activate con
+con -> ser: GetBySpecializationAsync(specialization)
+activate ser
+ser -> repo1: FindBySpecializationAsync(specialization)
+activate repo1
+repo1 -> repo: FindBySpecializationAsync(specialization)
+activate repo
+repo --> repo1: 200 OK
+deactivate repo
+repo1 --> ser: 200 OK
+deactivate repo1
+ser --> con: 200 OK
+deactivate ser
+<-- con: 200 OK
+deactivate con
+
+
+else With license number 
+?o-> con: GET /api/staffs/id/{licenseNumber}
+activate con
+con -> ser: GetByIdAsync(licenseNumber)
+activate ser
+ser -> repo1: FindByLicenseNumberAsync(licenseNumber)
+activate repo1
+repo1 -> repo: FindByLicenseNumberAsync(licenseNumber)
+activate repo
+repo --> repo1: 200 OK
+deactivate repo
+repo1 --> ser: 200 OK
+deactivate repo1
+ser --> con: 200 OK
+deactivate ser
+<-- con: 200 OK
+deactivate con
+
+end
+
+
+@enduml

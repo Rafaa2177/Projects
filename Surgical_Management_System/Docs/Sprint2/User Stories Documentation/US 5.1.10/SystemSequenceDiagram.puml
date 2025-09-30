@@ -1,0 +1,27 @@
+@startuml ssd
+title System Sequence Diagram - US 5.1.10
+
+actor Admin
+actor System
+
+Admin -> System: Request to delete an existing patient profile
+activate System
+System -> System: Validates the request
+System -> Admin: Displays the list of patient profiles 
+deactivate System
+Admin -> System: Selects a patient profile 
+activate System
+System -> Admin: Displays the patient profile information
+deactivate System
+Admin -> System: Remove the patient profile information
+activate System
+ System -> Admin: Show confirmation prompt
+deactivate System
+Admin -> System: Confirm removal
+activate System
+System -> System: Remove patient profile
+System -> System: Log removal of patient profile 
+System -> Admin: display operation success
+deactivate System
+
+@enduml

@@ -1,0 +1,54 @@
+@startuml US 6.2.14 - Create Operation Request
+
+title Sequence Diagram
+
+actor "Doctor" as user
+participant "Page" as fe <<application>>
+participant "OperationRequestPage" as requestPage <<application>>
+participant "OperationForm" as requestForm <<application>>
+participant "OperationController" as con <<application>>
+participant "OperationService" as service <<domain>>
+participant "OperationRepository" as repo <<repository>>
+
+user -> fe: Navigate to create operation request page
+activate user
+activate fe
+
+fe -> requestPage: Load create operation request page
+activate requestPage
+
+requestPage -> requestForm: Display operation request form
+activate requestForm
+
+user -> requestForm: Enter operation request details
+activate requestForm
+
+requestForm -> con: createOperationRequest(details) \n [https://localhost:5001/api/OperationRequest/]
+activate con
+
+con -> service: createOperationRequest(details)
+activate service
+
+service -> repo: saveOperationRequest(details)
+activate repo
+repo --> service: operationRequestSaved
+deactivate repo
+
+service --> con: operationRequestSaved
+deactivate service
+
+con --> requestForm: operationRequestSaved
+deactivate con
+
+requestForm -> requestPage: Display success message
+deactivate requestForm
+
+requestPage -> fe: Redirect to operation request list page
+deactivate requestPage
+
+fe -> user: Display operation request list
+deactivate fe
+
+deactivate user
+
+@enduml

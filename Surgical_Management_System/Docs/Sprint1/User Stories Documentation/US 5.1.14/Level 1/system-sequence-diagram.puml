@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+title US 5.1.14: System Sequence Diagram
+
+actor "Admin" as ad 
+participant "System" as sy
+
+ad -> sy: Asks to deactivate a staff profile
+activate ad
+activate sy
+sy --> ad: Shows the list of staff profiles
+ad -> sy: Selects a staff profile to deactivate
+sy --> ad: Asks if the admin is sure
+
+alt Admin confirms
+    ad -> sy: Confirms the deactivation
+    sy --> ad: Shows a success message
+else Admin cancels
+    ad -> sy: Cancels the deactivation
+    sy --> ad: Shows a cancel message
+end
+
+deactivate ad
+deactivate sy
+
+@enduml

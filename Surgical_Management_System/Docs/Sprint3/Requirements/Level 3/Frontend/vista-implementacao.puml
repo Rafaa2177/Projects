@@ -1,0 +1,46 @@
+@startuml 
+top to bottom direction 
+skinparam rectangle {
+    BackgroundColor #ADD8E6
+    BorderColor Black
+}
+skinparam package {
+    BackgroundColor #ADD8E6
+    BorderColor Black
+}
+skinparam defaultFontName Arial
+
+package " Front-end " {
+
+    package "Infrastructure" {
+        package "Routes" as Routes
+        
+    }
+
+    package "Interface Adapters" {
+        package " " as Components
+        package " " as Pages
+    }
+    
+    package "Application Services/Use Case Services"{
+    package " " as AppServices 
+    }
+    
+    package Entities/Core/Domain {
+    package " " as DataModels 
+    
+    }
+    
+  
+
+    Routes ..> Components 
+    Components ..> AppServices
+    Pages ..|> AppServices
+    
+    AppServices ..> DataModels
+    
+    
+
+}
+
+@enduml

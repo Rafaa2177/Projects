@@ -1,0 +1,78 @@
+@startuml
+actor Admin
+participant "UserController" as SC
+participant "UserService" as US
+participant "UserRepository" as repo
+participant "HttpClient" as HC
+
+Admin -> SC: POST /register
+activate SC
+
+SC -> US: GetManagementApiTokenAsync()
+activate US
+US -> HC: POST /oauth/token
+activate HC
+HC -> US: access_token
+deactivate HC
+
+US -> SC: token
+deactivate US
+
+SC -> US: CreateUserAsAdmin(token, regDto)
+activate US
+US -> HC: POST /api/v2/users
+activate HC
+HC -> US: HttpStatusCode.Created
+deactivate HC
+deactivate US
+
+alt User Created
+    SC -> US: SendPasswordResetEmail(regDto.email)
+    activate US
+    US -> HC: POST /api/v2/tickets/password-change
+    activate HC
+    HC -> US: HttpStatusCode.OK
+    deactivate HC
+    deactivate US
+
+    SC -> US: UserAsync(regDto)
+    activate US
+    US -> repo: AddAsync(user)
+    activate repo
+    repo -> US: user
+    deactivate repo
+    US -> SC: user
+    deactivate US
+   
+
+    SC -> US: GetRoleIdByNameAsync(regDto.role, token)
+    activate US
+    US -> HC: GET /api/v2/roles?name_filter=role
+    activate HC
+    HC -> US: roleId
+    deactivate HC
+    deactivate US
+
+    SC -> US: GetUserIdByEmailAsync(regDto.email, token)
+    activate US
+    US -> HC: GET /api/v2/users-by-email
+    activate HC
+    HC -> US: userId
+    deactivate HC
+    deactivate US
+
+    SC -> US: AddRoleToUserAsync(userId, roleId, token)
+    activate US
+    US -> HC: POST /api/v2/users/{userId}/roles
+    activate HC
+    HC -> US: HttpStatusCode.OK
+    deactivate HC
+    deactivate US
+
+    SC -> Admin: Ok("User devidamente Registado, verifique o email registado")
+else User Not Created
+    SC -> Admin: BadRequest("Erro ao registar o utilizador")
+end
+
+deactivate SC
+@enduml

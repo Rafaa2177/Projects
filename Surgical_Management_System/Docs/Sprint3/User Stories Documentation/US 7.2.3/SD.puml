@@ -1,0 +1,60 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor Admin as ad
+participant "HomePage" as home <<application>>
+participant ListAllergyPage as page
+participant allergiesRoute as route
+participant IAllergiesController as con1
+participant allergiesController as con2
+participant IAllergiesService as ser1
+participant allergiesService as ser2
+participant IAllergiesRepo as repo1
+participant allergiesRepo as repo2
+
+
+ad -> home: List all allergies
+activate home 
+home -> page: /Allergy/ListAllergyPage
+activate page
+page -> route: GET /api/allergies
+activate route
+route -> con1: getAllAllergies
+activate con1
+con1 -> con2: getAllAllergies
+activate con2
+con2 -> ser1: getAllAllergies
+activate ser1
+ser1 -> ser2: getAllAllergies
+activate ser2
+ser2 -> repo1: findByDomainId
+activate repo1
+repo1 -> repo2: findByDomainId
+activate repo2
+repo2 --> repo1: 200 OK
+deactivate repo2
+repo1 --> ser2: 200 OK
+deactivate repo1
+ser2 --> ser1: 200 OK
+deactivate ser2
+ser1 --> con2: 200 OK
+deactivate ser1
+con2 --> con1: 200 OK
+deactivate con2
+con1 --> route: 200 OK
+deactivate con1
+route --> page: 200 OK
+deactivate route
+page --> home: 200 OK
+deactivate page
+home --> ad: List of allergies
+deactivate home
+
+
+
+
+
+
+@enduml

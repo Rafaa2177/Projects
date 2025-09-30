@@ -1,0 +1,64 @@
+@startuml sd
+title Sequence Diagram - US 5.1.23 - List/Search Operation Types
+
+actor "Admin" as admin
+participant "OperationTypeUI" as ui <<presentation>>
+participant "OperationController" as con <<application>>
+participant "OperationService" as service <<domain>>
+participant "OperationRepository" as repo <<repository>>
+participant "AuditService" as audit <<service>>
+
+activate admin
+admin -> ui: Request to list or search operation types
+
+activate ui
+ui -> con: requestOperationTypes(searchQuery)
+activate con
+
+con -> service: getOperationTypes(searchQuery)
+activate service
+
+service -> repo: findOperationTypes(searchQuery)
+activate repo
+repo --> service: matchingOperationTypes
+deactivate repo
+
+service --> con: matchingOperationTypes
+deactivate service
+
+con --> ui: Display list of operation types
+deactivate con
+
+ui --> admin: Display list of operation types or search results
+deactivate ui
+
+admin -> ui: Select an operation type to view details
+activate ui
+ui -> con: requestOperationDetails(operationTypeId)
+activate con
+
+con -> service: getOperationDetails(operationTypeId)
+activate service
+service -> repo: findById(operationTypeId)
+activate repo
+repo --> service: operationTypeDetails
+deactivate repo
+
+service --> con: operationTypeDetails
+deactivate service
+
+con --> ui: Display operation type details (name, required staff, duration, status)
+deactivate con
+
+ui --> admin: Display operation type details
+deactivate ui
+
+admin -> ui: Choose to edit or remove operation type
+activate ui
+ui -> ui: US 5.1.21/sequence-diagram.puml
+ui -> ui: US 5.1.22/sequence-diagram.puml
+deactivate con
+ui --> admin: Confirms result (success or error)
+deactivate ui
+
+@enduml

@@ -1,0 +1,106 @@
+@startuml implementation_view
+
+top to bottom direction
+
+interface "API" as API
+interface "Database API" as DB_API
+
+component "BackendWebApplication" as APP <<component>> <<container (C4)>> {
+  portin " " as P1
+  portin " " as P2
+  portout " " as P3
+
+
+
+  Interface "Controller API" as CTRL_API
+
+
+'  Componentes de baixo nível
+    folder "Frameworks & Drivers Layer" #CCFFFF {
+    component "Persistence" as PERSISTENCE <<component>> {
+    }
+    component " DataSchema " as ROUTE <<component>> {
+    }
+    component " Routes " as ROUTE <<component>> {
+        }
+  }
+
+
+
+  Interface "App Services API" AS SRV_API
+  Interface "Repo API" AS REPO_API
+  Interface "Model API" AS MODEL_API
+  Interface "Persistence API" AS PERSISTENCE_API
+  Interface "DTO API" AS DTO_API
+
+
+'Interações externas
+  folder "Interface Adapters Layer" #CCFFCC {
+    component "Controller" as CTRL <<component>> {
+    }
+    component "Repository" as REPO <<component>> {
+    }
+    component "Mappers" as REPO <<component>> {
+        }
+  }
+
+'Componente para organizar a lógica de negócio da aplicação
+  folder "Application Business Rules" #CC8080 {
+    component "Application Service" as SRV <<component>> {
+    }
+    component "Application Service" as SRV <<component>> {
+        }
+  }
+
+'Camada + alta que contém o modelo de domínio
+  folder "Enterprise Business Rules" #FFC080 {
+    component "ValueObjects" as MODEL <<component>> {
+    }
+    component "Aggregates" as Aggregates <<component>>{
+    }
+     component "Services" as Services <<component>>{
+        }
+  }
+  component "DTO" as DTO <<component>> {
+ }
+ 
+}
+
+API -- P1
+P2 --up( DB_API
+"MongoDB" )-- P3
+
+ROUTE -- P3
+
+ROUTE --- P1
+PERSISTENCE -- P2
+
+
+ROUTE --( CTRL_API
+CTRL -up- CTRL_API
+PERSISTENCE -- PERSISTENCE_API
+REPO -up-( PERSISTENCE_API 
+
+
+DTO_API )-- DTO
+DTO_API -- CTRL
+
+
+CTRL --( SRV_API
+SRV -up- SRV_API
+
+
+
+REPO -- REPO_API
+SRV -up-( REPO_API 
+
+SRV --( MODEL_API 
+REPO --( MODEL_API 
+MODEL -up- MODEL_API 
+MODEL_API -up- Aggregates
+MODEL_API -up- Services
+
+
+
+
+@enduml

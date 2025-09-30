@@ -1,0 +1,79 @@
+@startuml sd
+title Sequence Diagram - US 5.1.22 - Remove Obsolete Operation Type
+
+actor "Admin" as admin
+participant "OperationTypeUI" as ui <<presentation>>
+participant "OperationController" as con <<application>>
+participant "OperationService" as service <<domain>>
+participant "OperationRepository" as repo <<repository>>
+participant "AudiService" as audit <<service>>
+
+activate admin
+admin -> ui: Request to deactivate or remove an operation type
+
+activate ui
+ui -> con: requestExistingOperationTypes()
+activate con
+
+con -> service: getExistingOperationTypes()
+activate service
+
+service -> repo: findAllOperationTypes()
+activate repo
+repo --> service: existingOperationTypes
+deactivate repo
+
+service --> con: existingOperationTypes
+deactivate service
+
+con --> ui: existingOperationTypes
+deactivate con
+
+ui --> admin: Display list of operation types and actions (deactivate or remove)
+deactivate ui
+
+admin -> ui: Select operation type and action (deactivate or remove)
+activate ui
+ui -> con: handleOperationTypeAction(operationTypeId, action)
+activate con
+
+alt Admin chooses to deactivate
+    con -> service: markOperationAsInactive(operationTypeId)
+    activate service
+    service -> repo: updateOperationStatusToInactive(operationTypeId)
+    activate repo
+    repo --> service: operationStatusUpdated
+    deactivate repo
+    service -> audit: logOperationTypeStatusChange(operationTypeId, "inactive")
+    service --> con: operationMarkedAsInactive
+    deactivate service
+    con --> ui: operationMarkingResult (success)
+    deactivate con
+    ui --> admin: Confirms result (success or error)
+    deactivate ui
+else Admin chooses to remove
+    con -> ui: showConfirmationPrompt()
+    activate ui
+    ui --> admin: Display confirmation prompt
+    deactivate ui
+    admin -> ui: Confirm removal
+    activate ui
+    ui -> con: confirmOperationRemoval(operationTypeId)
+    activate con
+    con -> service: removeOperationType(operationTypeId)
+    activate service
+    service -> repo: delete(operationTypeId)
+    activate repo
+    repo --> service: operationRemoved
+    deactivate repo
+    service -> audit: logOperationTypeRemoval(operationTypeId)
+    service --> con: operationRemovalSuccess
+    deactivate service
+    con --> ui: operationRemovalResult (success)
+end
+
+deactivate con
+ui --> admin: Confirms result (success or error)
+deactivate ui
+
+@enduml

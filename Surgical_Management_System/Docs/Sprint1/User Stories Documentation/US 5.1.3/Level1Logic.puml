@@ -1,0 +1,15 @@
+@startuml logical-view
+top to bottom direction
+ 
+interface "Patient" as API
+interface "Auth0" as AUTH0
+ 
+component "System" <<component>> <<system (C4)>> {
+  portin " " as P1
+  portout " " as P2
+}
+ 
+API -- P1
+P2 --( AUTH0
+ 
+@enduml

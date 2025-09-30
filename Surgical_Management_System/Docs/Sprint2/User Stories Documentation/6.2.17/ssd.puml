@@ -1,0 +1,23 @@
+@startuml US 6.2.17
+
+title System Sequence Diagram - US 6.2.17 - List Operation Requests with Filter
+
+actor "Doctor" as user
+participant "System" as system
+
+user -> system: Navigate to list operation requests page
+activate user
+activate system
+
+system -> user: Display options to filter operation requests
+deactivate system
+
+user -> system: Selected filter option
+activate system
+
+system -> user: Display list of operation requests
+deactivate system
+
+deactivate user
+
+@enduml

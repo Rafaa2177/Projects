@@ -1,0 +1,37 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+title US 5.1.12: Sequence Diagram
+
+
+participant "StaffsController" as con <<application>>
+participant "StaffsService" as ser <<service>>
+participant "IStaffRepository" as repo1 <<interface>>
+participant "StaffsRepository" as repo <<repository>>
+
+
+?o-> con: POST /api/staffs
+activate con 
+con -> ser: AddAsync(dto)
+activate ser
+ser -> repo1: FindByEmailAsync(dto.Email),\nFindByPhoneNumber(dto.PhoneNumber)
+activate repo1
+repo1 -> repo: FindByEmailAsync(dto.Email),\nFindByPhoneNumber(dto.PhoneNumber)
+activate repo
+repo --> repo1: Email, PhoneNumber
+deactivate repo
+repo1 --> ser: Email, PhoneNumber
+deactivate repo1
+ser --> con: Success
+con -> ser : AddAsync(staff)
+ser -> repo: AddAsync(staff)
+activate repo
+repo --> ser: 201 Created
+deactivate repo
+ser -> con: 201 Created
+deactivate ser
+<-- con: 201 Created
+
+
+@enduml

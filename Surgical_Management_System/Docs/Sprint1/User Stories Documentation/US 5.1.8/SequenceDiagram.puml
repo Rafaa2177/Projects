@@ -1,0 +1,50 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+title US 5.1.8: Sequence Diagram
+
+actor "Admin" as admin 
+participant "Page" as page <<application>>
+participant "AddPacientPage" as pacientPage <<application>> 
+participant "PacientForm" as form <<application>> 
+participant "PatientController" as con <<application>>
+participant "PatientService" as ser <<service>>
+participant "IPatientRepository" as repo1 <<interface>>
+participant "PatientRepository" as repo <<repository>>
+participant "Patient" as patient <<entity>>
+
+
+admin -> page : Navigate to create patient profile page
+activate page 
+page -> pacientPage : Load create patient profile page
+activate pacientPage
+pacientPage -> form : PatientForm(handleSubmit)
+activate form
+form-> con: POST /api/patients
+activate con 
+con -> ser: Create(dto)
+activate ser
+ser -> repo1: AddAsync(dto)
+activate repo1
+repo1 -> repo: FindByEmailAsync(dto.Email)
+activate repo
+repo --> repo1: Email
+deactivate repo
+repo1 --> ser: Email
+deactivate repo1
+ser -> patient: Patient(dto)
+activate patient
+patient --> ser: Success
+deactivate patient
+ser -> repo: AddAsync(staff)
+activate repo
+repo --> ser: 201 Created
+deactivate repo
+ser -> con: 201 Created
+deactivate ser
+<-- con: 201 Created
+deactivate con
+
+
+@enduml

@@ -1,0 +1,58 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+top to bottom direction
+
+skinparam component {
+    BackgroundColor #ADD8E6
+}
+skinparam node {
+    BackgroundColor #ADD8E6
+}
+
+skinparam artifact {
+    BackgroundColor #ADD8E6
+}
+
+node "localhost:3001" as lh {
+component "<<component>>\nBrowser"{
+    component "<<component>>\n    Frontend" as fe
+}
+
+}
+
+node "localhost:5001" as s {
+artifact "<<artifact>>"\n BackOffice" as backO
+artifact "<<artifact>>"\n BusinessContinuityPlan" as bcp2
+artifact "<<artifact>>"\n Planning" as planning
+artifact "<<artifact>>"\n GDPR" as gdpr2
+artifact "<<artifact>>"\n 3DVisualization" as 3dviz
+component "<<component>>\n   BackOffice" as backoffice
+component "<<component>>\n    Planning" as plan
+component "<<component>>\n      GDPR" as gdpr 
+component "        <<component>>\nBusinessContinuityPlan" as bcp
+component "   <<component>>\n 3DVisualization" as 3d
+}
+
+node "localhost:4000"" as s2 {
+component "<<component>>"{
+package "BackOffice" {
+artifact "<<artifact>>"\n BackOffice" as ui 
+component "<<component>>"\n BackOffice" as uu 
+
+}
+ui ..> uu : <<manifest>>
+    
+}
+
+lh -- s: https
+lh -- s2 : https 
+3dviz ..> 3d : <<manifest>> 
+backO ..> backoffice : <<manifest>>
+gdpr2 ..> gdpr : <<manifest>> 
+bcp2 ..> bcp : <<manifest>>
+planning ..> plan : <<manifest>>
+
+
+@enduml

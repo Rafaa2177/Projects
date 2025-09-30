@@ -1,0 +1,29 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+title US 5.1.13 System Sequence Diagram
+
+actor "Admin" as ad 
+participant "System" as sy
+
+ad -> sy: Selects to edit a staff profile
+activate ad 
+activate sy 
+sy--> ad: Shows a list of the staffs that exist
+ad-> sy: Selects a staff to edit
+sy --> ad: Shows the staff's profile and asks\n to select a field to edit
+ad -> sy: Selects a field and edits it
+sy --> ad: Asks to confirm the change
+ad -> sy: Confirms the change
+sy --> ad: Asks to select another field to edit or to finish
+ alt Another field
+    ad -> sy: Selects another field
+    else Finish
+    ad -> sy: Selects to finish
+    end 
+sy --> ad: Shows the updated staff profile
+deactivate ad
+deactivate sy
+
+@enduml

@@ -1,0 +1,104 @@
+@startuml US 6.2.7
+
+title Sequence Diagram - US 6.2.7 - Edit Patient Profile
+
+actor "Admin" as admin
+participant "Page" as fe
+participant "ListOperationRequestPage" as listPage
+participant "UpdatePatientPage" as updatePage
+participant "PatientProfileForm" as profileForm
+participant "ProfileController" as con <<application>>
+participant "ProfileService" as service <<domain>>
+participant "ProfileRepository" as repo <<repository>>
+participant "EmailService" as notif <<service>>
+
+admin -> fe: Navigate to list operation requests page
+activate admin
+activate fe
+
+fe -> listPage: Load list operation requests page
+activate listPage
+
+listPage -> fe: listOperationRequest
+deactivate listPage
+fe -> admin: Display list of operation requests
+deactivate fe
+
+admin -> listPage: Select patient to edit
+activate listPage
+
+listPage -> updatePage: Navigate to update patient page
+activate updatePage
+
+updatePage -> con: getPatientByEmail(email) \n [https://localhost:5001/api/Patients/email/{email}]
+activate con
+
+con -> service: getPatientByEmail(email)
+activate service
+
+service -> repo: findByEmail(email)
+activate repo
+repo --> service: patientData
+deactivate repo
+
+service --> con: patientData
+deactivate service
+
+con --> updatePage: patientData
+deactivate con
+
+updatePage -> profileForm: Display patient profile form
+activate profileForm
+
+profileForm -> updatePage: updateProfile(profileData)
+deactivate profileForm
+updatePage -> listPage : updateProfile(profileData)
+deactivate updatePage
+listPage -> fe: updateProfile(profileData)
+deactivate listPage
+activate fe
+fe -> admin: updateProfile(profileData)
+deactivate fe
+admin -> profileForm: Enter updated patient details
+activate profileForm
+
+
+profileForm -> con: updateProfile(profileData) \n [https://localhost:5001/api/Patients/email/{email}]
+activate con
+
+con -> service: validateAndUpdateProfile(profileData)
+activate service
+
+alt Sensitive data changed
+    service -> notif: sendNotification(patientEmail, "Sensitive data updated")
+    deactivate notif
+end
+
+service -> repo: save(profileData)
+activate repo
+repo --> service: confirmation
+deactivate repo
+
+service --> con: update success
+deactivate service
+
+con --> profileForm: update success
+deactivate con
+
+profileForm -> updatePage: Display success message
+deactivate profileForm
+activate updatePage
+updatePage -> listPage: Redirect to list operation requests page
+deactivate updatePage
+activate listPage
+listPage -> fe: Display updated list of operation requests
+deactivate listPage
+
+
+activate fe
+fe -> admin: Display updated list of operation requests
+deactivate fe
+
+deactivate admin
+
+@enduml

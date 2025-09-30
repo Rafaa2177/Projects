@@ -1,0 +1,88 @@
+@startuml US 5.2.4
+
+title Sequence Diagram
+
+actor "Backoffice User" as user
+participant "page" as fe <<application>>
+participant "LoginPage" as loginPage <<application>>
+participant "LoginForm" as loginForm <<application>>
+participant "LoginController" as con <<application>>
+participant "UserService" as service <<domain>>
+
+user -> fe: Navigate to login page
+activate user
+activate fe
+
+fe -> loginPage: Load login page
+activate loginPage
+
+loginPage -> loginForm: Display login form
+activate loginForm
+loginForm -> loginPage: Enter credentials (username, password)  
+deactivate loginForm
+loginPage -> fe: Enter credentials (username, password)
+deactivate loginPage
+fe -> user : Enter credentials (username, password)
+deactivate fe
+
+user -> loginForm: Enter credentials (username, password)
+activate loginForm
+
+loginForm -> con: validateCredentials(username, password) \n [https://localhost:5001/login]
+activate con
+
+con -> service: verifyCredentials(username, password)
+activate service
+
+alt Correct information
+
+    service -> service: GetManagementApiTokenAsync()
+    activate service
+    service --> service: accessToken
+    deactivate service
+
+    service -> service: GetRoleIdByNameAsync(roleName, accessToken)
+    activate service
+    service --> service: roleId
+    deactivate service
+
+    service --> con: role
+    deactivate service
+
+    con -> loginForm: Login successful and role
+    deactivate con
+
+    loginForm -> loginPage: Display success message
+    deactivate loginForm
+
+    loginPage -> fe: Redirect to appropriate page based on role
+    deactivate loginPage
+
+    fe -> user: Display information according to the role
+    deactivate fe
+
+else Incorrect information
+
+    loop 5 times
+
+        con -> service: verifyCredentials(username, password)
+        activate con
+        activate service
+        service --> con: wrong credentials
+        deactivate service
+        con -> loginForm: wrong credentials
+        deactivate con
+        loginForm -> user: wrong credentials
+        user -> loginForm: Enter credentials (username, password)
+        activate loginForm
+        
+    end
+    con -> loginForm: The account was locked, an email was sent to the admin
+    deactivate con
+    loginForm -> user: The account was locked, an email was sent to the admin
+    deactivate loginForm
+end
+
+deactivate user
+
+@enduml

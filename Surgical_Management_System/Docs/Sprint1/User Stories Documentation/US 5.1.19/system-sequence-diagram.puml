@@ -1,0 +1,36 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+title US 5.1.19 System Sequence Diagram
+
+actor "Doctor" as do
+participant "System" as sy
+
+
+do -> sy: Requests to list all operation requisitions
+activate do
+activate sy
+sy --> do: Asks to choose th filter for the search, by patient name, operation type,\n priority or status.
+do -> sy: Chooses an option
+sy --> do: Shows the list of operation requisitions, according to the filter
+do --> sy: Selects an operation requisition
+sy --> do: Shows the operation requisition details and options to edit or delete it
+
+alt Edit 
+    do -> sy: Requests to edit the operation requisition
+    sy --> do: Shows the form to edit the operation requisition
+    do -> sy: Fills the form
+    sy --> do: Asks to confirm the edition
+    do -> sy: Confirms the edition
+    sy --> do: Shows a success message
+else Delete
+    do -> sy: Requests to delete the operation requisition
+    sy --> do: Asks for confirmation
+    do -> sy: Confirms the deletion
+    sy --> do: Shows a success message
+end
+
+
+
+@enduml

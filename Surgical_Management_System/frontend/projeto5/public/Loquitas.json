@@ -1,0 +1,11 @@
+{
+    "groundTextureUrl": "/textures/ground.jpg",
+    "wallTextureUrl": "/textures/hospital-wall.png",
+    "bedObject": "/models/gltf/scene.gltf",
+    "size": { "width": 8, "height": 8 },
+    "numRooms": 4,
+    "roomsOcupied":[1,0,0,1],
+    "initialPosition": [7, 6],
+    "initialDirection": 0.0,
+    "exitLocation": [-0.5, 6]
+}

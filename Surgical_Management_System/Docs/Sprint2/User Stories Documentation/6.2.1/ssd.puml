@@ -1,0 +1,17 @@
+@startuml US 6.2.1
+
+title System Sequence Diagram - US 6.2.1 - Register For HealtCare Application
+
+actor "Patient" as user
+participant "System" as system
+
+
+user -> system : User Fills the information
+activate user
+activate system
+system --> system : Proccesses Request
+system --> user : status dialog
+deactivate system
+deactivate user
+
+@enduml

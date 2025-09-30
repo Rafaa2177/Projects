@@ -1,0 +1,65 @@
+@startuml sd
+title Sequence Diagram - US 5.1.20 - Add New Operation Type
+
+actor "Admin" as admin
+participant "OperationTypeUI" as ui <<presentation>>
+participant "OperationController" as con <<application>>
+participant "OperationService" as service <<domain>>
+participant "OperationRepository" as repo <<repository>>
+participant "AuditService" as audit <<service>>
+
+activate admin
+admin -> ui: Request to add new operation type
+
+activate ui
+ui -> con: requestExistingOperationTypes()
+activate con
+
+con -> service: getExistingOperationTypes()
+activate service
+
+service -> repo: findAllOperationTypes()
+activate repo
+repo --> service: existingOperationNames
+deactivate repo
+
+service --> con: existingOperationNames
+deactivate service
+
+con --> ui: existingOperationNames
+deactivate con
+
+ui --> admin: Display existing operation type names to avoid duplication
+deactivate ui 
+
+admin -> ui: Submit operation type details (name, required staff, duration)
+activate ui
+ui -> con: submitOperationTypeDetails(operationDetails)
+activate con
+
+con -> service: validateOperationName(operationDetails.name)
+activate service
+service -> repo: findByName(operationDetails.name)
+activate repo
+alt Operation name is unique
+    repo --> service: no existing operation
+    deactivate repo
+    service -> repo: save(operationDetails)
+    activate repo
+    repo --> service: operationSavedConfirmation
+    deactivate repo
+    service -> audit: logOperationTypeCreation(operationDetails)
+    service --> con: operationCreationSuccess
+else Operation name is not unique
+    repo --> service: existing operation found
+    deactivate repo
+    service --> con: operationCreationFailed
+end
+
+deactivate service
+con --> ui: operationCreationResult (success or error)
+deactivate con
+ui --> admin: Confirms result (success or error)
+deactivate ui
+
+@enduml

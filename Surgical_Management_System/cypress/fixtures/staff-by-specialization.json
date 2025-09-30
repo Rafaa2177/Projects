@@ -1,0 +1,11 @@
+[
+  {
+    "fullName": "Jane Smith",
+    "licenseNumber": { "value": "67890" },
+    "specialization": "Pediatrics",
+    "phoneNumber": "987-654-3210",
+    "email": "jane.smith@example.com",
+    "role": 1,
+    "active": true
+  }
+]

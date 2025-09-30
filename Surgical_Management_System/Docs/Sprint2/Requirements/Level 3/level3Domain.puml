@@ -1,0 +1,79 @@
+@startuml   
+    class User <<Auth0>>{
+        -username : String
+        -role : Enum
+        -email : String
+    }
+
+    class Patient<<Entity>>{
+        +FirstName: String
+        +LastName: String
+        +FullName: String
+        +DateOfBirth: Date
+        +Gender: Gender
+        +medicalRecordNumber : PatientId
+        +Email : String
+        +PhoneNumber: Long
+        +MedicalConditions: String
+        +EmergencyContact: Long
+        +Appointments : String
+    }
+    class PatientId <<Identity>>{}
+  
+
+    class Staff <<Entity>>{
+        +FirstName: String
+        +LastName: String
+        +FullName: String
+        +Email : String
+        +PhoneNumber: Long
+        +TimeSlots: List<TimeSlots>
+        +Role: Enum
+    }
+    class StaffId <<Identity>>{}
+    
+    class Appointment<<Entity>>{
+        +dateAndTime: Date
+        +status: Enum
+    }
+    class AppointmentId <<Identity>>{}
+    class SurgeryRoom<<Entity>>{}
+
+    class OperationRequest <<Entity>>{
+        +PatientId: PatientId
+        +doctorId: StaffId
+        +OperationDate: DateTime
+        +priority: String
+    }
+    class OperationRequestId <<Identity>>{}
+
+    class OperationType<<Entity>>{}
+    
+    class Specialization<<Entity>>{}
+
+    User "0..1" --> "1" Patient : can be
+    
+    User "1" --> "0..1" Staff : is
+
+    Staff "1" --> "*" OperationRequest : doctor
+    Appointment "1" --> "1" OperationRequest
+
+    SurgeryRoom "1" --> "*" Appointment
+
+    Staff "1" ---> "*" Specialization : has
+    OperationType "*" --> "*" Specialization
+    OperationType "*" --> "*" OperationRequest
+    
+    Patient "1" -> "*" Appointment
+    Patient "1" --> "1" PatientId
+    Staff "1" --> "1" StaffId
+    Appointment "1" -> "1" AppointmentId
+    OperationRequest "1" --> "1" OperationRequestId
+    
+    
+    
+    
+
+
+    
+@enduml

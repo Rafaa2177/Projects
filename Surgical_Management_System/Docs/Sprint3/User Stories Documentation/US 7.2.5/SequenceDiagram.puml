@@ -1,0 +1,62 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title List all Medical Conditions
+
+autonumber
+
+actor Admin as ad
+participant "HomePage" as home <<application>>
+participant ListMedicalConditionPage as page
+participant medicalConditionRoute as route
+participant IMedicalConditionController as con1
+participant medicalConditionController as con2
+participant IMedicalConditionService as ser1
+participant medicalConditionService as ser2
+participant IMedicalConditionRepo as repo1
+participant medicalConditionRepo as repo2
+
+
+ad -> home: List all medical conditions
+activate home 
+home -> page: /medicalConditions/ListMedicalConditionPage
+activate page
+page -> route: GET /api/medicalCondition
+activate route
+route -> con1: getAllMedicalConditions
+activate con1
+con1 -> con2: getAllMedicalConditions
+activate con2
+con2 -> ser1: getAllMedicalConditions
+activate ser1
+ser1 -> ser2: getAllMedicalConditions
+activate ser2
+ser2 -> repo1: findByDomainId
+activate repo1
+repo1 -> repo2: findByDomainId
+activate repo2
+repo2 --> repo1: 200 OK
+deactivate repo2
+repo1 --> ser2: 200 OK
+deactivate repo1
+ser2 --> ser1: 200 OK
+deactivate ser2
+ser1 --> con2: 200 OK
+deactivate ser1
+con2 --> con1: 200 OK
+deactivate con2
+con1 --> route: 200 OK
+deactivate con1
+route --> page: 200 OK
+deactivate route
+page --> home: 200 OK
+deactivate page
+home --> ad: List of medical conditions
+deactivate home
+
+
+
+
+
+
+@enduml

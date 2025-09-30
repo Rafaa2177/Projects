@@ -1,0 +1,38 @@
+@startuml US 6.2.3
+
+title Sequence Diagram - US 6.2.3 - Delete Patient
+
+actor "Patient" as user
+participant "page" as pag <<Page>>
+participant "DeleteProfileButton" as form <<Component>>
+participant "PatientController" as con <<BackOffice>>
+
+user -> pag : http://localhost:3000/Patient/page
+activate user
+    activate pag
+        pag -> form : calls component
+        activate form
+            form --> pag: button
+        deactivate form
+        pag-->user : Page Loaded    
+        user -> pag: User clicks on Delete Button
+        pag -> form: handleRemove
+        activate form
+            alt (localstorage.getItem('accessToken')!=null)
+                form -> con : DELETE https://localhost:5001/api/Patients/deletePatientAccount/${localStorage.getItem('accessToken')}
+                activate con
+                    con --> form : response
+                deactivate con
+                alt response==OK
+                    form --> pag : alert("Account deleted successfully");\nrouter.push("http://localhost:3000");
+                    pag --> user : Success Alert is shown and user is redirected to homepage
+                else response != OK
+                    form --> pag : alert("Error deleting request" + response.statusText);
+                    pag --> user : Error Alert is shown
+            end
+             
+        deactivate form       
+    deactivate pag
+deactivate user
+
+@enduml

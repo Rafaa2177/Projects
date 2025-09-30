@@ -1,0 +1,49 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+title US 5.1.12: Sequence Diagram
+
+actor Admin as ad 
+participant "HomePage" as home <<application>>
+participant "AddStaffPage" as addp <<application>>
+participant "StaffForm" as form <<application>>
+participant "StaffsController" as con <<application>>
+participant "StaffsService" as ser <<service>>
+participant "IStaffRepository" as repo1 <<interface>>
+participant "StaffsRepository" as repo <<repository>>
+
+
+ad -> home : Click Add Staff
+activate ad
+activate home
+home -> addp: /Staff/AddStaffPage
+activate addp
+addp -> form: StaffForm(handleSubmit)
+activate form
+form -> con: POST /api/staffs
+activate con 
+con -> ser: AddAsync(dto)
+activate ser
+ser -> repo1: FindByEmailAsync(dto.Email),\nFindByPhoneNumber(dto.PhoneNumber)
+activate repo1
+repo1 -> repo: FindByEmailAsync(dto.Email),\nFindByPhoneNumber(dto.PhoneNumber)
+activate repo
+repo --> repo1: Email, PhoneNumber
+deactivate repo
+repo1 --> ser: Email, PhoneNumber
+deactivate repo1
+ser --> con: Success
+con -> ser : AddAsync(staff)
+ser -> repo: AddAsync(staff)
+activate repo
+repo --> ser: 201 Created
+deactivate repo
+ser -> con: 201 Created
+deactivate ser
+form <-- con: 201 Created
+deactivate con
+form --> addp: 201 Created
+
+
+@enduml

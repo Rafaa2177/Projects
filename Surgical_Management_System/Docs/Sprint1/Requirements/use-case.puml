@@ -1,0 +1,41 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+left to right direction
+
+:Admin: as Admin
+:Doctor: as Doctor
+:Patient: as Patient
+:Backoffice User: as Backoffice
+
+
+Admin --> (US 5.1.1)
+Admin --> (US 5.1.8)
+Admin --> (US 5.1.9)
+Admin --> (US 5.1.10)
+Admin --> (US 5.1.11)
+Admin --> (US 5.1.12)
+Admin --> (US 5.1.13)
+Admin --> (US 5.1.14)
+Admin --> (US 5.1.15)
+
+
+
+Doctor --> (US 5.1.16)
+Doctor --> (US 5.1.17)
+Doctor --> (US 5.1.18)
+Doctor --> (US 5.1.19)
+
+
+
+Patient --> (US 5.1.3)
+Patient --> (US 5.1.4)
+Patient --> (US 5.1.5)
+Patient --> (US 5.1.7)
+
+
+
+Backoffice --> (US 5.1.2)
+Backoffice --> (US 5.1.6)
+
+@enduml

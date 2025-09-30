@@ -1,0 +1,42 @@
+@startuml US 6.2.16
+
+title Sequence Diagram - US 6.2.16 - Update Operation Request
+
+actor "Doctor" as user
+participant "ListOperationRequestPage" as pag <<Page>>
+participant "EditOperationRequestModal" as form <<Component>>
+participant "SuccessModal" as modal <<Component>>
+participant "PatientController" as con <<BackOffice>>
+
+user -> pag: http://localhost:3000/Staff/ListOperationRequestPage
+activate user
+    activate pag
+        pag -> form : calls
+        activate form
+            form --> pag : Modal component
+        deactivate form
+        pag-> modal : calls
+        activate modal
+            modal--> pag : Success Modal Component
+        deactivate modal
+        pag --> user : page loaded
+        user -> pag : User clicks on the opRequest he wants to edit
+        pag -> form : openModal(request)
+        activate form
+            form --> pag : Modal
+            pag --> user : A modal is shown
+            user -> pag : User writes his changes and clicks "Save"
+            pag -> form : handleSave
+            form --> pag : handleSave(updatedRequest)
+        deactivate form
+        pag -> con : PUT https://backOfficeUrl/api/OperationRequest/${localStorage.getItem('accessToken')}/${localStorage.getItem('docId')}
+        activate con
+            con -->pag : response
+        deactivate con
+        alt !response.OK
+            pag --> user : throw error 
+        end
+        pag --> user: Closes Edit Modal and shows Success Modal
+    deactivate pag
+deactivate user
+@enduml

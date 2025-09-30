@@ -1,0 +1,11 @@
+[
+  {
+  "fullName": "John Doe",
+  "licenseNumber": { "value": "12345" },
+  "specialization": "Cardiology",
+  "phoneNumber": "123-456-7890",
+  "email": "john.doe@example.com",
+  "role": 0,
+  "active": true
+  }
+]

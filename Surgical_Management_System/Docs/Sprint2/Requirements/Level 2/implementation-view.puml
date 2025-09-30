@@ -1,0 +1,25 @@
+@startuml implementation-view
+
+top to bottom direction
+
+skinparam package {
+    BackgroundColor #ADD8E6
+}
+
+package "Sistema" {
+    package BackOfficeWebApplication
+    package Planning
+    package 3DVisualization
+    package BusinessContinuityPlan
+    package Frontend
+}
+
+
+Frontend ..> 3DVisualization
+Frontend <.. BackOfficeWebApplication
+BusinessContinuityPlan ..> Frontend
+3DVisualization <.. Planning
+Frontend <.. Planning
+
+
+@enduml

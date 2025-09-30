@@ -1,0 +1,26 @@
+@startuml
+actor "Doctor" as doctor
+participant "OperationController" as con <<application>>
+participant "OperationService" as service <<domain>>
+participant "OperationRepository" as repo <<repository>>
+
+
+activate doctor
+doctor -> con: POST / OperationRequest
+activate con
+
+con -> service: validateAndCreateOperation(operationData)
+activate service
+
+service -> repo: save(operationData)
+activate repo
+repo --> service: confirmation
+deactivate repo
+
+
+service --> con: operationCreated
+deactivate service
+
+con --> doctor: OK ("Operation Created")
+deactivate con
+@enduml

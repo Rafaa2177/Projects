@@ -1,0 +1,71 @@
+@startuml US 6.2.17 - List Operation Requests
+
+title Sequence Diagram
+
+actor "Admin" as user
+participant "Page" as fe <<application>>
+participant "ListPacientPage" as listPage <<application>>
+participant "PacientForm" as form <<application>>
+participant "PatientController" as con <<application>>
+participant "PatientService" as service <<domain>>
+participant "PatientRepository" as repo <<repository>>
+
+user -> fe: Navigate to list patient profile page
+activate user
+activate fe
+
+fe -> listPage: Load list patient profile page
+activate listPage
+listPage -> fe: (filter)
+deactivate listPage
+
+fe -> user : Display options to filter patient profile
+deactivate fe
+
+user -> fe: Selected filter option
+activate fe
+fe -> listPage: (filter)
+activate listPage
+
+listPage -> form : PatientForm(handleSubmit)
+activate form
+
+
+form -> con: getPatientProfile(filter) \n [https://localhost:5001/api/Patients/email/${email}]
+activate con
+
+con -> service: getPatientProfile(filter)
+activate service
+
+service -> repo: findPatientProfile(filter)
+activate repo
+repo --> service: matchingPatientProfile
+deactivate repo
+
+service --> con: matchingPatientProfile
+deactivate service
+
+con --> listPage: matchingPatientProfile
+deactivate con
+
+listPage -> listPage: Display patients profile list
+
+
+listPage -> fe: Display list of patients profiler
+deactivate listPage
+
+fe -> user: Display list of patients profile
+deactivate fe
+
+user -> listPage: Choose a patient profile to edit or remove 
+activate listPage
+alt Admin chooses to edit
+listPage -> listPage: US 5.1.9/sequence-diagram.puml
+else Admin chooses to delete 
+listPage -> listPage: US 5.1.10/sequence-diagram.puml
+deactivate con
+end 
+listPage -> user : Display operation success
+deactivate user
+
+@enduml

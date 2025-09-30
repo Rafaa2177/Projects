@@ -1,0 +1,71 @@
+@startuml
+title Sequence Diagram - US 5.1.9 - Edit Patient Profile
+
+actor "Admin" as admin
+participant "ProfileController" as con <<application>>
+participant "ProfileService" as service <<domain>>
+participant "ProfileRepository" as repo <<repository>>
+participant "NotificationService" as notif <<service>>
+participant "AuditService" as audit <<service>>
+
+activate admin
+admin -> con: searchProfiles(searchCriteria)
+activate con
+
+con -> service: getProfilesByCriteria(searchCriteria)
+activate service
+
+service -> repo: findProfiles(searchCriteria)
+activate repo
+repo --> service: profileList
+deactivate repo
+
+service --> con: profileList
+deactivate service
+
+con --> admin: profileList
+deactivate con
+
+admin -> con: selectProfileToEdit(profileId)
+activate con
+
+con -> service: getProfile(profileId)
+activate service
+
+service -> repo: findById(profileId)
+activate repo
+repo --> service: profileData
+deactivate repo
+
+service --> con: profileData
+deactivate service
+
+con --> admin: profileData
+deactivate con
+
+admin -> con: updateProfile(profileData)
+activate con
+
+con -> service: validateAndUpdateProfile(profileData)
+activate service
+
+alt Sensitive data changed
+    service -> notif: sendNotification(patientEmail, "Sensitive data updated")
+    deactivate notif
+end
+
+service -> repo: save(profileData)
+activate repo
+repo --> service: confirmation
+deactivate repo
+
+service -> audit: logProfileChanges(profileId, changedFields)
+deactivate audit
+
+service --> con: update success
+deactivate service
+
+con --> admin: update success
+deactivate con
+
+@enduml

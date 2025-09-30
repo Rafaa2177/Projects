@@ -1,0 +1,28 @@
+@startuml
+ 'https://plantuml.com/component-diagram
+ 
+ skinparam component {
+   BackgroundColor #ADD8E6
+ }
+ 
+ skinparam interface {
+   BackgroundColor #ADD8E6
+   BorderColor black
+ }
+ 
+ component "<<component>>\n<<system (C4)>>\nSistema" as comp {
+ 
+   component "<<component>>\n<<container (C4)>>\n    BackOffice" as ba    
+ 
+ 
+ 
+ "BackOffice API" - ba
+  
+ }
+ 
+ "Auth0" )- [comp]
+ "Patient" -- [comp]
+ "Staff" -- [comp]
+ "Admin" -- [comp]
+ "SendGrid" -- [comp]
+ @enduml

@@ -1,0 +1,113 @@
+@startuml 
+
+top to bottom direction
+
+skinparam package {
+    BackgroundColor #ADD8E6
+}
+
+package "Sistema" {
+    package BackOfficeWebApplication
+    package Planning
+    package 3DVisualization
+    package BusinessContinuityPlan
+    package Frontend
+    package BackOfficeNode
+}
+
+
+Frontend ..> 3DVisualization
+Frontend ..> BackOfficeWebApplication
+BusinessContinuityPlan ..> BackOfficeWebApplication
+3DVisualization ..> Planning
+Frontend ..> Planning
+Frontend <.. BackOfficeNode
+BackOfficeNode ..> BackOfficeWebApplication
+
+
+top to bottom direction
+
+skinparam port {
+  BackgroundColor #ADD8E6
+}
+
+skinparam component {
+  BackgroundColor #ADD8E6
+}
+
+skinparam interface {
+  BackgroundColor #ADD8E6
+  BorderColor black
+}
+
+component "<<component>>\n<<system (C4)>>\nSistema" as comp {
+    port " " as P1
+    port " " as P13
+    component "    <<component>>\n  <<container (C4)>>\nPlanning" as plan {
+    port " " as P9
+    }
+    component "   <<component>>\n <<container (C4)>>\n     BackOffice" as ba{
+    port " " as P10
+    port " " as P12
+    
+    }    
+    component "    <<component>>\n  <<container (C4)>>\n  3dVisualization" as 3d{
+    port " " as P6
+    port " " as P7
+    }
+    component "       <<component>>\n     <<container (C4)>>\nBusinessContinuityPlan" as bcp{
+    port " " as P8
+    }
+    component "     <<component>>\n   <<container (C4)>>\n   Visualization (UI)" as fe{
+    portout " " as P2
+    portout " " as P3
+    portout " " as P4
+    portout " " as P5
+    portin " " as P11
+    portin " " as P15
+    }
+    component "    <<component>>\n   <<container (C4)>>\n BackOfficeNode" as node1 {
+        portout " " as P14
+}
+    
+
+"Planning API" -- P9 
+"BackOffice API" -- P10
+"3dVisualization API" -- P7
+"BusinessContinuityPlan API" -- P8
+
+"BackOfficeNode API" -- P14
+"BackOfficeNode API" )-- P15
+
+P14 --( "BackOffice API"
+
+P5 --( "BackOffice API"
+P4 --( "Planning API"
+P3 --( "3dVisualization API"
+P2 -( "BusinessContinuityPlan API"
+
+P6 --( "Planning API"
+
+
+P11 -- P1
+}
+
+"Auth0" )-up- P13
+"Patient" -up- P1
+"Staff" -- P1
+"Admin" -- P1
+"SendGrid" )-- P13
+P13 -- P12
+
+Frontend ..> fe : <<manifest>>
+Planning ..> plan : <<manifest>> 
+3DVisualization ..> 3d : <<manifest>>
+BackOfficeWebApplication ..> ba : <<manifest>>
+BusinessContinuityPlan ..> bcp : <<manifest>>
+BackOfficeNode ..> node1 : <<manifest>>
+
+
+
+
+
+@enduml

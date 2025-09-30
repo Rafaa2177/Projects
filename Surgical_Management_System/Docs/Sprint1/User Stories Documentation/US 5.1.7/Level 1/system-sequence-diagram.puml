@@ -1,0 +1,42 @@
+@startuml US 5.1.7
+
+
+title System Sequence Diagram
+
+
+actor "Patient" as patient 
+participant "System" as sy 
+participant "IAM Provider" as iam
+
+patient -> sy: Selects an IAM provider
+activate patient
+activate sy
+
+sy -> iam: Redirects the patient to the IAM provider
+activate iam
+patient -> iam: Inserts the user credentials
+
+alt Correct information
+
+    iam -> sy: Redirects the patient to the application\n with an authorization token
+    deactivate iam
+
+    alt token is valid 
+
+        sy -> patient: Creates a session for the patient, associating\n the IAM identity with the patient profile in the system
+    
+    else token is invalid
+    
+            sy -> patient: Login unsuccessful
+    
+        end
+
+else Incorrect information
+    
+        sy -> patient: Login unsuccessful
+    
+    end
+
+@enduml
+
+
