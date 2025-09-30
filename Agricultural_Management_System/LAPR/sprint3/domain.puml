@@ -1,0 +1,301 @@
+@startuml
+
+class Agricultura {
+  Operacoesid
+  Plantaid
+  quantidade
+  Unidadeid
+  Tipo_Agriculturaid
+}
+class Aplicacao {
+  Operacoesid
+  Produtoid
+  Plantaid
+  quantidade
+  Unidadeid
+}
+class Aplicacao_Produto {
+  id
+  aplicacao
+}
+class Armazem {
+  Instalacaoid
+  area
+  Unidadeid
+}
+class Ciclo {
+  id
+  data_inicial
+  data_final
+  qtt
+  Unidadeid
+  Plantaid
+  ParcelaInstalacaoid
+}
+class Ciclo_Rega {
+  Cicloid
+  Setorid
+  data_inicial
+  data_final
+}
+class Colheita {
+  Operacoesid
+  Frutoid
+  quantidade
+  Unidadeid
+}
+class Especie {
+  id
+  especie
+  nome
+}
+class Estacao_Meteorologica {
+  Instalacaoid
+  Sensores_Tipoid
+}
+class Estado_Fenologico {
+  Estapasid
+  Especieid
+}
+class Etapas {
+  id
+  etapa
+}
+class Fabricante {
+  id
+  nome
+}
+class Fertilizacao {
+  Operacoesid
+  Modoid
+  Produtoid
+  area
+  unidadeArea
+  Plantaid
+  quantidade
+  Unidadeid
+}
+class Fertirrega {
+  RegaOperacoesid
+  Receitaid
+}
+class Ficha_Tecnica {
+  Produtoid
+  Substanciaid
+  quantidade
+}
+class Formato {
+  id
+  formato
+}
+class Fruto {
+  id
+  Plantaid
+  fruto
+}
+class Garagem {
+  Instalacaoid
+  area
+  Unidadeid
+}
+class Instalacao {
+  id
+  designacao
+}
+class Logs_Operacoes {
+  idLog
+  Operacoesid
+  mensagem
+  dataRegisto
+}
+class MobilizacaoSolo {
+  Operacoesid
+  quantidade
+  Unidadeid
+}
+class Modo {
+  id
+  modo
+}
+class Moinho {
+  Instalacaoid
+}
+class Operacoes {
+  id
+  data
+  ParcelaInstalacaoid
+  dataRegisto
+  anulado
+}
+class Parcela {
+  Instalacaoid
+  area
+  Unidadeid
+}
+class Planta {
+  id
+  variedade
+  Especieid
+  Tipo_Plantacaoid
+}
+class Plantacao {
+  Operacoesid
+  Plantaid
+  quantidade
+  Unidadeid
+  compasso
+  distancia
+}
+class Produto {
+  id
+  designacao
+  Fabricanteid
+  Tipo_Produtoid
+  Aplicacaoid
+  Formatoid
+}
+class Receita {
+  id
+}
+class Receita_Produto {
+  Receitaid
+  Produtoid
+  quantidade
+  Unidadeid
+}
+class Rega {
+  Operacoesid
+  hora
+  Setorid
+  quantidade
+  Unidadeid
+}
+class Semeadura {
+  Operacoesid
+  area
+  unidadeArea
+  Plantaid
+  quantidade
+  Unidadeid
+}
+class Sensores_Tipo {
+  id
+  Tipo
+}
+class Setor {
+  id
+  data_inicial
+  data_final
+  quantidade
+  Unidadeid
+  Sistema_RegaInstalacaoid
+ }
+class Sistema_Rega {
+  Instalacaoid
+  area
+  Unidadeid
+}
+class Substancia {
+  id
+  nome
+}
+class Tipo_Agricultura {
+  id
+  tipo
+}
+class Tipo_Plantacao {
+  id
+  tipo
+}
+class Tipo_Produto {
+  id
+  tipo
+}
+class Unidade {
+  id
+  nome
+}
+
+Produto "1..*" .. "1." Fabricante
+Produto "1..*" .. "1" Tipo_Produto
+Produto "1..*" .. "1" Aplicacao_Produto
+Produto "1..*" .. "1" Formato
+Produto "1..*" -- "1" Ficha_Tecnica
+Produto "1..*" -- "1" Receita_Produto
+Produto "1..*" -- "1" Aplicacao
+Produto "1..*" -- "1" Fertilizacao
+
+Ficha_Tecnica "1..*" -- "1" Substancia
+
+Instalacao "1" -- "1" Moinho
+Instalacao "1" -- "1" Garagem
+Instalacao "1" -- "1" Armazem
+Instalacao "1" -- "1" Sistema_Rega
+Instalacao "1" -- "1" Estacao_Meteorologica
+Instalacao "1" -- "1" Parcela
+
+Estacao_Meteorologica "1" .. "1" Sensores_Tipo
+
+Parcela "1" .. "1" Ciclo
+Parcela "1" .. "1..*" Operacoes
+
+Unidade "1" .. "1..*" Armazem
+Unidade "1" .. "1..*" Parcela
+Unidade "1" .. "1..*" Garagem
+Unidade "1" .. "1..*" Plantacao
+Unidade "1" .. "1..*" Aplicacao
+Unidade "1" .. "1..*" Ciclo
+Unidade "1" .. "1..*" Agricultura
+Unidade "1" .. "1..*" Semeadura
+Unidade "1" .. "1..*" Fertilizacao
+Unidade "1" .. "1..*" Rega
+Unidade "1" .. "1..*" Setor
+Unidade "1" .. "1..*" Sistema_Rega
+Unidade "1" .. "1..*" Receita_Produto
+Unidade "1" .. "1..*" Colheita
+Unidade "1" .. "1..*" MobilizacaoSolo
+
+Operacoes "1" -- "1..*" Logs_Operacoes
+Operacoes "1" -- "1" Plantacao
+Operacoes "1" -- "1" Agricultura
+Operacoes "1" -- "1" Semeadura
+Operacoes "1" -- "1" Fertilizacao
+Operacoes "1" -- "1" Rega
+Operacoes "1" -- "1" Colheita
+Operacoes "1" -- "1" MobilizacaoSolo
+
+Ciclo "1" -- "1..*" Ciclo_Rega
+Ciclo "1..*" .. "1" Planta
+
+Planta "1" .. "1..*" Fruto
+Planta "1" .. "1..*" Plantacao
+Planta "1" .. "1..*" Agricultura
+Planta "1..*" .. "1" Tipo_Plantacao
+Planta "1" .. "1..*" Semeadura
+Planta "1" .. "1..*" Aplicacao
+Planta "0..1" .. "1..*" Fertilizacao
+Planta "1..*" .. "1" Especie
+
+Especie "1" -- "1..*" Estado_Fenologico
+
+Estado_Fenologico "1..*" .. "1" Etapas
+
+Estado_Fenologico "1..*" .. "1" Ciclo
+
+Fruto "1" .. "1..*" Colheita
+
+Rega "1" -- "1" Fertirrega
+Rega "1..*" .. "1" Setor
+
+Setor "1" -- "1..*" Ciclo_Rega
+Setor "1..*" .. "1" Sistema_Rega
+
+Fertirrega "1..*" .. "1" Receita
+
+Receita "1" -- "1..*" Receita_Produto
+
+Fertilizacao "1" -- "1" Modo
+
+Agricultura "1..*" .. "1" Tipo_Agricultura
+
+@enduml

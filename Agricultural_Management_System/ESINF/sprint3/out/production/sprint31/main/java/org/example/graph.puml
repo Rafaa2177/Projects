@@ -1,0 +1,74 @@
+@startuml
+
+CT1 -- CT10
+CT1 -- CT17
+CT1 -- CT6
+
+CT2 -- CT14
+CT2 -- CT7
+CT2 -- CT8
+CT2 -- CT11
+
+CT3 -- CT12
+CT3 -- CT16
+CT3 -- CT15
+CT3 -- CT4
+
+CT15 -- CT12
+CT15 -- CT3
+
+CT16 -- CT3
+CT16 -- CT12
+CT16 -- CT9
+CT16 -- CT4
+
+CT12 -- CT3
+CT12 -- CT15
+CT12 -- CT16
+
+CT7 -- CT14
+CT7 -- CT13
+CT7 -- CT2
+
+CT8 -- CT2
+CT8 -- CT14
+
+CT13 -- CT7
+CT13 -- CT14
+CT13 -- CT11
+
+CT14 -- CT13
+CT14 -- CT7
+CT14 -- CT8
+CT14 -- CT2
+
+CT11 -- CT13
+CT11 -- CT2
+
+CT5 -- CT6
+CT5 -- CT10
+CT5 -- CT17
+
+CT9 -- CT16
+CT9 -- CT4
+
+CT4 -- CT9
+CT4 -- CT16
+CT4 -- CT3
+
+CT17 -- CT5
+CT17 -- CT1
+CT17 -- CT6
+
+CT6 -- CT5
+CT6 -- CT17
+CT6 -- CT10
+CT6 -- CT17
+CT6 -- CT1
+
+CT10 -- CT6
+CT10 -- CT5
+CT10 -- CT1
+
+
+@enduml

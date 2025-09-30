@@ -1,0 +1,207 @@
+@startuml
+
+class "Fabricante" {
+    +id
+    nome
+}
+
+class "Armazem"{
+    Instalacaoid
+    area
+    Unidadeid
+}
+
+
+class "Instalacao" {
+    +id
+    designacao
+    Tipo_Exploracaoid
+}
+
+class "Estacao_Metereologica"{
+    Instalacaoid
+    Sensores_Tipoid
+}
+
+
+
+
+
+
+
+
+
+
+
+
+class "Tipo_Produto" {
+    +id
+    tipo
+}
+
+class "Agricultura"{
+    Operacoesid
+    Plantaid
+    PlantaNaoExiste
+}
+
+class "Aplicacao" {
+    Operacoesid
+    Produtoid
+    Plantaid
+    PlantaNaoExistente
+}
+
+
+
+class "Formato" {
+    +id
+    formato
+}
+
+
+
+
+class "Fertilizacao"{
+    Operacoesid
+    Modoid
+    Produtoid
+    area
+    Unidadeid
+    Plantaid
+    PlantaNaoExistente
+}
+
+class "Modo"{
+  +id
+  modo
+}
+
+class "Ficha_Tecnica" {
+    Produtoid
+    Substanciaid
+    quantidade
+}
+
+class "Ciclo" {
+    +id
+    data_inicial
+    data_final
+    qtt
+    UnidadeId
+    PlantaId
+    ParcelaInstalacaoid
+    PlantaNaoExistente
+}
+
+class "Parcela" {
+    Instalacaoid
+    area
+    Unidadeid
+}
+
+class  "Planta" {
+    +id
+    variedade
+    Especieid
+    Tipo_Plantacaoid
+}
+
+class "Rega" {
+    Operacoesid
+    hora
+    Setorid
+}
+
+
+
+class "Produto"{
+   +id
+   designacao
+   Fabricanteid
+   Tipo_Produtoid
+   Aplicacaoid
+   Formatoid
+}
+
+class "Garagem"{
+    Instalacaoid
+    area
+    Unidadeid
+}
+
+class "Operacoes" {
+    +id
+    data
+    ParcelaInstalacaoid
+    quantidade
+    Unidadeid
+    Tipo_Operacaoid
+}
+
+
+
+class "Moinho"{
+    Instalacaoid
+}
+
+
+
+
+
+class "Sementeira"{
+    Operacoesid
+    area
+    Unidadeid
+   Plantaid
+   PlantaNaoExistente
+}
+
+
+class "Unidade" {
+    +id
+    nome
+}
+
+
+class "Sistema_Rega" {
+    Instalacaoid
+    area
+    Unidadeid
+}
+
+class "Substancia"{
+    +id
+    nome
+    }
+
+
+
+Produto "1" -- "0..1" Fabricante : "fabrica"
+Produto "1" -- "0..1" Tipo_Produto : "possui"
+Produto "1" -- "0..1" Aplicacao
+Produto "1" -- "0..1" Formato
+Produto "1" -- "0..1" Ficha_Tecnica : "tem"
+Ciclo "1" -- "1" Planta
+Ciclo "1" -- "1" Unidade
+Ciclo "1" -- "1" Parcela : "pertence a parcela"
+Ciclo "1" -- "1" Operacoes : "pertence a operacoes"
+Ficha_Tecnica "1" -- "0..1" Substancia : "tem uma substancia"
+Ficha_Tecnica "1" -- "0..1" Produto : "é de um produto"
+Parcela "1" -- "0..1" Instalacao
+Moinho "1" -- "0..1" Instalacao
+Armazem "1" -- "0..1" Instalacao
+Agricultura "1" -- "0..1" Operacoes : "realizada em operacoes"
+Rega "1" -- "0..1" Operacoes : "realizada em operacoes"
+Fertilizacao "1" -- "0..1" Modo
+Fertilizacao "1" -- "0..1" Produto : "de produto"
+Fertilizacao "1" -- "0..1" Operacoes : "realizada em operacoes"
+Fertilizacao "1" -- "0..1" Parcela
+Aplicacao "1" -- "0..1" Operacoes : "realizada em operacoes"
+Sistema_Rega "1" -- "0..1" Instalacao
+Estacao_Metereologica "1" -- "0..1" Instalacao
+Sementeira "1" -- "0..1" Operacoes : "realizada em operacoes"
+Sementeira "1" -- "0..1" Parcela
+Garagem "1" -- "0..1" Instalacao
+
+@enduml
