@@ -1,0 +1,76 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype ortho
+skinparam linetype polyline
+
+left to right direction
+
+
+
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model US017
+
+class NetWorkManager{
+}
+
+class Emplyee{
+agency
+}
+
+class Deals{
+sid
+ownerName
+ownerPassaportNumber
+ownerTIN
+ownerEmail
+ownerTelephoneNumber
+propertyType
+propertyArea
+propertyLocation
+propertyDistanceFromCenter
+propertyNumberBedrooms
+propertyNumberBathrooms
+propertyPnumParking
+propertyCentralHeating
+propertyAirConditioned
+propertyBasement
+propertyLoft
+propertySunExposure
+propertyRequestedSaleRentPrice
+propertySaleRentPrice
+comission
+contractDuration
+propertyDateAnnouncementRequest
+propertyDateOfSale
+propertyTypeOfBusiness
+storeID
+storeName
+storeLocation
+storePhoneNumber
+storeEmailAddress
+
+}
+
+class Person{
+name
+taxNumber
+emailAddress
+telephoneNumber
+}
+
+
+
+
+NetWorkManager "1" -- "0..*" Emplyee : is a >
+Person "1" -- "1" Emplyee : is a <
+NetWorkManager "1" -- "0..*" Deals : lists >
+
+
+@enduml

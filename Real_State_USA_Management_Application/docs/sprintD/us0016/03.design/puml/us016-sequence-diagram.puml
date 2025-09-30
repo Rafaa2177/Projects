@@ -1,0 +1,157 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Agent" as ADM
+participant ":ScheduleVisitResponseUI" as UI
+participant ":ScheduleVisitResponseController" as CTRL
+participant "repositories\n:Repositories" as PLAT
+participant "taskCategoryRepository:\nTaskCategoryRepository" as TaskCategoryRepository
+participant "visitRequestRepository\n:VisitRequestRepository" as VISREP
+participant "visitRequest\n:VisitRequest" as VISIT
+participant "authenticationRepository:\nAuth" as AUTH
+participant "EmailService" as EMSER <<interface>>
+participant "GmailService" as GMAIL
+participant "DEIService" as DEI
+participant "textEmailService\n:TextEmailService" as TEXT
+
+
+activate ADM
+
+        ADM -> UI : asks to displays visit requests grouped by property
+        activate UI
+
+            UI -> CTRL** : create
+
+            UI -> CTRL : getVisitRequestList()
+            activate CTRL
+
+
+
+                CTRL -> PLAT : static getInstance()
+                activate PLAT
+
+                    PLAT --> CTRL: repositories
+                deactivate PLAT
+
+                CTRL -> PLAT : getVisitRequestRepository()
+                activate PLAT
+
+                    PLAT --> CTRL: visitRequestRepository
+                deactivate PLAT
+
+                CTRL -> PLAT : getAuthenticationRepository()
+                activate PLAT
+
+                PLAT --> CTRL : authenticationRepository()
+                deactivate PLAT
+
+                CTRL -> AUTH : ensureAuthenticatedUserHasRoles(AuthenticationController.ROLE_AGENT)
+
+
+                CTRL -> VISIT : getVisitRequest()
+                activate VISIT
+
+                    VISIT --> CTRL : visitRequestList
+                deactivate VISIT
+
+                CTRL --> UI : visitRequestList
+            deactivate CTRL
+
+            loop for each announcement
+
+            UI --> ADM : shows the list of visit requests and ask to select one
+        deactivate UI
+        end
+
+    ADM -> UI : selects a visit request
+    activate UI
+
+         UI -> CTRL : getVisitRequestByID(id)
+                activate CTRL
+
+                    CTRL -> VISREP : getVisitRequestByID(id)
+                    activate VISREP
+
+                        VISREP -> VISIT : getVisitRequestByID(id)
+                        activate VISIT
+
+                            VISIT --> VISREP: visitRequest
+                        deactivate VISIT
+
+                        VISREP --> CTRL : visitRequest
+                        deactivate VISREP
+
+                           CTRL --> UI : visitRequest
+                        deactivate CTRL
+
+        UI --> ADM : asks to accept or decline the visit request
+    deactivate UI
+
+    ADM -> UI : selects an option
+    activate UI
+
+        UI --> ADM : shows the selected visit request and asks to confirm
+    deactivate UI
+
+
+    ADM -> UI : confirm and submits data
+    activate UI
+
+        UI->CTRL : acceptVisitRequest(visit,Status)
+        activate CTRL
+
+            CTRL-> VISIT : acceptVisitRequest(visit,Status)
+            activate VISIT
+
+
+                VISIT->VISIT : getAnnouncements()
+
+
+                VISIT -> VISIT : getAgent()
+
+                VISIT -> VISIT : getStatus(option)
+
+                alt option == accepted
+                    VISIT -> VISIT : setStatus (Status.ACCEPTED)
+                else option == declined
+                    VISIT -> VISIT : setStatus(Status.DECLINED)
+                end
+                deactivate VISIT
+
+           CTRL -> EMSER : emailOption(visitRequest)
+           activate EMSER
+           alt email == gmail
+            EMSER-> GMAIL: getEmailService()
+            activate GMAIL
+            GMAIL-> TEXT : sendEmailNotification(String email, VisitRequest visitRequest, Announcement announcement)
+            activate TEXT
+            TEXT --> GMAIL :
+            deactivate TEXT
+            GMAIL --> EMSER : email sent sucessfully
+            deactivate GMAIL
+            else email == dei
+
+            EMSER -> DEI : getEmailService()
+            activate DEI
+            DEI -> TEXT : sendEmailNotification(String email, VisitRequest visitRequest, Announcement announcement)
+            activate TEXT
+            TEXT-->DEI
+            deactivate TEXT
+            DEI--> EMSER : email sent sucessfully
+            deactivate DEI
+            end
+            EMSER --> CTRL : email sent sucessfully
+            deactivate EMSER
+            CTRL--> UI : email sent sucessfully
+
+            UI --> ADM: display operation success
+    deactivate UI
+
+deactivate ADM
+
+@enduml

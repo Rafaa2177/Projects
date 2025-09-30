@@ -1,0 +1,34 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title US019 - System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Network Manager" as SA
+participant ":System" as System
+
+activate SA
+
+    SA -> System : asks to divide the set of all stores into two subsets, \n so that the total number of properties of the stores between \n the two subsets is close as possible
+
+
+
+    activate System
+
+    SA <-- System : asks if the user wants to use the system data, or a file data
+    deactivate System
+
+    SA -> System : chooses
+    activate System
+
+    SA <-- System : returns the subsets of stores (containing the stores' ID \n and the number of properties of each store)
+
+
+    SA <-- System : returns the difference between the sums of the number of properties \n of the stores in the two subsets
+
+    deactivate System
+
+@enduml

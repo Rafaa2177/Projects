@@ -1,0 +1,133 @@
+@startuml
+
+class AnalyseDealsController{
+ - repositories
+ - purchaseOrderRepository
+ - announcementRepository
+ - Prediction
+
+ + linearRegression(area)
+ + linearRegressionD(distanceCityCentre)
+ + linearRegressionB(numberOfBedrooms)
+ + linearRegressionBA(numberOfBathrooms)
+ + linearRegressionP(numberOfParkingSpaces)
+ + multiLinearRegression(area, distanceFromCenter, nBedrooms, nBathrooms, nParking)
+ + getPrediction()
+
+}
+
+
+class AuthenticationRepository {
+ - authenticationFacade
+ - serializableUserRepository
+
+ + doLogin(email, pwd)
+ + doLogout()
+ + getCurrentUserSession()
+ + addUserRole(id, description)
+ + addUserWithRole(name, email, pwd, roleId)
+ + ensureAuthenticatedUserHasRoles(roles)
+ + sync()
+}
+
+class Announcement {
+-LocalDate datePublished
+-AdvertisementRequest advertisementRequest
+-Commission commission
+-AdvertisementStatus status
+
++ Advertisement(AdvertisementRequest advertisementRequest, Agent agent, LocalDate datePublished, Commission commission)
++ equals(Object o)
++ hashCode()
++ toString()
++ sellProperty()
+}
+
+enum Status {
+ACCEPT
+DECLINE
+PENDING
+}
+
+class AuthFacade {
+-UserSession userSession
++getCurrentUserSession()
+}
+
+class PurchaseOrder {
+ - status
+ - ID
+ - client_email
+ - announcement
+ - amountOfered
+ - STATUS_BY_OMISSION
+ - numberOfPurchaseOrders
+
+ + PurchaseOrder(email, amountOfered, announcement)
+ + getClient()
+ + getAmountOfered()
+ + getIdOrder()
+ + getStatus()
+ + setStatus(status: Status)
+ + getAnnouncement()
+ + compareTo(o: Object)
+ + toString()
+
+
+}
+
+class PurchaseOrderRepository {
+ - purchaseOrders: List<PurchaseOrder>
+
+ + add(email, offer, announcement)
+ + validateOffer(announcement, offer)
+ + offerInsideLimits(announcement, offer)
+ + checkIfOrderIsPending(announcement)
+ + getPurchaseOrders()
+ + getOrdersByAnnouncement(announcement)
+}
+
+
+class Repositories {
+ - instance: Repositories
+ - properties: Properties
+
+ + Repositories()
+ + getInstance()
+ + getOrganizationRepository()
+ + getTaskCategoryRepository()
+ + getAuthenticationRepository()
+ + getAnnouncementRepository()
+ + getVisitRequestRepository()
+ + getBranchRepository()
+ + getRequestRepository()
+ + getOrderRepository()
+ + setAuthenticationRepository(authenticationRepository)
+ + setBranchRepository(branchRepository)
+ + setRequestRepository(requestRepository)
+ + setInstance(instance)
+ + getPurchaseOrderRepository()
+ + getPersonRepository()
+ + getProperties()
+ + sortingAlgorithm()
+}
+
+AnalyseDealsController --> Repositories
+AnalyseDealsController --> PurchaseOrder
+
+Repositories --> Repositories : instance
+
+Repositories "1" --> "1" AuthenticationRepository : has
+Repositories "1" --> "1" PurchaseOrderRepository : has
+
+PurchaseOrderRepository "1" --> "*" PurchaseOrder : has
+
+AuthenticationRepository "1" --> "*" AuthFacade : has
+
+Announcement --> Status
+
+PurchaseOrder "1" --> "1" Announcement : has
+
+
+
+@enduml

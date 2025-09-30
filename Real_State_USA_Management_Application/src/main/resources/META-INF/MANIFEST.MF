@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Main-Class: com.example.test.HelloApplication
+Class-Path: toolbox-17.0.35.jar fxgl-core-17.2.jar fxgl-io-17.2.jar fxgl
+ -gameplay-17.2.jar javafx-fxml-19.0.2-mac.jar javafx-base-19.0.2-mac.ja
+ r javafx-web-19.0.2-mac.jar countries-17.0.23.jar util-4.0.13.jar javaf
+ x-fxml-19.0.2.jar bootstrapfx-core-0.4.0.jar formsfx-core-11.6.0.jar ja
+ ckson-databind-2.12.1.jar heatmap-17.0.12.jar storage-4.0.13.jar junit-
+ jupiter-api-5.9.2.jar fxgl-17.2.jar fxgl-entity-17.2.jar apiguardian-ap
+ i-1.1.2.jar controlsfx-11.1.2.jar ikonli-core-12.3.1.jar javafx-graphic
+ s-19.0.2.jar junit-jupiter-engine-5.9.2.jar opentest4j-1.2.0.jar fxgl-s
+ cene-17.2.jar junit-platform-engine-1.9.2.jar toolboxfx-17.0.33.jar jav
+ afx-controls-19.0.2.jar tilesfx-17.1.17.jar kotlin-stdlib-1.6.0-modular
+ .jar ikonli-javafx-12.3.1.jar annotations-13.0.jar javafx-media-19.0.2-
+ mac.jar jackson-core-2.12.1.jar javafx-controls-19.0.2-mac.jar javafx-g
+ raphics-19.0.2-mac.jar audio-4.0.13.jar javafx-base-19.0.2.jar javafx-m
+ edia-19.0.2.jar kotlin-stdlib-common-1.6.0.jar validatorfx-0.4.0.jar ju
+ nit-platform-commons-1.9.2.jar javafx-web-19.0.2.jar jackson-annotation
+ s-2.12.1.jar lifecycle-4.0.13.jar
+

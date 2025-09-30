@@ -1,0 +1,130 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class PublishAnnouncementUI {
+}
+
+class PublishAnnouncementController {
+    +getUserRepositories()
+    +getUserList()
+    +setPropertyType(propertyType)
+    +createProperty(ownerName, commission, price, contractDuration, sizeM2, distanceCenter, proximityPublicServices, location)
+    +createResidence(numberOfBedrooms, numberOfBathrooms, numberOfParkingSpaces,availableEquipment)
+    +createHouse(basement,inhabitableLoft)
+    +createPhotographList()
+    +setDate(currentDate)
+}
+
+class PropertyTypeListRepository {
+    +getPropertyTypeRepository()
+}
+
+class Repositories {
+    +getPropertyTypeRepository()
+    +getUserRepositories()
+    +{static}getInstance()
+}
+
+
+class Announcement {
+    -date
+    +setPropertyType(propertyType)
+    +createProperty(ownerName,commission, price,contractDuration,sizeM2,distanceCenter,proximityPublicServices,location)
+    +addProperty(property)
+    +createResidence(numberOfBedrooms, numberOfBathrooms, numberOfParkingSpaces, availableEquipment)
+    +createHouse(basement,loft,sunExposure)
+    +createPhotographList()
+    +setDate(currentDate)
+    +getRequestType()
+}
+
+class Agent {
+    -ownerName: String
+    -citizenCardNumber: Integer
+    -taxNumber: String
+    -phoneNumber: Integer
+    -emailAddress: String
+}
+
+class House {
+    -basement: Boolean
+    -loft: Boolean
+    -sunExposure: String
+    +createHouse(basement options, inhabitable loft options, sunExposure)
+}
+
+
+class Residence {
+    -numberOfBedrooms: Integer
+    -numberOfBathrooms: Integer
+    -numberOfParkingSpaces: Integer
+    -availableEquipment: String
+    +createResidence(numberOfBedrooms, numberOfBathrooms, numberOfParkingSpaces, availableEquipment)
+}
+
+class Property {
+    -sizeM2: Integer
+    -distanceCenter: Double
+    -price: Integer
+    -proximityPublicServices: Double
+    +createProperty(ownerName, commission, price, contractDuration, sizeM2, distanceCenter, proximityPublicServices, location, sunExposure)
+    +createPhotographList()
+    +add(photograph)
+}
+
+class Location{
+    -street: String
+    -city: String
+    -district: String
+    -state: String
+}
+
+
+class Photographs {
+    -photograph: String
+}
+
+class Commission {
+    -value: Double
+    -percentage: Double
+}
+
+class UserRepositories {
+    +getUserRepositories()
+    +getUserList()
+}
+
+
+
+
+
+
+PublishAnnouncementUI --> PublishAnnouncementController
+
+PublishAnnouncementController .-> Repositories
+PublishAnnouncementController -> Announcement
+PublishAnnouncementController .-> PropertyTypeListRepository
+PublishAnnouncementController .-> UserRepositories
+
+Repositories --> Announcement
+Repositories --> PropertyTypeListRepository
+Repositories --> UserRepositories
+
+Announcement --> Property: has
+Announcement <-- Agent
+Announcement --> Commission
+House --|> Residence
+
+Residence --|> Property
+
+Property --> Location: has
+Property --> Photographs
+
+
+
+
+
+
+
+
+@enduml

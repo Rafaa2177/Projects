@@ -1,0 +1,187 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Agent" as AGENT
+participant ":ListPurchaseOrdersUI" as UI
+participant ":ListPurchaseOrderController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "propertiesRepository:\nPropertiesRepository" as PropertiesRepository
+participant "OrderMapper" as OM
+participant "currentSession\n:UserSession" as US
+participant "appSession\n:ApplicationSession" as APP
+participant "employeeRepository\n: EmployeeRepository" as EMPREP
+participant "employee\n: Employee" as EMP
+participant "order\n: Order" as ORD
+participant "emailService\n EmailService" as EMSER
+participant "announcement\n:Announcement" as ANNOUNCEMENT
+
+activate AGENT
+
+    AGENT -> UI : asks to display purchase orders grouped by property
+    activate UI
+
+        UI -> CTRL** : create
+        activate CTRL
+
+            CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+                RepositorySingleton --> CTRL : repositories
+            deactivate RepositorySingleton
+
+            CTRL->EMPREP: getEmployeeRepository()
+            activate EMPREP
+
+                EMPREP -->CTRL: employeeRepository
+            deactivate EMPREP
+
+            CTRL-->CTRL: getEmployeeFromSession()
+            activate CTRL
+
+                CTRL->APP: getInstance()
+                activate APP
+
+                    APP --> CTRL: appSession
+                deactivate APP
+
+                CTRL -> APP: getCurrentSession()
+                activate APP
+
+                    APP --> CTRL: currentSession
+                deactivate APP
+
+                CTRL -> SESSAO: email = getUserEmail()
+                activate SESSAO
+
+                    SESSAO --> CTRL: email
+                deactivate SESSAO
+
+                CTRL-> EMPREP: getEmployeeByEmail()
+                activate EMPREP
+
+                    EMPREP-->CTRL: employee
+                deactivate EMPREP
+            deactivate CTRL
+
+            CTRL-->CTRL: employee
+        deactivate CTRL
+
+        UI -> CTRL : getEmployeeAnnouncements()
+        activate CTRL
+
+            CTRL -> EMP : getAnnouncements()
+            activate EMP
+
+               EMP --> CTRL : announcementList
+            deactivate EMP
+
+            CTRL --> UI : announcementList
+        deactivate CTRL
+
+        loop for each announcement
+
+            UI --> AGENT : shows the purchase order list ordered by the amount offered
+        end
+
+        UI --> AGENT : ask to select a purchase order
+    deactivate UI
+
+    AGENT->UI : selects one purchase order
+    activate UI
+
+        UI-->AGENT: asks if wants to accept or decline the purchase order
+    deactivate UI
+
+    AGENT->UI: selects an option
+    activate UI
+
+        UI-->AGENT: shows the selected purchase order and option and asks to submit
+    deactivate UI
+
+    AGENT->UI: confirms and submits data
+    activate UI
+
+        UI->CTRL: setPurchaseOrder(order,option)
+        activate CTRL
+
+            CTRL->EMP: setPurchaseOrder(order,option)
+            activate EMP
+
+                EMP->ORD: getAnnouncement()
+                activate ORD
+
+                    ORD-->EMP: announccement
+                deactivate ORD
+
+                EMP->ORD: getClient()
+                activate ORD
+
+                    ORD-->EMP: client
+                deactivate ORD
+
+                EMP->ORD: setStatus(option)
+                activate ORD
+
+                    ORD-->EMP
+                deactivate ORD
+
+                EMP->EMSER: sendNotification(client.getEmail(),order)
+                activate EMSER
+
+                    EMSER-->EMP
+                deactivate EMSER
+
+                EMP->ANNOUNCEMENT: removeFromOrders(order)
+                activate ANNOUNCEMENT
+
+                    ANNOUNCEMENT-->EMP
+                deactivate ANNOUNCEMENT
+
+
+                alt option=accepted
+
+                    EMP->ANNOUNCEMENT: getOrders()
+                    activate ANNOUNCEMENT
+
+                        ANNOUNCEMENT-->EMP: orderList
+                    deactivate ANNOUNCEMENT
+
+                    loop for each order
+
+                        EMP->ORD: setStatus(status.DECLINE)
+                        activate ORD
+
+                            ORD-->EMP
+                        deactivate ORD
+
+                        EMP->EMSER: sendNotification(client.getEmail(),order)
+                        activate EMSER
+
+                            EMSER-->EMP
+                        deactivate EMSER
+                    end
+
+                    EMP->ANNOUNCEMENT: clearOrders()
+                    activate ANNOUNCEMENT
+
+                        ANNOUNCEMENT-->EMP
+                    deactivate ANNOUNCEMENT
+                end
+
+                EMP-->CTRL: true/false
+            deactivate EMP
+
+            CTRL-->UI: true/false
+        deactivate CTRL
+
+        UI-->AGENT: display operation success
+    deactivate UI
+deactivate AGENT
+
+@enduml

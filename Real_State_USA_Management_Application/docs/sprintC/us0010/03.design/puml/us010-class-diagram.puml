@@ -1,0 +1,65 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class RegisterOfferUI{
+ - controller: RegisterOfferController
+}
+
+Class RegisterOfferController {
+- announcements: List<Announcement>
+ + getAnnouncements(): List<Announcement>
+ + checkIfOrderIsPending(announcement: Announcement)
+ + offerInsideLimits(announcement: Announcement, offer)
+ + validateOffer(announcement: Announcement, offer)
+ + registerOffer(announcement: Announcement, offer)
++ offerInsideLimits(announcement: Announcement, offer)
+ + checkIfOrderIsPending(announcement: Announcement)
+}
+
+class AnnouncementRepository {
+- announcements: List<Announcement>
++ getAnnouncement(): List<Announcement>
+}
+class PurchaseOrderRepository {
++ validateOffer(announcement: Announcement, offer)
++ offerInsideLimits(announcement: Announcement, offer)
++ checkIfOrderIsPending(announcement: Announcement)
++ add(email, offer, announcement: Announcement)
+}
+
+class Repositories  {
++ getInstance(): Repositories
+ + getAnnouncementRepository(): AnnouncementRepository
++ getPurchaseOrderRepository(): PurchaseOrderRepository
+}
+
+class Announcement {
+- property: Property
++ getProperty(): Property
++ toString(): String
+}
+
+class Property {
+-address: Address
++ getPrice()
++ getAddress(): Address
+}
+
+RegisterOfferUI ..> RegisterOfferController
+Repositories -> Repositories : instance
+RegisterOfferController ..> Repositories: repositores
+Repositories --> "1" AnnouncementRepository
+PurchaseOrderRepository <- AnnouncementRepository
+PurchaseOrderRepository ..> AnnouncementRepository
+AnnouncementRepository --> Announcement
+Announcement -> Property
+
+@enduml

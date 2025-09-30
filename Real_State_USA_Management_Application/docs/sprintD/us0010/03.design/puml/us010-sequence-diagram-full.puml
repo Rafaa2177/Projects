@@ -1,0 +1,118 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Client" as ADM
+participant ":RegisterOfferUI" as UI
+participant ":RegisterOfferController" as CTRL
+participant ":Repositories" as RP
+participant "repositories\n:Repositories" as PLAT
+participant ":AnnouncementRepository" as AR
+participant ":PurchaseOrderRepository" as POR
+
+activate ADM
+
+
+ADM -> UI : Register a new offer
+
+        activate UI
+
+            UI -> CTRL** : create
+
+                CTRL -> RP : getInstance()
+                activate CTRL
+
+                activate RP
+
+                    RP --> CTRL: repositories
+                deactivate RP
+
+                CTRL -> PLAT : getAnnouncementRepository()
+                activate PLAT
+
+                    PLAT --> CTRL: AnnouncementRepository
+                deactivate PLAT
+
+                CTRL -> AR : getAnnouncementList()
+                activate AR
+
+                    AR --> CTRL : AnnouncementList
+                deactivate AR
+
+                CTRL --> UI : AnnouncementList
+          deactivate CTRL
+
+        UI --> ADM: shows a list of available announcements,\n and asks to select an announcement
+        deactivate UI
+
+        ADM -> UI: chooses an announcement
+        activate UI
+
+        UI -> CTRL: checkIfOrderIsPending(announcement)
+        activate CTRL
+
+        CTRL -> RP : getInstance()
+        activate RP
+
+        RP --> CTRL: repositories
+        deactivate RP
+
+        CTRL -> PLAT : getPurchaseOrderRepository()
+        activate PLAT
+
+        PLAT --> CTRL: PurchaseOrderRepository
+        deactivate PLAT
+
+        CTRL -> POR: checkIfOrderIsPending(announcement)
+        activate POR
+
+        POR --> CTRL: return true/false
+        deactivate POR
+
+        CTRL --> UI: return true/false
+        deactivate CTRL
+
+alt Order is not pending
+
+        UI --> ADM : requests offered price
+        deactivate UI
+
+        ADM -> UI : types the order amount
+        activate UI
+
+        UI -> CTRL: offerInsideLimits(announcement, offer)
+        activate CTRL
+
+        CTRL -> POR : offerInsideLimits(announcement, offer);
+        activate POR
+
+        POR --> CTRL: return true/false
+        deactivate POR
+
+        CTRL --> UI: return true/false
+        deactivate CTRL
+
+alt amount order inside limits
+
+        UI --> ADM : asks the user to confirm the order
+        deactivate UI
+
+        ADM -> UI : confirm inserted data
+        activate UI
+        UI --> ADM : submits order
+
+end alt
+
+end alt
+
+
+
+
+
+
+
+@enduml

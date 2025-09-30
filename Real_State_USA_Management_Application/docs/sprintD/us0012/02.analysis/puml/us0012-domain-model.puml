@@ -1,0 +1,38 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+
+class SystemAdministrator {
+    name
+    citizenCard
+    taxNumber
+    address
+    phoneNumber
+    emailAddress
+}
+
+class Information {
+    fileCsv
+}
+
+class LegacySystem {
+    //não sei o que por aqui!!!!
+}
+
+class Agency {
+    name
+    email
+    position
+    phone
+}
+
+Information -- LegacySystem : of >
+SystemAdministrator -- Information : import >
+LegacySystem -- Agency : belongs to >
+@enduml

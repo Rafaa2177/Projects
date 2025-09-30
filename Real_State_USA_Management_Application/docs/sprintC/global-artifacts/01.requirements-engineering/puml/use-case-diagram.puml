@@ -1,0 +1,19 @@
+@startuml
+left to right direction
+
+actor "System Admin" as admin
+actor "Unregistered user" as unUser
+actor Agent as Agent
+actor Owner as Owner
+rectangle "RealEstate USA App" {
+  usecase "US1 - As an Unresgistered user, I want to display listed properties" as UC1
+  usecase "US2 - As an agent, I can publish any sale annoucement on the system, for example received through a phone call" as UC2
+  usecase "US3 - As a system administrator, I want to register a new employee" as UC3
+  usecase "US4 - As a owner, I intend to submit a request for listing a property sale or rent, choosing the responsible agent " as UC4
+}
+unUser -- UC1
+Agent -- UC2
+admin -- UC3
+Owner -- UC4
+
+@enduml

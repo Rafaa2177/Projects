@@ -1,0 +1,42 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US011
+
+autonumber
+
+actor "Agent" as Employee
+participant ":System" as System
+
+activate Employee
+
+
+    Employee -> System :  asks to display purchase orders grouped by property
+    activate System
+
+        loop for each announcement
+
+        System --> Employee : shows the purchase order list ordered by the amount offered
+                end
+                deactivate System
+
+    Employee -> System : selects one purchase order
+    activate System
+
+
+        System --> Employee : ask if wants to accept or decline the purchase order
+        deactivate System
+
+    Employee -> System : selects an option
+    activate System
+
+    System-->Employee: shows the selected purchase order and option and asks to submit
+    deactivate System
+
+    Employee->System: confirms and sumbits data
+    activate System
+    System-->Employee: displays operation success
+
+@enduml

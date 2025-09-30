@@ -1,0 +1,185 @@
+
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "System Administrator" as ADM
+participant ":CreateEmployeeUI" as UI
+participant ":CreateEmployeeController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "agenciesRepository\n:AgenciesRepository" as agenciesRepository
+participant "roleRepository \n : RoleRepository" as RP
+participant "agencies\n:Agencies" as Agency
+participant "role\n:Role" as Role
+participant "employee\n:Employee" as OrganizationRepository
+participant "employeeRepository\n : EmployeeRepository" as ER
+participant "location\n: Location" as LOC
+
+
+      activate ADM
+
+       ADM -> UI : request to initiate the process of registering a new employee
+        activate UI
+        UI-->ADM : solicits information regarding employee data(name, passport card number,\ntax number, street, district,zipcode,city,state,email adress,contact telephone number)
+         UI->UI: saveData()
+
+
+        ADM->UI:types the employee information
+        UI->UI: saveAgencies()
+        activate UI
+
+
+
+          deactivate UI
+         UI->CTRL**: create
+
+
+         UI -> CTRL : getRolesToDisplay()
+        activate CTRL
+
+         CTRL -> RepositorySingleton : getInstance()
+         activate RepositorySingleton
+
+         RepositorySingleton --> CTRL: repositories
+         deactivate RepositorySingleton
+
+         CTRL->PLAT: getRolesRepository()
+         activate PLAT
+         PLAT-->CTRL: rolesRepository
+         deactivate PLAT
+         CTRL->RP: getRoles()
+         activate RP
+         RP-->CTRL: rolesList
+         deactivate RP
+         CTRL-->UI: rolesList
+
+         UI --> ADM :shows the list of the roles that the new employee can perform
+         deactivate UI
+
+
+          ADM -> UI : selects a role
+          activate UI
+          UI-> UI: saveRoles()
+
+
+          UI -> CTRL :getAgenciesToDisplay()
+
+
+
+
+
+
+
+
+
+
+
+          CTRL -> RepositorySingleton : getInstance()
+           activate RepositorySingleton
+          RepositorySingleton-->CTRL : repositories
+           deactivate RepositorySingleton
+
+          CTRL -> PLAT : getAgenciesRepository()
+           activate PLAT
+
+          PLAT --> CTRL: agenciesRepository
+           deactivate PLAT
+
+          CTRL -> agenciesRepository : getAgencies()
+           activate agenciesRepository
+
+           agenciesRepository --> CTRL : agenciesList
+            deactivate agenciesRepository
+           CTRL-->UI: agenciesList
+
+           UI --> ADM : shows the list of agencies where\n the new employee can work
+            deactivate UI
+
+
+           alt Role-Agent or AgencyManager
+           ADM->UI: selects one agency
+           activate UI
+           else Role-NetworkManager
+           ADM->UI: selects the intends agencies
+           end
+
+            UI -> UI: saveAgencies()
+
+
+
+            UI --> ADM : shows all the information and asks to confirm
+             deactivate UI
+
+            ADM -> UI : confirm the information and submits data
+             activate UI
+
+            alt Role-Agent or AgencyManager
+            UI->CTRL: createEmployee(name,\n passport card number,\ntax number,\nstreet,\ndistrict,zipcode,\ncity,state,\nemail adress,\ncontact telephone number, agency)
+            else Role-NetworkManager
+            UI->CTRL: createEmployee(name,\n passport card number,\ntax number,\nstreet,\ndistrict,zipcode,\ncity,state,\nemail adress,\ncontact telephone number, agencies)
+            end
+
+
+            CTRL -> CTRL : getAgenciesByID(agencyID)
+
+
+
+            PLAT --> CTRL : agencyRepository
+            activate PLAT
+            deactivate PLAT
+
+
+            agenciesRepository --> CTRL : agency
+            activate agenciesRepository
+             deactivate agenciesRepository
+            CTRL --> CTRL : agency
+            |||
+            CTRL -> CTRL : getRoleByName(role Name)
+
+
+             PLAT --> CTRL: rolesRepository
+             activate PLAT
+              deactivate PLAT
+
+             RP --> CTRL: roles
+             activate RP
+             deactivate RP
+
+             CTRL-->CTRL: roles
+
+
+             CTRL->LOC**: createLocation(city,state,district,zipcode,street)
+             alt Role-Agent or AgencyManager
+             CTRL->OrganizationRepository**: createEmployee(name,\n passport card number,\ntax number,\nlocation,\nemail adress,\ncontact telephone number, agency)
+             activate OrganizationRepository
+             else Role-NetworkManager
+             CTRL->OrganizationRepository: createEmployee(name,\n passport card number,\ntax number,\nlocation,\nemail adress,\ncontact telephone number, agencies)
+             deactivate OrganizationRepository
+
+             end
+
+             CTRL->ER: saveEmployee()
+             activate ER
+             deactivate ER
+
+             CTRL -> CTRL : generatePassword()
+
+             CTRL -> OrganizationRepository : sendEmail(employeeEmail, employeePassword)
+            activate OrganizationRepository
+            deactivate OrganizationRepository
+             OrganizationRepository-->CTRL: employeeAdd
+               deactivate OrganizationRepository
+
+             CTRL-->UI: employeeAdd
+
+             UI --> ADM: displays operation success
+               deactivate UI
+
+               deactivate ADM
+
+@enduml

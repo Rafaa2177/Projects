@@ -1,0 +1,72 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title US002 - Publishment of a new announcement
+
+autonumber
+
+actor "Agent" as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System : request to initiate the process of creating a new announcement.
+    activate System
+
+        System --> Employee : shows type of property list
+    deactivate System
+
+    Employee -> System : selects type of property
+    activate System
+
+        System --> Employee : Solicits information regarding the property data.
+    deactivate System
+
+    Employee -> System : types requested data \n(area of the property in m2, location, distance from the city center, \n price, commission and photographs )
+
+    opt Property is an Apartment/House
+    activate System
+
+        System --> Employee : requests data
+    deactivate System
+
+    Employee -> System : types requested data \n(number of bedrooms, number of bathrooms, number of parking spaces,\n available equipment (central heating and/or air conditioning))
+
+    opt Property is a House
+    activate System
+        System--> Employee : requests data
+    deactivate System
+
+    Employee -> System : types requested data \nbasement, inhabitable loft and sun exposure
+
+    activate System
+        System--> Employee : shows basement, inhabitable loft and sun exposure options
+    deactivate System
+
+    Employee -> System : selects option
+
+    end opt
+
+    end opt
+
+
+
+   activate System
+          System--> Employee : shows all the inserted data related to the announcement
+   deactivate System
+
+   Employee -> System : submits data
+
+   activate System
+             System--> Employee : analyses the data, if approved, sends a confirmation request before posting
+   deactivate System
+
+    Employee -> System :request to publishes the announcement
+
+    activate System
+
+            System --> Employee :publishes the announcement, displays operation success
+        deactivate System
+@enduml

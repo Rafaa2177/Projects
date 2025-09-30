@@ -1,0 +1,144 @@
+@startuml
+skinparam monochrome false
+skinparam packageStyle rectangle
+skinparam shadowing true
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+title Domain Model
+
+
+
+class Property{
+    area
+    distanceFromCenter
+    price
+}
+
+class Agent{
+    name
+    passportCardNumber
+    taxNumber
+    address
+    emailAddress
+    telephoneNumber
+}
+
+class Agency{
+    designation
+    phoneNumber
+    emailAddress
+}
+
+class Client{
+    name
+    passportCardNumber
+    taxNumber
+    address
+    email
+    telephoneNumber
+}
+
+
+class UnregisteredUser{
+    designation
+}
+
+class Announcement{
+    typeOfBusiness
+    typeOfProperty
+    area
+    location
+    distanceFromCenter
+    price
+}
+class Photos{
+   URI
+}
+class TypeOfBusiness {
+designation
+}
+
+class Land {
+designation
+}
+
+class Habitation {
+    numberOfBedrooms
+    numberOfBathrooms
+    numberOfParkingSpaces
+    availableEquipment
+}
+
+class Location {
+    street
+    district
+    zipcode
+    city
+    state
+}
+
+class Apartment{
+    designation
+}
+
+class House {
+    basement
+    inhabitableLoft
+    sunExposure
+}
+
+class AnnouncementType{
+    designation
+}
+
+class Sale{
+    requestedPrice
+}
+
+class Lease{
+    requestedFee
+    duration
+}
+
+class Commission{
+    typeOfCommission
+    value
+}
+
+
+Client "*" ---> "*" Agent : contacts
+Client "*" ---> "*" Announcement : views
+
+
+Client "*" ---> "*" Property : owns
+
+UnregisteredUser "*" ---> "*" Announcement : views
+
+Property "1.." -left-> "1" UnregisteredUser: is displayed by
+Property "1" -left-> "1" TypeOfBusiness: is categorized by
+Property "1" -left-> "*" Announcement : has
+Property " " <-right- " " Land: is a
+Property "1" -down-> "1" Location: has
+Property " " <-right- " " Habitation : is a
+
+Habitation " " <-- " " House : is a
+Habitation " " <-- " " Apartment: is a
+
+Agency "1" --> "1" Employee : has multiple
+Employee "1" --> "0" Agent : can be
+
+
+Agent "1" --> "1" Roles : has one
+Agent "*" ---> "*" Announcement : publishes
+Agent "1" -- "1" Commission : defines a
+
+Announcement "1" -- "0.." AnnouncementType: has
+AnnouncementType "1" -- "0.." Sale: can be
+AnnouncementType "1" -- "0.." Lease: can be
+Announcement "1" -- "0.." Photos: has
+
+@enduml

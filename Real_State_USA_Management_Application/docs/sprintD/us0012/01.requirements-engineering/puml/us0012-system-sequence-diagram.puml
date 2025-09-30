@@ -1,0 +1,45 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Alternative One
+
+autonumber
+
+actor SystemAdministrator as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System : asks to import file
+    activate System
+
+        System --> Employee : shows all the files and asks to choose one
+    deactivate System
+
+    Employee -> System : chooses a file to import
+    activate System
+
+alt "file selected is not valid"
+
+opt "file is empty"
+        System --> Employee : shows message "file is empty"
+end opt
+
+opt "file is not in csv format"
+    System --> Employee : shows message "file is not in csv format"
+end opt
+end alt
+
+        System --> Employee : aks to confirm to import file
+    deactivate System
+
+    Employee -> System : confirms import file
+    activate System
+
+        System --> Employee : displays operation success
+    deactivate System
+
+
+@enduml

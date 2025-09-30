@@ -1,0 +1,119 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+'title Domain Model
+
+'class Platform {
+'  -description
+'}
+
+
+
+class Agent {
+ name
+    citizenCard
+    taxNumber
+    address
+    phoneNumber
+    email
+    agencyToWhichIt'sAssigned
+}
+
+
+class AnnouncementRepository {
+designation
+}
+
+class Announcement {
+initialAndEndDate
+contractType
+
+}
+
+class AnnouncementType{
+designation
+}
+
+class Sale {
+requestedPrice
+}
+
+class Lease {
+requestedFee
+duration
+}
+
+class Comission {
+typeOfComission
+value
+}
+
+class Property {
+area
+location
+distance
+price
+}
+
+class Residence {
+bedrooms
+bathrooms
+parkingSpaces
+}
+
+class Photograph {
+designation
+}
+class House {
+basement
+loft
+sunExposure
+}
+
+class Adress {
+street
+zipCode
+}
+
+class Client {
+name
+email
+phoneNumber
+taxNumber
+passportCardNumber
+}
+
+class PurchaseOrder {
+orderAmount
+}
+
+Announcement "1" -- "1" Comission : has >
+Announcement "1" -- "0.." AnnouncementType: has >
+Announcement "1" - "1" Property: has >
+Announcement "1" -left- "0..*" PurchaseOrder: has >
+
+AnnouncementType "1" -- "0.." Sale: can be >
+AnnouncementType "1" -- "0.." Lease: can be >
+
+Property "1" - "1..*" Photograph: has >
+Property <|-- Residence
+Residence <|-- House
+
+PurchaseOrder "1" -- "1" Client: created by >
+
+Client "1" -up- "1" Adress: has >
+
+Agent "1" -- "1" Adress: has >
+Agent "1" -- "1" Announcement: is responsible >
+
+AnnouncementRepository "1" -- "*" Announcement: has >
+@enduml

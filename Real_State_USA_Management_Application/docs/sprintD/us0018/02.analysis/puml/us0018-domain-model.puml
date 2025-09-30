@@ -1,0 +1,42 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+hide circle
+hide methods
+
+class Person{
+  name
+  telephoneNumber
+  emailAddress
+  cardNumber
+  taxNumber
+}
+
+
+class StoreManager{
+  name
+  telephoneNumber
+  emailAddress
+  cardNumber
+  taxNumber
+}
+
+class Store{
+  ID
+  telephoneNumber
+  emailAddress
+}
+
+class PurchaseOrder{
+    price
+    contractDuration
+}
+
+
+Person <|-- StoreManager
+StoreManager --> Store : manages
+Store --> PurchaseOrder : lists
+PurchaseOrder<--StoreManager:Analyzes
+
+@enduml

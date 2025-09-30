@@ -1,0 +1,146 @@
+@staruml
+@startuml
+
+skinparam packageStyle rectangle
+skinparam shadowing true
+
+
+skinparam classAttributeIconSize 0
+
+title US004 - Class Diagram
+
+class CreateRequestUI
+{
+}
+
+class CreateRequestController
+{
++getRequestCategories()
++getPropertyType()
++setPropertyType()
++createRequest(requestType, currentOwner)
++createProperty(area , location , distanceCenter , price , photographList)
++createPhotographList()
++setContactDuration(contractDuration)
++createResidence(bedrooms , bathrooms , parkingSpaces , equipment)
++createHouse(basement, loft, sunExposure)
++getBranch()
++getAgentList(selectBranch)
++setDate(currentDate)
++setState(currentState)\
+
+
+
+ }
+
+ class Repositories{
+ -PropertyTypeRepository
+ -RequestTypeRepository
+ -BranchRepository
+ +getInstance()
+ +getRequestTypeRepository()
+ +getPropertyTypeRepository()
+ +getBrachRepository()
+ }
+
+ class PropertyTypeRepository{
+-propertyTypeList: List<String>
++getPropertyType()
+}
+
+class BranchRepository{
+-brachList: List<Branch>
++getBranchList()
+}
+
+class RequestCategoryRepository{
+-requestTypeList: List<String>
++getRequestType()
+}
+
+class Branch{
+-List<agent>
++createRequest(requestType,user)
++addRequest(request)
++getAgentList(selectedBranch)
+}
+
+class Request{
+-requestState: Boolean
+-propertyType : String
+-area : Integer
+-location : String
+-distanceCenter : double
+-price : integer
+-List<photographList>
+-date: String
+-user: Owner
++setPropertyType(propertyType)
++createProperty(area, location, distanceCenter, price, photographList)
++addProperty(property)
++createResidence(bedrooms, bathrooms, parkingSpaces, equipment)
++createHouse(basement, loft, sunExposure)
+}
+
+class Employee{
+-name: String
+-passportNumber: integer
+-taxNumber:: String
+-phoneNumber: integer
+-address: Address -property
+}
+
+class House{
+-basement: Boolean
+-loft: Boolean
+-sunExposure: String
+}
+
+class Residence{
+-bedrooms: Integer
+-bathrooms: Integer
+-parkingSpaces: Integer
+-equipment: String
+}
+
+class Property{
+-area: Integer
+-location: String
+-distance: Double
+-price: Integer
+-photograph: List<String>
+}
+
+class Owner{
+-name: String
+-passportNumber: Integer
+-taxNumber: Integer
+-email: String
+-phoneNumber: Integer
+}
+class Agent{
+}
+
+
+
+
+
+
+CreateRequestUI ...> CreateRequestController
+CreateRequestController ..> Repositories
+Repositories --> "1" PropertyTypeRepository
+Repositories -> "1" BranchRepository
+Repositories --> "1" RequestCategoryRepository
+CreateRequestController --> Branch
+BranchRepository -> "*" Branch
+Branch "1" -> "*" Employee : employs
+Request --> House
+Owner "1"-->"1" CreateRequestUI : interacts
+Branch "1"-->"1.." Request : creates
+Request --> Property
+Request --> Residence
+House -|> Residence
+Residence -|> Property
+Owner "1" ---> "1" Agent :chooses
+Agent -|> Employee
+@enduml

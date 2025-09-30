@@ -1,0 +1,108 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class DisplayTheListPropertiesUI{
+
+'Controllers cannot have any
+ 'kind of business-related data
+ 'manipulation.
+
+}
+
+class Habitation {
+
+    -HabitationType: Type
+    -numberOfBedrooms
+     +getHabitationType()
+     +setHabitationType(habitationType)
+    +getNumberOfBedrooms()
+    +setNumberOfBedrooms(numberOfBedrooms)
+}
+
+class DisplayTheListPropertyController{
+
+    -PorpertyRepository propertyRepository = null
+    -getPropertyRepository()
+    -getListOfAllProperties(propertyType, businessType, numberOfBedrooms)
+
+}
+
+
+enum HabitationType {
+
+    HOUSE;
+    APARTMENT;
+
+}
+'habitation is a property
+
+
+enum PropertyType {
+
+   HABITATION;
+   LAND;
+}
+
+class Property {
+
+    -PropertyType : type
+    -BusinessType : type
+    +getBusinessType()
+        +setBusinessType(businessType)
+    +getPropertyType()
+    +setPropertyType(propertyType)
+
+}
+
+class Repositories {
+
+    -repositories()
+    +getInstance()
+    +getPropertyRepository()
+
+}
+
+enum BusinessType {
+
+    SALE;
+    LEASE;
+
+}
+
+class PropertyRepository {
+
+    -properties: ArrayList<Object>
+    +getListOfAllProperties(propertyType, businessType, numberOfBedrooms, sortCrtiteria)
+    +getListOfAllHabitations(habitationType, businessType, numberOfBedrooms, sortCrtiteria)
+    +getListOfLand(propertyType)
+    +getProperties()
+    +setProperties()
+    +addProperty(Property)
+}
+
+
+
+DisplayTheListPropertiesUI ..> DisplayTheListPropertyController
+DisplayTheListPropertyController ..> Repositories : repositories
+
+
+
+Repositories -> Repositories : instance
+Repositories --> "1" PropertyRepository
+PropertyRepository  -> "*" Property
+Property --- BusinessType
+Property --- PropertyType
+Property <|- Habitation
+Habitation --- HabitationType
+
+'an enum is a special "class" that represents a group of constants (unchangeable variables, like final variables)
+'Because the fields of an enum are constants, their names are written in capital letters.
+@enduml

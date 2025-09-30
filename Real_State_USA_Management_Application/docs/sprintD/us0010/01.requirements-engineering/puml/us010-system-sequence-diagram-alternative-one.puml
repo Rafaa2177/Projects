@@ -1,0 +1,107 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title US010 - Placing an order to purchase a property
+
+autonumber
+
+actor "Client" as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System : chooses one property to buy
+    activate System
+
+        System --> Employee : requests offered price
+    deactivate System
+
+
+    Employee -> System : types the order amount
+    activate System
+
+
+
+    opt The order amount submitted is higher than the amount set by the owner
+
+
+
+        System --> Employee : shows information on screen
+        System --> Employee : requests offered price
+        Employee -> System : types the order amount
+        end
+
+
+       opt The order amount submitted by the client has already been posted for the property
+       System -->Employee : shows information on screen
+       Employee -> System : chooses another property to buy
+        System --> Employee : requests offered price
+        Employee -> System : types the order amount
+
+
+       end
+
+
+        System --> Employee : asks the user to confirm the order
+
+
+    deactivate System
+
+
+    Employee -> System : confirm inserted data
+    activate System
+
+        System --> Employee :
+    deactivate System
+
+    alt chooses the same property
+    loop the previous order wasn´t declined.
+        Employee -> System : choses one property to buy
+        activate System
+        end
+
+
+
+            System --> Employee : requests offered price
+
+
+        Employee -> System : types the order amount
+
+        opt The order amount submitted is higher than the amount set by the owner
+
+
+
+                System --> Employee : shows information on screen
+                System --> Employee : requests offered price
+                Employee -> System : types the order amount
+                end
+
+
+
+       opt The order amount submitted by the client has already been posted for the property
+       System -->Employee : shows information on screen
+       Employee -> System : chooses another property to buy
+        System --> Employee : requests offered price
+        Employee -> System : types the order amount
+
+
+       end
+
+
+        System --> Employee : asks the user to confirm the order
+
+
+    deactivate System
+
+
+    Employee -> System : confirm inserted data
+    activate System
+
+        System --> Employee : submits order
+    deactivate System
+    end
+
+
+@enduml

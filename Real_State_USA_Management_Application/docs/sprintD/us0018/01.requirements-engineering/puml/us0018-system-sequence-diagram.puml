@@ -1,0 +1,37 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title US018 - System Sequence Diagram (SSD)
+
+autonumber
+
+actor StoreManager
+participant System
+
+activate StoreManager
+
+    StoreManager -> System: asks to analyse the deals (house & apartments)
+    activate System
+
+        StoreManager <-- System: requests the path of the file with the deals (house & apartments)
+    deactivate System
+
+    StoreManager -> System: provides the path of the file with the deals (house & apartments)
+    activate System
+
+        StoreManager <-- System: show the regression models and request to select one
+    deactivate System
+
+    StoreManager -> System: selects a regression model
+    activate System
+
+        StoreManager <-- System: requests about the parameters to be used (area, rooms, etc...)
+    deactivate System
+
+        StoreManager -> System: provides the parameters to be used (area, rooms, etc...)
+        activate System
+
+            StoreManager <-- System: shows statistics
+@enduml

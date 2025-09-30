@@ -1,0 +1,46 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+
+class Person {
+    passportNumber
+    taxNumber
+    phoneNumber
+    password
+    Roles.AGENT
+}
+
+class User {
+    name
+    email
+    password
+
+}
+
+class VisitRequest {
+    announcement
+    date
+    message
+    timeSlot
+    person
+    idVisit
+    status
+}
+class EmailService{
+}
+
+Person "1" - "0..*" VisitRequest : manages visit request >
+Person --|> User : is a >
+Person --> EmailService: sends email >
+EmailService --> Client: receives email >
+
+@enduml

@@ -1,0 +1,116 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Agent" as A
+participant ":ListVisitRequestUI" as UI
+participant ":ListVisitRequestController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant ":AuthenticationRepository" as AR
+participant ":PersonRepository" as PR
+participant ":VisitRequestRepository" as VRR
+participant ":ApplicationSession" as AS
+participant "appSession \n:ApplicationSession" as APS
+participant "currentSession \n:UserSession" as CS
+participant "visitRequestRepository \n:VisitRequestRepository" as VRR
+participant ":ConfigurationFileForSorting" as CF
+
+participant "visitRequestMapper \n:VisitRequestMapper" as VRM
+participant "visitRequestDTO \n:VisitRequestDTO" as VRDTO
+participant "visitRequestDTOList \n:List<VisitRequestDTO>" as LVRDTO
+
+
+activate A
+
+        A -> UI : asks for the list of all booking requests made for myself
+
+        activate UI
+
+            UI -> CTRL** : create
+
+            UI -> CTRL : checkAgentList()
+            activate CTRL
+
+            CTRL -> RepositorySingleton : getInstance()
+
+            activate RepositorySingleton
+
+                RepositorySingleton --> CTRL: repositories
+
+            deactivate RepositorySingleton
+
+            CTRL -> AR : getCurrentSession()
+            activate AR
+
+            AR --> CTRL : return UserSession
+            deactivate AR
+
+            CTRL -> PR : getPersonByUserSession(UserSession)
+            activate PR
+
+            PR --> CTRL : return Person
+            deactivate PR
+
+            CTRL -> VRR : checkAgentList()
+            activate VRR
+
+            VRR --> CTRL : return boolean
+            deactivate VRR
+
+            CTRL --> UI : return boolean
+            deactivate CTRL
+
+            alt [if check = true]
+
+            UI --> A :shows message: \n"There's no visit requests to this Agent on the system"
+
+            end alt
+
+            alt [if check = false]
+
+            UI --> A : asks the start date and end date
+            deactivate UI
+
+            A -> UI : types dates
+            activate UI
+
+            UI -> CTRL :  List = getAgentVisitRequestList()
+            activate CTRL
+
+            CTRL -> VRR : getAgentVisitRequestList
+            activate VRR
+
+            VRR --> CTRL :  return AgentVisitRequestList
+            deactivate VRR
+
+            CTRL --> UI : return AgentVisitRequestList
+            deactivate CTRL
+
+            UI -> CTRL : getSortedVisitRequestList(List)
+            activate CTRL
+
+            CTRL -> VRR : getSortedVisitRequestList(List?)
+            activate VRR
+
+            VRR -> CF : getSortedVisitRequestList(List)
+            activate CF
+
+            CF --> VRR :  return algorithm
+            deactivate CF
+
+            VRR --> CTRL : return sortedVisitRequestList
+            deactivate VRR
+
+            CTRL --> UI : return sortedVisitRequestList
+            deactivate CTRL
+
+            UI --> A : shows sortedVisitRequestList
+            deactivate UI
+
+            deactivate A
+
+            end alt
+@enduml

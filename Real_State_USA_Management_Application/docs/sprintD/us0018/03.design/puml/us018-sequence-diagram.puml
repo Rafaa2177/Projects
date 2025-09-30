@@ -1,0 +1,237 @@
+@startuml
+autonumber
+actor StoreManager as SM
+
+participant ":AnalyzeDealsGUI" as GUI
+participant ":AnalyzeDealsController" as CTRL
+participant ":Repositories" as REPO
+participant "repositories :Repositories" as repo
+participant ":InformationFromFile" as IF
+
+participant ":PurchaseOfferRepository" as POR
+participant ":PurchaseOffer" as PO
+
+participant ":SimpleRegression" as SR
+participant ":MultipleLinearRegression" as MLR
+
+participant "PersonRepository" as PersonRepo
+participant "AnnouncementRepository" as AnnRepo
+
+activate SM
+
+    SM -> GUI: asks to analyse deals
+    activate GUI
+        SM <-- GUI: requests the path of the file with the deals (houses & apartments)
+        SM -> GUI: provides the path of the file with the deals (houses & apartments)
+
+        GUI -> CTRL: informationFromFile(path)
+        activate CTRL
+
+            CTRL -> REPO: getInstance
+            activate REPO
+                CTRL <-- REPO: instance
+            deactivate REPO
+            CTRL -> repo: getPurchaseOfferRepository
+            activate repo
+                CTRL <-- repo: purchaseOfferRepository
+            deactivate repo
+            CTRL -> IF: loadDealsFromFile(path)
+            activate IF
+
+                CTRL <-- IF: list<InformationFromFile>
+            deactivate IF
+
+            CTRL -> CTRL: fillAdvertisementInfo()
+            activate CTRL
+
+            deactivate CTRL
+
+            CTRL -> POR: createPurchaseOffer(list<Advertisement> advertisementList)
+            activate POR
+
+loop for each announcement
+                POR -> PO**: create
+                POR -> PO: acceptOffer()
+end
+                CTRL <-- POR: List<PurchaseOffer> purchaseOffers
+            deactivate POR
+
+            GUI <-- CTRL: true/false
+        deactivate CTRL
+
+        deactivate CTRL
+
+        SM <-- GUI: shows regression models and request to select one
+        SM -> GUI: selects a regression model
+
+
+
+alt if parameter is area
+        GUI -> CTRL: getPriceByArea()
+        activate CTRL
+
+            CTRL -> AnnRepo: getAnnouncementList()
+            activate AnnRepo
+                CTRL <-- AnnRepo: announcementList
+            deactivate AnnRepo
+            CTRL -> POR: priceByArea(purchaseOffers, area)
+            activate POR
+    loop for each purchase order
+                POR -> SR: addData(propertyArea, price)
+                activate SR
+                deactivate SR
+    end
+                POR -> SR: prediction(area)
+                activate SR
+                    POR <-- SR: price
+                deactivate SR
+                CTRL <-- POR: price
+            deactivate POR
+
+            GUI<- CTRL: price
+        deactivate CTRL
+end
+
+alt if parameter is distance from city center
+
+        GUI -> CTRL: getPriceByDistancetoCityCenter()
+        activate CTRL
+
+            CTRL -> AnnRepo: getAnnouncementList()
+            activate AnnRepo
+                CTRL <-- AnnRepo: announcementList
+            deactivate AnnRepo
+
+            CTRL -> POR: priceByDistance(purchaseOffers, distance)
+            activate POR
+    loop for each purchase order
+                POR -> SR: addData(propertyDistance, price)
+                activate SR
+                deactivate SR
+    end
+                POR -> SR: prediction(distance)
+                activate SR
+                    POR <-- SR: price
+                deactivate SR
+                CTRL <-- POR: price
+            deactivate POR
+
+            GUI<- CTRL: price
+        deactivate CTRL
+end
+
+alt if parameter is nrBedrooms
+        GUI -> CTRL: getPriceByNumberOfBedrooms()
+        activate CTRL
+
+            CTRL -> AnnRepo: getAnnouncementList()
+            activate AnnRepo
+                CTRL <-- AnnRepo: announcementList
+            deactivate AnnRepo
+            CTRL -> POR: priceByNrBedrooms(purchaseOffers, nrBedrooms)
+            activate POR
+    loop for each purchase order
+                POR -> SR: addData(propertyNrBedrooms, price)
+                activate SR
+                deactivate SR
+    end
+                POR -> SR: prediction(nrBedrooms)
+                activate SR
+                    POR <-- SR: price
+                deactivate SR
+                CTRL <-- POR: price
+            deactivate POR
+
+            GUI<- CTRL: price
+        deactivate CTRL
+end
+
+alt if parameter is nrBathrooms
+        GUI -> CTRL: getPriceByNumberOfBathrooms()
+        activate CTRL
+
+            CTRL -> AnnRepo: getAnnouncementList()
+            activate AnnRepo
+                CTRL <-- AnnRepo: announcementList
+            deactivate AnnRepo
+            CTRL -> POR: priceByNrBathrooms(purchaseOffers, nrBathrooms)
+            activate POR
+    loop for each purchase order
+                POR -> SR: addData(propertyNrBathrooms, price)
+                activate SR
+                deactivate SR
+    end
+                POR -> SR: prediction(nrBathrooms)
+                activate SR
+                    POR <-- SR: price
+                deactivate SR
+                CTRL <-- POR: price
+            deactivate POR
+
+            GUI<- CTRL: price
+        deactivate CTRL
+end
+
+alt if parameter is nrParkingSpaces
+        GUI -> CTRL: getPriceByNumberOfParkingSpaces()
+        activate CTRL
+
+            CTRL -> AnnRepo: getAnnouncementList()
+            activate AnnRepo
+                CTRL <-- AnnRepo: announcementList
+            deactivate AnnRepo
+
+            CTRL -> POR: priceByNrParkingSpaces(purchaseOffers, nrParkingSpaces)
+            activate POR
+    loop for each purchase order
+                POR -> SR: addData(propertyNrParkingSpaces, price)
+                activate SR
+                deactivate SR
+    end
+                POR -> SR: prediction(nrParkingSpaces)
+                activate SR
+                    POR <-- SR: price
+                deactivate SR
+                CTRL <-- POR: price
+            deactivate POR
+
+            GUI<- CTRL: price
+        deactivate CTRL
+end
+
+alt if it has more than 1 parameter
+
+        GUI -> CTRL: getPriceByMultipleParameters()
+        activate CTRL
+
+        activate CTRL
+
+            CTRL -> AnnRepo: getAnnouncementList()
+            activate AnnRepo
+                CTRL <-- AnnRepo: announcementList
+            deactivate AnnRepo
+            CTRL -> POR: priceByParameters(purchaseOffers, area, distanceToCityCenter,nrBedrooms, nrBathrooms, nrParkingSpaces)
+            activate POR
+
+                POR -> MLR: addData(double[][], double[])
+                activate MLR
+                deactivate MLR
+
+                POR -> MLR: (...)
+                activate MLR
+                    POR <-- MLR: price
+                deactivate MLR
+
+                CTRL <-- POR: price
+            deactivate POR
+
+            GUI<- CTRL: price
+        deactivate CTRL
+end
+
+        SM <-- GUI: shows the price
+
+    deactivate GUI
+
+
+@enduml

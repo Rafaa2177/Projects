@@ -1,0 +1,44 @@
+@startuml
+
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+
+
+skinparam classAttributeIconSize 0
+
+class LegacyFile{
+
+ - person: Person
+ + addOrganizationsFromFile(path: String)
+ + getOrganization()
+ + addAnnouncementsLegacy(path: String)
+ - saveOrderFromLegacy(announcement,amount, data, email)
+}
+
+class Repositories {
+   - instance: Repositories
+    - properties: Properties
+
+    + Repositories()
+    + getInstance()
+    + getOrganizationRepository()
+    + getTaskCategoryRepository()
+    + getAuthenticationRepository()
+    + getAnnouncementRepository()
+    + getVisitRequestRepository()
+    + getBranchRepository()
+    + getRequestRepository()
+    + getOrderRepository()
+    + setAuthenticationRepository(authenticationRepository)
+    + setBranchRepository(branchRepository)
+    + setRequestRepository(requestRepository)
+    + setInstance(instance)
+    + getPurchaseOrderRepository()
+    + getPersonRepository()
+    + getProperties()
+    + sortingAlgorithm()
+}
+
+LegacyFile --> Repositories: get repositories
+@enduml

@@ -1,0 +1,64 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Alternative One
+
+autonumber
+
+actor "Unregistered User" as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System : asks to register a new account
+    activate System
+
+    System --> Employee : requests data (name, citizenCardNumber, taxNumber, email, phoneNumber, password)
+    deactivate System
+
+    Employee -> System : types requested data
+    activate System
+
+    System -> Employee : shows account information
+    deactivate System
+
+     Employee -> System : submits data
+     activate System
+
+     System -> Employee : displays operation success
+     deactivate System
+@enduml
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Alternative One
+
+autonumber
+
+actor "Unregistered User" as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System : asks to register a new account
+    activate System
+
+    System --> Employee : requests data (name, citizenCardNumber, taxNumber, email, phoneNumber, password)
+    deactivate System
+
+    Employee -> System : types requested data
+    activate System
+
+    System -> Employee : shows account information
+    deactivate System
+
+     Employee -> System : submits data
+     activate System
+
+     System -> Employee : displays operation success
+     deactivate System
+@enduml

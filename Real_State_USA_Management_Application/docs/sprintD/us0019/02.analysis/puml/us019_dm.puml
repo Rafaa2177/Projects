@@ -1,0 +1,75 @@
+@startuml
+hide circle
+hide methods
+
+
+class NetworkManager
+note right
+NetworkManager is a concept of the business component
+end note
+
+class Person{
+passportNumber
+taxNumber
+email
+phoneNumber
+}
+
+class Employee
+
+class User{
+name
+}
+
+class Store{
+id
+designation
+phoneNumber
+email
+}
+
+class Property{
+area
+distance
+photographs
+}
+
+class Apartment{
+nrBedrooms
+nrBathrooms
+nrParkingSpaces
+availableEquipment
+}
+
+class House{
+nrBedrooms
+nrBathrooms
+nrParkingSpaces
+avaliableEquipment
+existenceOfABasement
+inhabitableLoft
+sunExposure
+}
+
+class Land{}
+
+class Advertisement{
+datePublished
+}
+
+Advertisement "1" --  Property : covers >
+Store "1" -- "*" Advertisement : has >
+Person --|> User
+Employee --|> Person
+NetworkManager "1" --  Employee : is an >
+Agent "1" --  Employee : is an >
+StoreManager "1" --  Employee : is an >
+Apartment  --|>  Property
+House  --|>  Property
+Land  --|>  Property
+Store "1" -- "1" Agent : employs >
+
+
+
+
+@enduml

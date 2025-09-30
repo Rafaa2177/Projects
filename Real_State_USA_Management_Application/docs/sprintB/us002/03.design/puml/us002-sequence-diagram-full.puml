@@ -1,0 +1,183 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Employee_Agent" as ADM
+participant ":PublishAnnouncementUI" as UI
+participant ":PublishAnnouncementController" as CTRL
+participant ":Repositories" as RS
+participant "repositories\n:Repositories" as RRS
+participant ":UserRepositories" as UR
+participant ":PropertyTypeListRepository" as TCR
+participant ":Announcement" as AR
+participant "property\n:Property" as PT
+participant "residence\n:Residence" as RD
+participant "house\n:House" as HS
+
+activate ADM
+
+        ADM -> UI : asks to register new announcement
+
+        activate UI
+            UI -> CTRL** : create
+            activate CTRL
+
+                CTRL -> RS :getInstance()
+                activate RS
+
+                    RS --> CTRL: Repositories
+                deactivate RS
+
+                CTRL -> RRS : getPropertyTypeRepository()
+                activate RRS
+
+                    RRS --> CTRL: PropertyTypeRepository
+                deactivate RRS
+
+                CTRL -> TCR : getPropertyTypeList()
+                activate TCR
+
+                    TCR --> CTRL : PropertyList
+                deactivate TCR
+
+                CTRL --> UI : PropertyList
+            deactivate CTRL
+
+            UI --> ADM : Asks to select one property \n of the property type list
+        deactivate UI
+
+    ADM -> UI : selects one option
+    activate UI
+
+    UI -> CTRL: setPropertyType(propertyType)
+    activate CTRL
+    CTRL --> UI: PropertyType selected
+    deactivate CTRL
+
+        UI --> ADM : requests data (owner's name, commission, price, contract duration, size in m2, \n distance from the city center, proximity to public services, location)
+        ADM --> UI: verification if the owner is registered in the system
+        UI --> CTRL: getUserRepositories()
+        activate CTRL
+
+        CTRL --> RS: getInstance()
+        activate RS
+        RS --> CTRL: repositories
+        deactivate RS
+
+        CTRL -> RRS : getUserRepositories()
+        activate RRS
+        RRS --> CTRL: UserRepositories
+        deactivate RRS
+
+        CTRL --> UR: getUserList()
+        activate UR
+        UR --> CTRL: userList
+        deactivate UR
+
+        loop while users are invalid
+        CTRL -> CTRL: user is registered
+        end loop
+
+        CTRL --> UI: user is registered
+        UI --> ADM: user is registered
+        deactivate CTRL
+
+    deactivate UI
+
+    ADM -> UI : types requested data
+    activate UI
+
+    UI -> CTRL : createProperty(owner's name, commission, price, contract duration, size in m2, \n distance from the city center, proximity to public services, location, sunExposure)
+    activate CTRL
+    CTRL --> PT : createProperty(owner's name, commission, price, contract duration, size in m2, \n distance from the city center, proximity to public services, location, sunExposure)
+    activate PT
+    PT --> CTRL : property
+    deactivate PT
+    CTRL --> CTRL : addProperty(property)
+    deactivate CTRL
+
+
+
+alt Property is an Apartment
+
+    UI -> ADM : requests data (numberOfBedrooms, numberOfBathrooms, \n numberOfParkingSpaces, availableEquipment (central heating and/or air conditioning))
+    deactivate UI
+
+
+        ADM -> UI : types requested data
+        activate UI
+
+            UI -> CTRL : createResidence(numberOfBedrooms, numberOfBathrooms, numberOfParkingSpaces,\n availableEquipment)
+            activate CTRL
+
+                CTRL -> RD : createResidence(numberOfBedrooms, numberOfBathrooms, numberOfParkingSpaces,\n availableEquipment)
+
+                    activate RD
+                    RD --> CTRL: residence
+                    CTRL --> CTRL : addProperty(property)
+                    deactivate RD
+            deactivate CTRL
+
+
+alt Property is a House
+                UI -> ADM : requests data (basement options, inhabitable loft options, sunExposure)
+                deactivate UI
+
+                ADM -> UI : types requested data
+                activate UI
+
+                UI -> CTRL : createHouse(basement options, inhabitable loft options, sunExposure)
+                activate CTRL
+
+                    CTRL --> HS : createHouse (basement options, inhabitable loft options, sunExposure)
+                    activate HS
+
+                    HS --> CTRL: house
+                    deactivate HS
+                    CTRL --> CTRL: addProperty(property)
+
+            deactivate CTRL
+end alt
+
+end alt
+            |||
+            UI -> ADM : requested data (one to thirty photographs)
+            deactivate UI
+
+                ADM -> UI: types requested data
+                activate UI
+                    UI -> CTRL: createPhotographList()
+                    activate CTRL
+
+                    CTRL --> PT: createPhotographList()
+                    activate PT
+                    loop while 1 <= numberOfPhotographs <= 30
+                    PT--> CTRL: add(photograph)
+                    end loop
+                    deactivate PT
+                    deactivate CTRL
+                deactivate UI
+            UI --> ADM: shows all data related to the announcement
+            ADM --> UI : submits data
+            activate UI
+            UI --> CTRL: submits all the data
+            activate CTRL
+                CTRL --> AR**: create
+                activate AR
+                AR --> CTRL: announcement created
+                CTRL-> AR: setDate(currentDate)
+                AR --> CTRL: announcement created with success
+                CTRL --> UI: announcement created with success
+                deactivate
+                deactivate CTRL
+
+            UI --> ADM: displays operation success message
+    deactivate UI
+
+deactivate ADM
+
+@enduml
+

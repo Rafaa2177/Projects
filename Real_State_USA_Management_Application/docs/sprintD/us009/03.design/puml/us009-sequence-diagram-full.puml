@@ -1,0 +1,148 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Client" as CLT
+participant ":VisitRequestUI" as UI
+participant ":VisitRequestController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as Repositories
+participant ":AnnouncementRepository" as AR
+participant ":VisitRequestRepository" as VRR
+participant ":PersonRepository" as PR
+
+activate CLT
+
+        CLT -> UI : asks to schedule a visit
+
+        activate UI
+
+            UI -> CTRL** : create
+
+                CTRL -> RepositorySingleton : getInstance()
+                activate CTRL
+
+                activate RepositorySingleton
+
+                    RepositorySingleton --> CTRL: repositories
+                deactivate RepositorySingleton
+
+                CTRL -> Repositories : getAnnouncementRepository()
+                activate Repositories
+
+                    Repositories --> CTRL: AnnouncementRepository
+                deactivate Repositories
+
+                CTRL -> AR : getAnnouncementList()
+                activate AR
+
+                    AR --> CTRL : AnnouncementList
+                deactivate AR
+
+                CTRL --> UI : AnnouncementList
+            deactivate CTRL
+
+            UI --> CLT : shows a list of available announcements,\n and asks to select an announcement
+
+        deactivate UI
+
+    CLT -> UI : selects an announcement
+    activate UI
+
+        UI --> CLT : requests data (client's name and phone number;\n date and time slot)
+    deactivate UI
+
+    CLT -> UI : types requested data (date and time slot)
+    activate UI
+
+    UI -> CTRL: saveTimeSlot(timeslot1, count)
+    activate CTRL
+
+    CTRL -> RepositorySingleton : getInstance()
+    activate RepositorySingleton
+
+    RepositorySingleton --> CTRL: repositories
+    deactivate RepositorySingleton
+
+    CTRL -> Repositories : getVisitRequestRepository()
+    activate Repositories
+
+    Repositories --> CTRL: VisitRequestRepository
+    deactivate Repositories
+
+    CTRL -> VRR : saveTimeSlot(int[][] timereal, int count)
+    activate VRR
+
+    VRR --> CTRL : returns timeSlot
+    deactivate VRR
+
+    CTRL --> UI : returns timeSlot
+    deactivate CTRL
+
+    UI --> CLT: asks to confirm data
+    deactivate UI
+
+alt in case date and time slot are available
+
+        CLT -> UI: confirms data
+        activate UI
+
+        UI -> CTRL: confirms data
+        activate CTRL
+
+        CTRL -> RepositorySingleton : getInstance()
+        activate RepositorySingleton
+
+        RepositorySingleton --> CTRL: repositories
+        deactivate RepositorySingleton
+
+        CTRL -> Repositories : getPersonRepository()
+        activate Repositories
+
+        Repositories --> CTRL: PersonRepository
+        deactivate Repositories
+
+        CTRL -> PR : getPerson()
+        activate PR
+
+        PR --> CTRL : returns person
+        deactivate PR
+
+        CTRL --> UI : returns person
+        deactivate CTRL
+
+        UI --> CLT: asks to write a message
+    deactivate UI
+
+    CLT -> UI : write a message
+    activate UI
+
+     UI --> CLT: confirm message
+        deactivate UI
+
+        CLT -> UI : confirms message
+        activate UI
+
+        UI -> CTRL : createVisitRequest(announcement, date,\n timeSlot, message, person)
+        activate CTRL
+
+            CTRL -> VRR : visitRequestRepository.addRequests(visit)
+            activate VRR
+
+            VRR --> VRR: visitRequests.add(visitRequest)
+
+            VRR --> CTRL: Visit Request added
+            deactivate VRR
+
+             CTRL --> UI: Visit Request added
+            deactivate CTRL
+
+            UI --> CLT: displays operation success
+    deactivate UI
+end alt
+deactivate CLT
+
+@enduml

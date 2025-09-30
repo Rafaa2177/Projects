@@ -1,0 +1,62 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class Client {
+    name
+    phoneNumber
+}
+
+class Message {
+    client's name
+    phoneNumber
+    date
+    timeSlot
+}
+
+
+class Agent {
+    name
+    citizenCard
+    taxNumber
+    address
+    phoneNumber
+    emailAddress
+
+}
+
+class Property {
+    propertyType
+    area
+    price
+    distanceFromCityCenter
+
+}
+
+
+class VisitRequest {
+    timeSlot
+    data
+}
+
+
+Client -- Agent : Informs >
+
+(Client,Agent) -- Message : making use of
+
+Agent -- VisitRequest : schedule >
+
+VisitRequest -- Property: to visit >
+
+Client "1" -- "1..*" VisitRequest : requests  >
+
+
+
+
+@enduml

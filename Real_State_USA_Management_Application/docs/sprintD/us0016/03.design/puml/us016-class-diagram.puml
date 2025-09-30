@@ -1,0 +1,79 @@
+@startuml
+
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+class Employee{
+-String passportNumber
+-String taxNumber
+-String phoneNumber
+-String pwd
+
+}
+
+
+class ScheduleVisitResponseUI{
+}
+
+class ScheduleVisitResponseController{
+- EmailServiceAdapter adapter
+- EmailService emailService
++ getVisitRequestList()
++ getAuthenticationRepository()
+}
+
+class Repositories{
+- AuthenticationRepository authenticationRepository
++ VisitRequestRepository visitRequestRepository
+-getInstance()
+-getVisitRequestRepository()
+- getAuthenticationRepository()
+}
+
+class VisitRequest{
++List<VisitRequest> visitRequests
+-getVisitRequestById(int id)
+-getAnnouncements()
+-getAgent()
+-getStatus()
+-setStatus(Status.ACCEPTED)
+}
+
+class VisitRequestRepository{
+-acceptVisitRequest(VisitRequest visit, Status.ACCEPTED)
+}
+
+interface EmailService{
+-sendNotificationEmailForVisitRequest(String email, VisitRequest visitRequest, Announcement announcement)
+}
+
+class GmailService{
++int number
+}
+
+class TextEmailService{
++int number
+}
+
+class DeiService{
++int number
+}
+
+ScheduleVisitResponseUI .-> ScheduleVisitResponseController
+ScheduleVisitResponseController .-> Repositories
+Repositories .-> VisitRequestRepository
+Repositories .-> AuthenticationRepository
+ScheduleVisitResponseController --> VisitRequestRepository
+ScheduleVisitResponseController --> EmailService
+EmailService .--> GmailService
+EmailService .--> DeiService
+EmailService .--> TextEmailService
+Employee --> ScheduleVisitResponseUI
+ScheduleVisitResponseController --> VisitRequest
+VisitRequest -> VisitRequestRepository
+@enduml

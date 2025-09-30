@@ -1,0 +1,85 @@
+@startuml
+  skinparam monochrome true
+  skinparam packageStyle rectangle
+  skinparam shadowing false
+  skinparam classAttributeIconSize 0
+  hide circle
+  hide methods
+
+  title Domain Model
+
+  class Owner {
+      name
+      citizenCardNumber
+      taxNumber
+      address
+      email
+      telephoneNumber
+  }
+
+  class Agency{
+      designation
+      location
+      emailAddress
+      telephoneNumber
+      }
+
+  class Agent {
+      name
+      citizenCardNumber
+      taxNumber
+      address
+      email
+      telephoneNumber
+  }
+
+  class Property{
+      typeOfBusiness
+      typeOfProperty
+  }
+
+  class Apartment{
+      area
+      location
+      distanceFromCenter
+      price
+      numberOfBedrooms
+      numberOfBathrooms
+      numberOfParkingSpaces
+      availableEquipment
+  }
+
+  class House{
+      area
+      location
+      distanceFromCenter
+      price
+      numberOfBedrooms
+      numberOfBathrooms
+      numberOfParkingSpaces
+      availableEquipment
+      basement
+      inhabitableLoft
+      sunExposure
+  }
+
+  class Land{
+       area
+       location
+       distanceFromCenter
+       price
+
+  }
+  class RentalAgreement{
+      rentalDuration
+  }
+  Agency "1" - "1" Owner: Select <
+  Owner "1" - "0..*" Property: submit >
+  Owner "1" -- "1" Agent:assign >
+  Agent "1" - "0..*" Property
+  Property "1"-"1" RentalAgreement
+  Owner "1" -"1" RentalAgreement:define >
+  Property <|-- House
+  Property <|-- Apartment
+  Property <|-- Land
+  @enduml

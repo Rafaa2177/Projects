@@ -1,0 +1,24 @@
+@startuml
+title System Sequence Diagram (SSD) - List all booking requests for properties managed by me
+
+actor "Agent" as Employee
+participant ":System" as System
+
+activate Employee
+    ref over System
+    Gets the list created in US009
+    end
+
+    Employee -> System : asks for the list of all booking requests made for myself
+    activate System
+   System --> Employee : requests start date and end date
+    deactivate System
+
+    Employee -> System :  types start date and end date
+    activate System
+
+    System --> Employee : shows list of all booking requests made for myself according to the configuration file
+
+    System --> Employee : shows operation success message
+    deactivate System
+@enduml

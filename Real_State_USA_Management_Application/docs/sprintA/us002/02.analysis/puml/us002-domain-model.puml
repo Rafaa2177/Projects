@@ -1,0 +1,112 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class Announcement{
+    initialAndEndDate
+    contractType
+}
+
+class AnnouncementType{
+    designation
+}
+
+class Sale{
+    requestedPrice
+}
+
+class Lease{
+    requestedFee
+    duration
+}
+
+class Commission{
+    typeOfCommission
+    value
+}
+
+class Request{
+    designation
+}
+
+class Property{
+    propertyCategory
+    area
+    price
+    distanceFromCityCenter
+    photographs
+}
+
+class Location{
+   reference
+   typeOfArea
+}
+
+class Land{
+    designation
+}
+
+class Habitation{
+    numberOfBedrooms
+    numberOfBathrooms
+    numberOfParkingSpaces
+    availableEquipment
+}
+
+class Apartment{
+    designation
+}
+
+class Agent{
+    name
+    citizenCard
+    taxNumber
+    address
+    phoneNumber
+    emailAddress
+    agencyToWhichIt'sAssigned
+}
+
+class Owner{
+    name
+    citizenCard
+    taxNumber
+    address
+    phoneNumber
+}
+
+class House {
+    basement
+    inhabitableLoft
+    sunExposure
+}
+
+Request "1" -- "1" Agent : receives >
+
+Agent "1" -- "1" Announcement : publishes >
+Agent "1" -- "1" Commission: chooses >
+
+Owner "1" -- "*" Property : owns >
+Owner "1" -right- "*" Request : makes >
+
+Announcement "1" -- "1" Commission : has >
+Announcement "1" -- "0.." AnnouncementType: has >
+
+AnnouncementType "1" -- "0.." Sale: can be >
+AnnouncementType "1" -- "0.." Lease: can be >
+
+Property "1" -right- "*" Announcement : has >
+Property "1" -- "*" Land: can be >
+Property "1" -- "1" Location: has >
+Property "1" -- "*" Habitation : can be >
+
+Habitation "1" -- "0.." House : can be >
+Habitation "1" -- "0.." Apartment: can be >
+
+@enduml

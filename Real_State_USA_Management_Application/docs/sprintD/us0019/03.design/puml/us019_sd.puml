@@ -1,0 +1,136 @@
+@startuml
+autonumber
+actor "NetworkManager" as NM
+participant ":StorePartitionGUI" as GUI
+participant ":StorePartitionGUIFileController" as CTRL
+participant "StorePartitionController" as SPC
+participant ":Repositories" as REPO
+participant "repositories :Repositories" as repo
+participant ":LoadInformationFromFile" as LIFF
+participant ":InformationFromFileMapper" as MapperDTO
+participant ":InformationFromFileDTO" as DTO
+participant ":StoreRepository" as SR
+
+
+
+activate NM
+NM -> GUI : asks to divide stores into two subsets
+activate GUI
+GUI --> NM : asks if the user wants to divide stores in the system \n or by using a csv file
+NM -> GUI : chooses the preferred method
+opt user chooses to divide stores using csv file
+NM -> GUI : searches or writes the path of the csv file
+GUI -> CTRL : pass the file path to the controller
+activate CTRL
+CTRL -> SPC : loadInformationFromFile(path)
+activate SPC
+deactivate CTRL
+SPC -> LIFF : loadInformationFromFile(path)
+activate LIFF
+deactivate SPC
+loop for each line
+                LIFF -> LIFF: loadInformationFromLine(header, line)
+
+
+                    LIFF -> MapperDTO: toDTO()
+                    activate MapperDTO
+                        LIFF <-- MapperDTO: InformationFromFileDTO
+                    deactivate MapperDTO
+
+
+end
+LIFF --> SPC : list
+activate SPC
+deactivate LIFF
+SPC --> CTRL : list
+deactivate SPC
+activate CTRL
+CTRL -> CTRL : check if the list is null or empty
+CTRL -> SPC : calculateStorePropertyCountMap(list)
+activate SPC
+deactivate CTRL
+SPC -> REPO : getInstance
+activate REPO
+REPO --> SPC : instance
+deactivate REPO
+SPC -> repo : getStoreRepository
+activate repo
+repo --> SPC : storeRepository
+deactivate repo
+SPC -> SR : calculateStorePropertyCountMap(list)
+activate SR
+SR --> SPC : storePropertyCountMap
+deactivate SR
+SPC --> CTRL : storePropertyCountMap
+deactivate SPC
+activate CTRL
+CTRL -> CTRL : check if the storePropertyCountMap is empty
+CTRL -> SPC : calculateClosestPropertyPartition(storePropertyCountMap)
+activate SPC
+deactivate CTRL
+SPC -> repo : getStoreRepository
+activate repo
+repo --> SPC : storeRepository
+deactivate repo
+SPC -> SR : calculateClosestPropertyPartition(storePropertyCountMap)
+activate SR
+SR --> SPC : closestPartitions
+deactivate SR
+SPC --> CTRL : closestPartitions
+deactivate SPC
+activate CTRL
+CTRL -> CTRL : check if closestPartitions is empty
+CTRL --> GUI : closestPartitions
+deactivate CTRL
+GUI --> NM : shows the requested partition, with the difference of \n properties between the two lists, and the stores ID
+end
+opt user chooses to divide stores using the system
+GUI -> CTRL : calls the controller
+activate CTRL
+CTRL -> SPC : getStoreList()
+activate SPC
+deactivate CTRL
+SPC -> REPO : getInstance
+activate REPO
+REPO --> SPC : instance
+deactivate REPO
+SPC -> repo : getStoreRepository
+activate repo
+repo --> SPC : storeRepository
+deactivate repo
+SPC -> SR : getStoreList()
+activate SR
+SR --> SPC : storeList
+deactivate SR
+SPC --> CTRL : storeList
+deactivate SPC
+activate CTRL
+CTRL -> CTRL : check if the storeList is empty
+CTRL -> SPC : divideStoresIntoTwoSublists(storeList)
+activate SPC
+deactivate CTRL
+SPC -> repo : getStoreRepository
+activate repo
+repo --> SPC : storeRepository
+deactivate repo
+SPC -> SR : divideStoresIntoTwoSublists(storeList)
+activate SR
+SR --> SPC : storePartitions
+deactivate SR
+SPC --> CTRL : storePartitions
+deactivate SPC
+activate CTRL
+CTRL -> CTRL : check if storePartitions is empty
+CTRL --> GUI : storePartitions
+deactivate CTRL
+GUI --> NM : shows the requested partition, with the difference of \n properties between the two lists, and the stores ID
+
+end
+
+
+deactivate SR
+deactivate SPC
+deactivate CTRL
+deactivate GUI
+deactivate NM
+@enduml

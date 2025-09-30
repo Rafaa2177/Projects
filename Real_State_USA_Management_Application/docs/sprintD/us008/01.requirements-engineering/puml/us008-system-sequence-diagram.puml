@@ -1,0 +1,73 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title US008 - System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Agent" as Agent
+participant ":System" as System
+
+activate Agent
+
+Agent -> System : Asks to see list of property announcement request
+activate System
+
+System --> Agent : Show the list of announcements related to the request
+deactivate System
+Agent ->  System : Chooses the announcement to accept / reject / exit
+
+loop while (requests.size() > 0 && exit == false)
+
+alt announcement is accepted
+activate System
+
+System --> Agent : Asks if commission is in percentage or value
+
+deactivate System
+
+Agent -> System : Inputs the pretended option
+
+
+
+activate System
+
+
+System --> Agent : asks for commission
+
+deactivate System
+
+Agent -> System : Inputs commission
+
+activate System
+
+System --> Agent : Publishes request and shows success message
+
+
+
+else announcement is rejected
+
+
+
+
+System --> Agent : asks to write an email to property owner
+
+deactivate System
+
+Agent -> System :inputs message
+activate System
+
+System --> Agent : Changes announcement status to declined and shows success message
+deactivate System
+
+
+end
+
+end
+
+
+
+
+@enduml

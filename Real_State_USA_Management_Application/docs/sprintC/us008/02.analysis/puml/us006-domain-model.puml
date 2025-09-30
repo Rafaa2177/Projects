@@ -1,0 +1,62 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+'title Domain Model
+
+'class Platform {
+'  -description
+'}
+
+class Agent {
+name
+taxNumber
+phoneNumber
+email
+address
+role
+commission
+}
+
+class AnnouncementRequest{
+ requestType
+ ownerName
+ property
+ house
+ apartment
+ price
+ rentPrice
+ commission
+ date
+ agent
+ habitationType
+ requestState
+}
+
+class Announcement{
+announcementRequest
+
+}
+
+class Commission{
+value
+percentage
+}
+
+
+
+
+Agent "1" -> "0..*" AnnouncementRequest : is appointed
+AnnouncementRequest "1" -> "1" Announcement : if published
+Agent "1" -> "1" Commission : sets
+Commission "1" --> "1" AnnouncementRequest
+
+@enduml

@@ -1,0 +1,40 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+hide circle
+hide methods
+
+
+class Agent {
+   name
+   citizenCard
+   taxNumber
+   address
+   phoneNumber
+   emailAddress
+}
+
+class VisitRequest {
+       timeSlot
+       data
+}
+
+class Property {
+    propertyType
+    area
+    price
+    distanceFromCityCenter
+}
+
+class Sort {
+    sortingAlgorithm
+    configurationFile
+}
+
+Agent --VisitRequest: list >
+VisitRequest -- Property: to visit >
+(Agent, VisitRequest) -- Sort: making use of
+
+@enduml

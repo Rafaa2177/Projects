@@ -1,0 +1,379 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+title US004 - Sequence Diagram
+'hide footbox
+actor "Owner" as ADM
+participant ":CreateRequestUI" as UI
+participant ":CreateRequestController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repository" as PLAT
+participant "requestCategoryRepository\n:RequestCategoryRepository" as TaskCategoryRepository
+participant "propertyTypeRepository\n:PropertyTypeRepository" as PropertyTypeRepository
+participant "branchRepository\n:BranchRepositories" as BranchRepository
+participant "branch\n:Branch" as BRANCH
+participant "request\n:Request" as REQUEST
+participant "residence:\nResidence" as RESIDENCE
+participant "property:\nProperty" as PROPERTY
+participant "house:\nHouse" as HOUSE
+participant "agent:\nAgent" as agent
+participant "emplyoee\n:Emplyoee"
+participant "agentList:\nList<Agent>" as agentList
+participant ":ApplicationSession" as _APP
+participant "appSession\n:ApplicationSession" as APP
+participant "currentSession\n:UserSession" as user
+
+
+
+activate ADM
+
+        ADM -> UI : asks to create a request to list a property
+
+        activate UI
+
+'            UI --> ADM : requests data (reference, description,  informal \n description, technical description, duration, cost)
+            'create CTRL
+            UI -> CTRL** : create
+
+            UI -> CTRL : getRequestCategories()
+            activate CTRL
+
+                CTRL -> RepositorySingleton : getInstance()
+                activate RepositorySingleton
+
+                    RepositorySingleton --> CTRL: repositories
+                deactivate RepositorySingleton
+
+
+                CTRL -> PLAT : getRequestCategoryRepository()
+                activate PLAT
+
+                    PLAT  --> CTRL: requestCategoryRepository
+                deactivate PLAT
+
+                CTRL -> TaskCategoryRepository : getRequestCategories()
+                activate TaskCategoryRepository
+
+                    TaskCategoryRepository --> CTRL : requestCategoryList
+                deactivate TaskCategoryRepository
+
+                CTRL --> UI : requestCategoryList
+            deactivate CTRL
+                UI -> CTRL : getUserData()
+            activate CTRL
+
+
+
+              CTRL -> _APP :getInstance()
+              activate _APP
+                _APP -> CTRL : appSession
+
+             deactivate _APP
+             CTRL -> APP : getCurrentSession
+              activate APP
+
+             APP --> CTRL : currentSession
+
+              deactivate APP
+
+             CTRL -> user : getUser()
+              activate user
+
+               user --> CTRL : user
+
+                deactivate user
+              deactivate APP
+
+
+            CTRL --> UI : user
+            deactivate CTRL
+            UI --> ADM : shows request category list\n and asks to select one
+
+        deactivate UI
+
+    ADM -> UI : selects a request category
+    activate UI
+    UI -> UI : saves the data
+    UI -> CTRL : createRequest(requestType, user)
+     activate CTRL
+
+     CTRL -> BRANCH : createRequest(requestType, user)
+     activate BRANCH
+
+      BRANCH -> REQUEST** : create
+     activate REQUEST
+     BRANCH <-- REQUEST : request
+     deactivate REQUEST
+
+     BRANCH -> BRANCH : addRequest(request)
+     activate BRANCH
+     deactivate BRANCH
+     deactivate BRANCH
+
+       CTRL <- UI :getPropertyType()
+
+         CTRL -> RepositorySingleton : getInstance()
+                         activate RepositorySingleton
+
+                             RepositorySingleton --> CTRL: repositories
+                         deactivate RepositorySingleton
+
+
+                         CTRL -> PLAT : getPropertyTypeRepository()
+                         activate PLAT
+
+                             PLAT  --> CTRL: PropertyTypeRepository
+                         deactivate PLAT
+
+                         CTRL -> PropertyTypeRepository : getPropertyTypeList()
+
+                         activate PropertyTypeRepository
+
+                             CTRL --> PropertyTypeRepository : propertyTypeList
+                         deactivate PropertyTypeRepository
+                             CTRL --> UI : propertyTypeList
+                         deactivate CTRL
+
+        UI --> ADM : requests property type(land, house or apartment)
+    deactivate UI
+
+    ADM -> UI : Selects property type
+    activate UI
+
+    UI -> UI : saves the data
+
+    UI -> CTRL : setPropertyType(propertyType)
+
+    activate CTRL
+
+    CTRL -> REQUEST : setPropertyType(propertyType)
+          activate REQUEST
+
+          deactivate REQUEST
+    deactivate CTRL
+
+    UI --> ADM : request data (property area , location , distance from city center)
+    deactivate UI
+
+   ADM -> UI :
+   activate UI
+
+   UI -> UI : saves the data
+   UI -> CTRL : createProperty(area , location , distanceCenter , price , photographList)
+   activate CTRL
+
+   CTRL -> REQUEST : createProperty(area, location, distanceCenter, price , photographList)
+
+    deactivate CTRL
+
+    activate REQUEST
+
+     REQUEST -> PROPERTY** : create
+
+        activate PROPERTY
+
+        PROPERTY --> REQUEST : property
+
+        deactivate PROPERTY
+
+     REQUEST -> REQUEST : addProperty(property)
+        activate REQUEST
+
+        deactivate REQUEST
+
+    deactivate REQUEST
+
+    UI --> ADM : request data (photograph)
+
+    deactivate UI
+
+    ADM -> UI : types requested data
+
+      activate UI
+
+      UI -> CTRL : createPhotographList()
+        activate CTRL
+
+         CTRL -> PROPERTY : createPhotographList()
+
+            activate PROPERTY
+                loop While verification ==  true
+                 PROPERTY -> PROPERTY : add(photograph)
+                end loop
+            deactivate PROPERTY
+         deactivate CTRL
+alt Request is Rent
+
+  UI --> ADM : request data (contract duration)
+
+      deactivate UI
+
+  ADM -> UI : types requested data
+      activate UI
+
+      UI -> CTRL : setContactDuration(contractDuration)
+
+         activate CTRL
+
+             CTRL -> REQUEST : setContactDuration(contractDuration)
+
+             activate REQUEST
+             deactivate REQUEST
+
+         deactivate CTRL
+end
+opt Property is Apartment/House
+
+UI --> ADM : request data (number of bedrooms, number of bathrooms, number of parking spaces, available equipment)
+     deactivate UI
+
+  ADM -> UI : types requested data
+    activate UI
+
+    UI -> CTRL : createResidence(bedrooms , bathrooms , parkingSpaces , equipment)
+
+    activate CTRL
+
+      CTRL -> REQUEST : createRequest(bedrooms , bathrooms , parkingSpaces , equipment)
+        activate REQUEST
+
+        REQUEST -> RESIDENCE** :create
+           activate RESIDENCE
+
+             RESIDENCE --> REQUEST : residence
+           deactivate RESIDENCE
+         REQUEST -> REQUEST : addProperty(Residence)
+         activate REQUEST
+
+       deactivate REQUEST
+    deactivate CTRL
+       deactivate REQUEST
+     opt Property is House
+         UI --> ADM : requests data (basement options, inhabitable loft options, sun exposure)
+         deactivate UI
+
+        ADM -> UI : types requested data
+            activate UI
+               UI -> CTRL : createHouse(basement, loft, sunExposure)
+                 activate CTRL
+
+                   CTRL -> REQUEST : createHouse(basement, loft, sunExposure)
+                   activate REQUEST
+
+                    REQUEST -> HOUSE** : create
+                     activate HOUSE
+
+                     HOUSE --> REQUEST : house
+
+                       REQUEST -> REQUEST : addProperty(house)
+                        activate REQUEST
+                     deactivate HOUSE
+                        deactivate REQUEST
+
+                        deactivate REQUEST
+                 deactivate CTRL
+
+     end
+
+end
+
+
+
+
+   UI -> CTRL : getBranch()
+
+  activate CTRL
+
+  CTRL -> RepositorySingleton : getInstance()
+                 activate RepositorySingleton
+
+                     RepositorySingleton --> CTRL: repositories
+                 deactivate RepositorySingleton
+
+
+                 CTRL -> PLAT : getBranch()
+                 activate PLAT
+
+                     PLAT  --> CTRL: branchRepository
+                 deactivate PLAT
+
+  CTRL -> BranchRepository : getBranchList()
+        activate BranchRepository
+
+           BranchRepository --> CTRL : brachList
+        deactivate BranchRepository
+
+  CTRL --> UI : branchList
+   deactivate CTRL
+
+
+  UI --> ADM : show branch list
+
+  ADM -> UI : selects branch
+  UI -> CTRL : getAgentList(selectBranch)
+     activate CTRL
+
+       CTRL -> BRANCH : getAgentList(selectedBranch)
+         activate BRANCH
+
+            BRANCH -> agentList** : create
+            loop for each employee
+             BRANCH -> agent : has(agent)
+              activate agent
+
+
+             agent --> BRANCH : true / false
+               deactivate agent
+               alt yes
+               BRANCH -> agentList : addAgentToList(employee)
+               activate agentList
+
+               end
+
+            end
+            agentList --> BRANCH :agentList
+           BRANCH --> CTRL : agentList
+           deactivate agentList
+           deactivate BRANCH
+         CTRL --> UI : agentList
+       deactivate CTRL
+     UI --> ADM : shows agent list
+     deactivate UI
+
+     ADM -> UI : selects agent
+     activate UI
+
+     UI -> UI : saves data
+     UI --> ADM : Requests data
+     deactivate UI
+     ADM -> UI : Confirms and submits the data
+     activate UI
+      UI -> CTRL : setDate(currentDate)
+      activate CTRL
+
+        CTRL -> REQUEST : setDate(currentDate)
+        activate REQUEST
+
+        deactivate REQUEST
+      deactivate CTRL
+
+
+
+     UI -> CTRL : setState(currentState)
+
+       deactivate REQUEST
+      activate CTRL
+
+      CTRL -> REQUEST : setState(currentState)
+      activate REQUEST
+
+      deactivate REQUEST
+     deactivate CTRL
+      UI --> ADM : displays operation success
+     deactivate UI
+
+@enduml

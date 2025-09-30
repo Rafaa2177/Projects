@@ -1,0 +1,140 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+class "Person" as PRS {
+    - passportNumber: String
+    - taxNumber: String
+    - phoneNumber: String
+    - address: Address
+    - pwd: String
+    - PASSPORT_NUMBER_LENGTH: int
+    - TAX_NUMBER_LENGTH: int
+    + Person(id: String, pwd: String, name: String)
+    + Person(id: String, pwd: String, name: String, passportNumber: String, taxNumber: String, phoneNumber: String, address: Address)
+    + getPwd(): String
+    + setPwd(pwd: String): void
+    + setPassportNumber(passportNumber: String): void
+    + getPassportNumber(): String
+    + getTaxNumber(): String
+    + setTaxNumber(taxNumber: String): void
+    + getPhoneNumber(): String
+    + setPhoneNumber(phoneNumber: String): void
+    + getAddress(): Address
+    + setAddress(address: Address): void
+    + validatePassword(pwd: String): boolean
+    + clone(): Person
+    + equals(o: Object): boolean
+    + hashCode(): int
+    + toString(): String
+}
+
+class ":VisitRequestUI" as UI {
+    - date: String
+    - message: String
+    - timeSlot: int[][]
+    - announcement: Announcement
+    - person: Person
+    - input: Scanner
+    - controller: VisitRequestController
+    + run(): void
+    + requestAnnouncement(): Announcement
+    + requestDate(): String
+    + requestTimeSlot(): int[][]
+    + requestString(print: String): String
+    + verfiInt(print: String): int
+    + requestMessage(): String
+    + requestID(): Person
+    + requestData(): void
+    + createVisitRequest(announcement: Announcement, date: String, timeSlot: int[][], message: String, person: Person): void
+}
+
+class ":VisitRequestController" as CTRL {
+    - visitRequestRepository: VisitRequestRepository
+    - announcementRepository: AnnouncementRepository
+    - personRepository: PersonRepository
+    + VisitRequestController()
+    + getAnnouncements(): List<Announcement>
+    + getVisitRequest(): List<VisitRequest>
+    + getPersonRepository(): PersonRepository
+    + createVisitRequest(announcement: Announcement, date: String, timeSlot: int[][], message: String, person: Person): void
+    + saveTimeSlot(timereal: int[][], count: int): int[][]
+}
+
+class ":Repositories" as RepositorySingleton {
+    - instance: Repositories           |
+    - propertyTypeListRepository: PropertyTypeListRepository
+    - userRepository: UserRepository |
+    - taskCategoryRepository: TaskCategoryRepository
+    - organizationRepository: OrganizationRepository
+    - authenticationRepository: AuthenticationRepository
+    - branchRepository: BranchRepository
+    - requestRepository: RequestRepository
+    - announcementRepository: AnnouncementRepository
+    - personRepository: PersonRepository
+    - purchaseOrderRepository: PurchaseOrderRepository
+    - employeeRepository: EmployeeRepository
+    - agentRepository: AgentRepository
+    - visitRequestRepository: VisitRequestRepository
+    + getOrganizationRepository(): OrganizationRepository
+    + getTaskCategoryRepository(): TaskCategoryRepository
+    + getAuthenticationRepository(): AuthenticationRepository
+    + getAnnouncementRepository(): AnnouncementRepository
+    + getVisitRequestRepository(): VisitRequestRepository
+    + getBranchRepository(): BranchRepository
+    + getRequestRepository(): RequestRepository
+    + getPersonRepository(): PersonRepository
+    + getPropertyTypeListRepository(): PropertyTypeListRepository
+    + setAuthenticationRepository(authenticationRepository: AuthenticationRepository): void
+    + setBranchRepository(branchRepository: BranchRepository): void
+    + setRequestRepository(requestRepository: RequestRepository): void
+    + setInstance(instance: Repositories): void
+    + setPropertyTypeListRepository(propertyTypeListRepository: PropertyTypeListRepository): void
+    + getUserRepository(): UserRepository
+    + getPurchaseOrderRepository(): PurchaseOrderRepository
+    + setUserRepository(userRepository: UserRepository): void
+    + getEmployeeRepository(): EmployeeRepository
+    + getAgentRepository(): AgentRepository
+    + getInstance(): Repositories
+}
+
+class ":AnnouncementRepository" as AR {
+    - announcements: List<Announcement>
+    + getAnnouncements(): List<Announcement>
+    + addAnnouncement(announcement: Announcement): void
+    + getAnnouncementsRepository(): List<Announcement>
+    + getAnnouncementByOrder(order: PurchaseOrder): Announcement
+}
+
+class ":VisitRequestRepository" as VRR {
+    - announcement: Announcement
+    - date: String
+    - message: String
+    - timeSlot: int[][]
+    - person: Person
+    + VisitRequest(announcement: Announcement, date: String, timeSlot: int[][], message: String, person: Person)
+    + getAnnouncement(): Announcement
+    + getDate(): String
+    + getMessage(): String
+    + getTimeSlot(): int[][]
+    + getPerson(): Person
+    + toString(): String
+}
+
+class ":PersonRepository" as PR {
+    + addPersons(user: Person): void   |
+    + getListPersonsRepository(): List<Person>
+    + getPerson(): Person
+}
+
+PRS --> UI
+UI --> CTRL
+
+CTRL --> RepositorySingleton
+
+RepositorySingleton --> AR
+RepositorySingleton --> PR
+RepositorySingleton --> VRR
+
+@enduml

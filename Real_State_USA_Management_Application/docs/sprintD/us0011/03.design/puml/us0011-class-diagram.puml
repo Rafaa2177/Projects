@@ -1,0 +1,135 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class ApplicationSession
+{
+    + static getInstance()
+    + getCurrentSession()
+}
+
+class UserSession
+{
+    + getUserEmail()
+}
+
+class Employee {
+    - name
+    - email
+    - position
+    - phone
+    - role
+    - taxNumber
+    - passportCardNumber
+    - announcements : List<announcements>
+    + getEmployeeAnnouncement
+}
+
+class EmployeeRepository{
+    + getEmployeeByEmail(email)
+
+}
+
+
+
+class Announcement {
+    - PropertyType propertyType
+    - Property property
+    - Commission commission
+    - RequestType businessType
+    - double price
+    - String date
+    + removeFromOrders(order)
+    + getOrders()
+
+}
+
+
+
+
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getAuthenticationRepository()
+    + getOrderRepository()
+    + getEmployeeRepository()
+}
+
+class OrderRepository{
+    +getOrderByID
+
+}
+
+class AnnouncementRepository{
+    - announcements : List<announcements>
+}
+
+class Order {
+    + getAnnouncement()
+    + getClient()
+    + setStatus()
+    - id : int
+    - status : Status
+    - client : User
+    - amountOffered : double
+
+
+
+}
+
+
+
+
+
+class SetOrdersController {
+    + SetOrdersController(authenticationRepository, announcementRepository, employeeRepository, orderRepository)
+    - getEmployeeFromSession()
+    + getAnnouncements()
+    + getOrderByID(id)
+    + setPurchaseOrder(order,option)**
+    - getTaskCategoryByDescription(taskCategoryDescription)
+    - getEmployeeFromSession()
+}
+
+
+
+class SetOrdersUI {
+}
+
+Repositories -> Repositories : instance
+SetOrdersController..>Repositories : repositories
+ApplicationSession -> ApplicationSession : instance
+
+
+
+
+
+ApplicationSession --> "1" UserSession : userSession
+
+SetOrdersController..>OrderRepository : orderRepository
+Employee --> Order : accepts or decline >
+SetOrdersUI .> SetOrdersController
+Announcement --> Order : has
+EmployeeRepository ->Employee
+SetOrdersController..>EmployeeRepository : employeeRepository
+SetOrdersController ..>AnnouncementRepository: announcementRepository
+OrderRepository->"*" Order
+SetOrdersController-->Announcement
+Order"*"->"1" Announcement
+Announcement<-Employee
+AnnouncementRepository..>"*" Announcement
+Repositories->"1" AnnouncementRepository
+SetOrdersController ..> ApplicationSession
+SetOrdersController ..> UserSession
+
+
+@enduml
+

@@ -1,0 +1,34 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Alternative One
+
+autonumber
+
+actor "Unregistred User" as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System :Asks to display listed properties
+    activate System
+
+    System --> Employee : Requests the parameters to display (type of business, type of property and number of bedrooms)
+    deactivate System
+
+    Employee -> System :Selects the parameters and specifications
+    activate System
+
+    System --> Employee : Shows the list of matching properties (type of business, type of property and number of bedrooms)
+    deactivate System
+
+    Employee --> System : Choose the sort criteria
+    activate System
+
+    System --> Employee : Update the list of properties with the sort criteria
+    deactivate System
+
+
+@enduml

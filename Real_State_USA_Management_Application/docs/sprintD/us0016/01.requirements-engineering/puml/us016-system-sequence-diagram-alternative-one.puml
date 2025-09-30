@@ -1,0 +1,42 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US016
+
+autonumber
+
+actor "Agent" as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System : asks to display visit requests grouped by property
+    activate System
+
+    loop for each announcement
+        System --> Employee : shows the list of visit requests and asks to select one
+    deactivate System
+     end loop
+    Employee -> System :  selects a visit request
+    activate System
+
+        System --> Employee : asks to accept or decline the visit request
+    deactivate System
+
+    Employee -> System : selects an option
+    activate System
+
+
+     System --> Employee : shows the selected visit request and asks to confirm
+    deactivate System
+
+    Employee -> System : confirms and submits data
+    activate System
+
+        System --> Employee : displays operation success
+    deactivate System
+
+@enduml
+

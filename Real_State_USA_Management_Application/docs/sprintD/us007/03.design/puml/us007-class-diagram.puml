@@ -1,0 +1,60 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getUserRepository()
+}
+
+class RegisterUserController {
+    + RegisterUserController(userRepository)
+    + registerUser(name, passportCardNumber, taxNumber,\n location, phoneNumber, emailAdress, password)
+}
+
+class RegisterUserUI{}
+
+class UserRepository {
+
+}
+
+class User{
+    -name: String
+    -taxNumber: int
+    -passportCardNumber: int
+    -location: String
+    -emailAddress: String
+    -phone: String
+    -password: String
+    --
+     + registerUser(name, passportCardNumber, taxNumber,\n location, phoneNumber, emailAdress, password)
+
+}
+
+
+
+
+
+RegisterUserUI ..> RegisterUserController
+
+RegisterUserController ..> Repositories : repositories
+
+Repositories -> "1" UserRepository
+
+RegisterUserController ..> UserRepository : userRepository
+
+UserRepository -> "*" User
+
+RegisterUserController ..> User : user
+
+
+
+
+
+
+
+
+
+@enduml

@@ -1,0 +1,52 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+
+class UnregisteredUser {
+designation
+}
+
+
+class Sale {
+designation
+}
+
+class Lease {
+designation
+}
+
+class Property {
+sortCriteria
+}
+
+class Habitation {
+numberOfBedrooms
+}
+
+class Apartment {
+designation
+}
+class House {
+designation
+}
+
+UnregisteredUser "1" - " 0.." Property : > visualizes
+
+Property "1" - "1"  Habitation : > is categorized by
+Habitation <|-- House
+Habitation <|-- Apartment
+Property "1" -- "0..*"  Sale : > is classified as
+Sale "1" -- "1..*"  Property : > classifies
+Property "1" - "0..*"  Lease : > is classified as
+Lease "1" - "1..*"  Property : > classifies
+
+@enduml

@@ -1,0 +1,92 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "UnregisteredUser" as UU
+participant ":CreateUserUI" as UI
+participant ":CreateUserController" as CTRL
+participant ":Repositories" as R
+participant "repositories:\nRepository" as RR
+participant ":UserRepository" as UR
+participant ":User" as user
+
+activate UU
+
+        UU -> UI : asks to register in the system
+
+        activate UI
+
+        UI -> CTRL** : create
+
+
+        activate CTRL
+
+        CTRL -> R : getInstance()
+
+        activate R
+
+        R --> CTRL : repositories
+        deactivate R
+
+        CTRL -> RR : getUserRepository()
+        activate RR
+
+        RR --> CTRL : usersRepository
+
+        deactivate RR
+
+        CTRL --> UI : usersRepository
+        deactivate CTRL
+
+            UI --> UU : requests data (name, passportCardNumber, taxNumber,\n emailAddress, address, phoneNumber, password)
+
+    deactivate UI
+    UU -> UI : inserts data
+    activate UI
+
+    UI -> UI : keep data (name, passportCardNumber, \ntaxNumber, emailAddress, phoneNumber, password)
+
+    UI --> UU : asks for data confirmation
+    deactivate UI
+    UU -> UI : confirms data
+
+    activate UI
+
+    UI -> CTRL : createUser(name, passportCardNumber, taxNumber, \nemailAddress, phoneNumber, password)
+
+    activate CTRL
+
+    CTRL -> UR : createUser(name, passportCardNumber, taxNumber, address, \nemailAddress, phoneNumber, password)
+    deactivate CTRL
+    activate UR
+    UR -> UR : checksIfUserAlreadyExists
+
+    opt return is false
+
+    UR -> user ** : createUser(name, passportCardNumber, taxNumber, address, \nemailAddress, phoneNumber, password)
+    activate user
+    user --> user : createdUser
+
+    end
+    deactivate user
+    UR-> UR : validateUser()
+    UR --> CTRL : createdUser
+    deactivate UR
+    activate CTRL
+
+    CTRL --> UI : createdUser
+
+    deactivate CTRL
+
+    deactivate R
+        UI --> UU : shows confirmation of successful registration
+        deactivate CTRL
+    deactivate UI
+
+deactivate UU
+
+@endum

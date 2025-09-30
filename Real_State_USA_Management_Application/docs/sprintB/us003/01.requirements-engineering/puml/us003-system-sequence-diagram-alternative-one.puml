@@ -1,0 +1,56 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US003
+
+autonumber
+
+actor "System Administrator" as Employee
+participant ":System" as System
+actor "Employee" as Emp
+
+activate Employee
+
+    Employee -> System : request to initiate the process of registering a new employee.
+    activate System
+
+        System --> Employee : solicits information regarding employee data.
+    deactivate System
+
+    Employee -> System : types the employee information(name, passport card number,tax number,\n ,email adress,contact telephone number )
+    activate System
+
+        System --> Employee : shows the list of the roles that the new employee can perform
+    deactivate System
+
+    Employee -> System : selects a user role
+    activate System
+
+    Employee->System: shows the agencies list and ask to select
+
+    alt Role-Agent or AgencyManager
+    System--> Employee: selects one agency
+    else Role-NetworkManager
+     System--> Employee: selects the intends agencies
+    deactivate System
+    end
+
+
+    activate System
+
+    System --> Employee : shows all the information and asks to confirm
+
+
+    Employee -> System : confirm the information
+
+    Employee -> System : submits data
+
+    System --> Employee : displays operation sucess
+
+    System -> Emp : generate a password and sent to the employee by email
+
+
+
+@enduml

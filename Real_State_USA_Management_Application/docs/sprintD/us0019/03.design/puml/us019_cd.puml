@@ -1,0 +1,83 @@
+@startuml
+
+package UI {
+  class StorePartitionUI {
+  }
+}
+
+package Controller {
+  class StorePartitionController {
+    - Repositories repositories
+    + StorePartitionController()
+    + getStoreListSize()
+    + getClosestPartition()
+    + getDifferenceBetweenSubsets()
+    + processInformation(InformationFromFileDTO information)
+  }
+}
+
+package Model {
+  class Store {
+    - int id
+    - String designation
+    - Address address
+    - String phoneNumber
+    - String email
+    - Person storeManager
+    - List<Advertisement> displayedAdds
+    + Store(int ID, String designation, String phoneNumber, String email, String street, City city, String postalCode)
+    + getId()
+    + getNumberOfAdvertisements()
+  }
+
+  class Advertisement {
+    - LocalDate datePublished
+    - AdvertisementRequest advertisementRequest
+    - Commission commission
+    - AdvertisementStatus status
+    + Advertisement(AdvertisementRequest advertisementRequest, Commission commission)
+  }
+
+  class AdvertisementRequest {
+    - Property property
+    - LocalDate creationDate
+    - double price
+    - String type
+    + AdvertisementRequest(Property property, double price, String type)
+  }
+
+  class LoadInformationFromFile {
+   +loadInformationFromFile(path)
+  }
+
+  class InformationFromFileDTO {
+  }
+}
+
+package repositories {
+  class Repositories {
+    - StoreRepository storeRepository
+    + Repositories()
+    + getInstance(): Repositories
+    + getStoreRepository()
+  }
+
+  class StoreRepository {
+    - List<Store> storeList
+    + StoreRepository()
+    + getStoreList()
+    + findClosestPartition()
+    + getDifferenceBetweenSubsets()
+  }
+}
+
+StorePartitionUI --> StorePartitionController
+StorePartitionController --> Repositories
+StorePartitionController --> LoadInformationFromFile
+Repositories --> StoreRepository : uses
+StoreRepository --> Store : uses
+Store --> Advertisement : has
+Advertisement --> AdvertisementRequest : has
+LoadInformationFromFile --> InformationFromFileDTO : creates
+
+@enduml

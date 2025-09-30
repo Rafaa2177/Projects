@@ -1,0 +1,138 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+
+
+class Employee {
+    - String name
+    -String emailAddress
+    -String location
+    -int taxNumber
+    -agency: Agency
+    - role: Role
+    + createEmployee(citizenCardNumber, taxNumber,\nname, location, phoneNumber, emailAddress,\nrole, agency)
+
+}
+
+class RoleRepository{
+    -ArrayList<Role> role
+    +getRoles()
+}
+
+class EmployeeRepository {
+    - ArrayList <Employee> employee
+    +createEmployee(citizenCardNumber, taxNumber,\nname, location, phoneNumber, emailAddress,\nrole, agency)
+    +saveEmployee()
+
+
+}
+
+class AgencyRepository {
+    - ArrayList<Agency> agencies
+    + getAgencies()
+}
+
+class Agency {
+    - int ID
+    - String name
+    - String website
+    - int phone
+    - String email
+
+}
+
+class Person {
+    - String name
+    - int passportCardNumber
+    - String emailAddress
+    -String taxNumber
+    -String contactTelephoneNumber
+    - String location
+    + Person(name, passportCardNumber,taxNumber,emailAddress,location, contactTelephoneNumber)
+}
+
+class Location {
+    - String street
+    -String city
+    - String state
+    - String zipCode
+    -String district
+
+   + +createLocation(city,state,district,zipcode,street)
+
+}
+
+class Repositories {
+    - repositories
+
+    + getInstance() : List <repositories>
+    + getAgenciesRepository()
+    + getRolesRepository()
+
+
+}
+
+class CreateEmployeeController {
+    - repositories Repositories
+    - AgencyRepository agencyRepository
+    - EmployeeRepository employeeRepository
+    - RolesRepository rolesRepository
+    - ArrayList<Agency> agencies
+    - ArrayList<Employee> employee
+    - ArrayList<Role> roles
+    +createEmployeeController()
+    +createEmployee(citizenCardNumber,\ntaxNumber, name, street,city,zipCode,\ndistrict,state, contact phoneNumber, emailAddress,\nrole, agency)
+    +getAgenciesList()
+    +getRolesList()
+
+
+}
+
+class CreateEmployeeUI {
+    +saveData()
+    +saveRoles()
+    +saveAgencies()
+}
+
+class RoleOfTheEmployee{
+    -String description
+    +Role(description)
+}
+
+
+
+
+Repositories -> Repositories : instance
+CreateEmployeeUI .> CreateEmployeeController
+RoleRepository --> "*" RoleOfTheEmployee
+CreateEmployeeController .> Repositories : repositories
+Repositories -> "1" RoleOfTheEmployee
+Repositories --> "1" AgencyRepository
+Repositories --> "1" RoleRepository
+CreateEmployeeController ..> AgencyRepository : AgencyRepository
+CreateEmployeeController ..> EmployeeRepository : EmployeeRepository
+AgencyRepository --> "*" Agency
+EmployeeRepository --> "*" Employee
+CreateEmployeeController ..> "1" Person
+Employee "*" - "1" RoleOfTheEmployee: has >
+Person "*" - "1..*" Location : lives in >
+Employee "*" -up "1" Agency : works in >
+
+Person <|-down- Employee
+
+
+
+
+
+
+
+
+
+
+
+
+@enduml

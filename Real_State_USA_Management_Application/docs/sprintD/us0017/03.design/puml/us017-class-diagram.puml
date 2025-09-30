@@ -1,0 +1,212 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getDealsRepository()
+}
+
+class DealsRepository{
+    + getDealsList()
+}
+
+class DisplayDealsController {
+    - List<String> algList
+    - List<String> orderList
+    - List<Deals> dealsList
+    - List<DealsDTO> listDto
+
+    + DisplayDealsController(dealsRepository)
+    + getDealsList()
+    + getAlgOptions()
+    + getOrderList()
+    + getDeals(sortingAlg,sortingOrder)
+    + getPropertiesAsString()
+}
+
+class DisplayDealsUI {
+}
+
+class Deals{
+-int sid;
+-String ownerName;
+-Integer ownerPassportNum;
+-String ownerTIN;
+-String ownerEmail;
+-String ownerPhone;
+-String propertyType;
+-Double area;
+-String propertyLocation;
+-Float distanceFromTheCityCentre;
+-int propertyNumberBedrooms;
+-int propertyNumberBathrooms;
+-int propertyPnumParking;
+-String propertyCentralHeating;
+-String propertyAirconditioned;
+-String propertyBasement;
+-String propertyLoft;
+-String propertySunExposure;
+-double propertyRequestedSaleRentPrice;
+-double propertySaleRentPrice;
+-double commission;
+-String contractDuration;
+-String propertyDateAnnounceRequest;
+-String propertyDateOfSale;
+-String typeBusiness;
+-int storeID;
+-String storeName;
+-String storeLocation;
+-String storePhoneNumber;
+-String storeEmailAddress;
+
+Deals(sid,ownerName,ownerPassportNum,ownerTIN,ownerEmail,ownerPhone,propertyType,area,propertyLocation,distanceFromTheCityCentre,propertyNumberBedrooms,propertyNumberBathrooms,propertyPnumParking,propertyCentralHeating,propertyAirconditioned,
+propertyBasement,propertyLoft,propertySunExposure,propertyRequestedSaleRentPrice,propertySaleRentPrice,commission,contractDuration,propertyDateAnnounceRequest,propertyDateOfSale,typeBusiness,storeID,storeName,storeLocation,storePhoneNumber,storeEmailAddress)
++getSid()
++getOwnerName()
++getOwnerPassaportNum()
++getOwnerTIN()
++getOwnerEmail()
++getOwnerPhone()
++getPropertyType()
++getArea()
++getPropertyLocation()
++getDistanceFromTheCityCenter()
++getPropertyNumberBedrooms()
++getPropertyNumberBathrooms()
++getPropertyPnumParking()
++getPropertyCentralHeating()
++getPropertyAirConditioned()
++getPropertyBasement()
++getPropertyLoft()
++getPropertySunExposure()
++getPropertyRequestedSaleRentPrice()
++getPropertySaleRentPrice()
++getCommission()
++getContractDuration()
++getPropertyDateAnnounceRequest()
++getPropertyDateOfSale()
++getTypeBusiness()
++getStoreID()
++getStoreName()
++getStoreLocation()
++getStorePhoneNumber()
++getStoreEmailAddress()
++toString
+}
+
+class DealsDTO{
+-int sid;
+-String ownerName;
+-Integer ownerPassportNum;
+-String ownerTIN;
+-String ownerEmail;
+-String ownerPhone;
+-String propertyType;
+-Double area;
+-String propertyLocation;
+-Float distanceFromTheCityCentre;
+-int propertyNumberBedrooms;
+-int propertyNumberBathrooms;
+-int propertyPnumParking;
+-String propertyCentralHeating;
+-String propertyAirconditioned;
+-String propertyBasement;
+-String propertyLoft;
+-String propertySunExposure;
+-double propertyRequestedSaleRentPrice;
+-double propertySaleRentPrice;
+-double commission;
+-String contractDuration;
+-String propertyDateAnnounceRequest;
+-String propertyDateOfSale;
+-String typeBusiness;
+-int storeID;
+-String storeName;
+-String storeLocation;
+-String storePhoneNumber;
+-String storeEmailAddress;
+
++DealsDTO(sid,ownerName,ownerPassportNum,ownerTIN,ownerEmail,ownerPhone,propertyType,area,propertyLocation,distanceFromTheCityCentre,propertyNumberBedrooms,propertyNumberBathrooms,propertyPnumParking,propertyCentralHeating,propertyAirconditioned,
+propertyBasement,propertyLoft,propertySunExposure,propertyRequestedSaleRentPrice,propertySaleRentPrice,commission,contractDuration,propertyDateAnnounceRequest,propertyDateOfSale,typeBusiness,storeID,storeName,storeLocation,storePhoneNumber,storeEmailAddress)
++getSid()
++getOwnerName()
++getOwnerPassaportNum()
++getOwnerTIN()
++getOwnerEmail()
++getOwnerPhone()
++getPropertyType()
++getArea()
++getPropertyLocation()
++getDistanceFromTheCityCenter()
++getPropertyNumberBedrooms()
++getPropertyNumberBathrooms()
++getPropertyPnumParking()
++getPropertyCentralHeating()
++getPropertyAirConditioned()
++getPropertyBasement()
++getPropertyLoft()
++getPropertySunExposure()
++getPropertyRequestedSaleRentPrice()
++getPropertySaleRentPrice()
++getCommission()
++getContractDuration()
++getPropertyDateAnnounceRequest()
++getPropertyDateOfSale()
++getTypeBusiness()
++getStoreID()
++getStoreName()
++getStoreLocation()
++getStorePhoneNumber()
++getStoreEmailAddress()
++toString
+
+
+}
+
+class DealsMapper{
++ toDTO(deals)
++ toDTO(dealsList)
+}
+
+class PropertyAreaBubbleSort{
++bubbleSort(dealsDTOList,sortingOption)
+}
+
+class PropertySelectionSort{
++selectionSort(dealsDTOList,sortingOption)
+}
+
+Repositories -> Repositories : instance
+
+DisplayDealsUI .> DisplayDealsController
+
+DisplayDealsController .> Repositories : repositories
+
+Repositories --> "1" DealsRepository
+DealsRepository --> "*" Deals
+DealsMapper .-> Deals
+DealsMapper .-> DealsDTO
+
+DisplayDealsController .-> DealsRepository
+
+
+DisplayDealsController .-> Deals
+DisplayDealsUI .-> DealsDTO
+DisplayDealsController .-> DealsDTO
+DisplayDealsController .-> DealsMapper
+DisplayDealsController .-> PropertyAreaBubbleSort
+DisplayDealsController .-> PropertySelectionSort
+
+
+
+@enduml

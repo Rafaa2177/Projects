@@ -1,0 +1,154 @@
+@startuml
+autonumber
+actor "Agent" as Agent
+participant ":PublishAnnouncementUI" as UI
+participant ":PublishAnnouncementController" as CTRL
+
+participant ":Repositories" as REPO
+participant ":RequestRepository" as RequestRepo
+participant ":PersonRepository" as PersonREPO
+participant ":AnnouncementRepository" as AnREPO
+participant ":Announcement" as An
+participant ":AnnouncementDTO" as AnnouncementDTO
+participant ":AnnouncementMapper" as AnnouncementMapper
+participant ":AnnouncementRequestMapper" as AnRequestMapper
+participant ":AnnouncementRequestDTO" as AnRequestDTO
+participant ":CurrentUser" as CurrentUser
+
+
+activate Agent
+
+    Agent -> UI : asks to review advertisement requests
+    activate UI
+
+
+        deactivate CTRL
+      UI -> CTRL : getAgentEmail()
+        activate CTRL
+
+         CTRL -> CurrentUser : getEmail()
+          activate CurrentUser
+
+          CurrentUser --> CTRL : email
+          deactivate CurrentUser
+
+         CTRL -> CTRL :saves email
+        activate CTRL
+
+        deactivate CTRL
+
+         CTRL --> UI : email
+      deactivate CTRL
+      UI -> CTRL : createRequestListDTO()
+        activate CTRL
+
+         CTRL -> REPO : getRequestRepository()
+           activate REPO
+
+             REPO --> CTRL : RequestRepository
+           deactivate REPO
+         CTRL -> AnREPO : getAnnouncementRepository()
+         activate AnREPO
+
+         AnREPO --> CTRL : AnnouncementRepository
+         deactivate AnREPO
+         CTRL -> RequestRepo: getRequests()
+          activate RequestRepo
+
+            RequestRepo --> CTRL : List<AnnouncementRequest> requests
+         deactivate RequestRepo
+         loop foreach (AnnouncementRequest request : requests)
+
+
+
+        CTRL -> AnRequestMapper : toDTO (request)
+
+          activate AnRequestMapper
+
+           AnRequestMapper --> CTRL : requestDTO
+          deactivate AnRequestMapper
+        CTRL -> CTRL : addToRequestListDTO(request)
+       end
+       CTRL --> UI  : requestListDTO
+      deactivate CTRL
+    loop while (requestListDTO.size() > 0 && exit == false)
+
+     opt if (requestDTO.getAgent().getEmail() == email)
+
+     UI --> Agent : shows Request
+
+     UI --> Agent : asks if the agent wants to accept/decline the request or to leave loop
+   deactivate UI
+     Agent -> UI : inputs choice
+   activate UI
+        alt Agent accepts the request
+
+          UI --> Agent : asks if commission is in percentage or value
+   deactivate UI
+          Agent -> UI : inputs option
+   activate UI
+          UI --> Agent : asks to input commission
+   deactivate UI
+          Agent -> UI : inputs commission
+   activate UI
+
+       UI -> UI : validates input
+
+         loop while (commissionIsAccepted == false)
+           UI --> Agent : Shows invalid input message and asks to input commission
+
+   deactivate UI
+   Agent -> UI : inputs commission
+   activate UI
+    UI-> UI : validates input
+         end
+    UI -> CTRL : saveCommission(commission)
+     activate CTRL
+
+     deactivate CTRL
+
+      UI -> CTRL : createAnnouncement(request)
+      activate CTRL
+
+       CTRL -> AnnouncementDTO :AnnouncementDTO(request.getRequestType() , request.getOwner() , request.getProperty() , request.getPrice() , request.getRentPrice() , commission , request.getPropertyType() , request.getDate() , request.getAgent())
+       activate AnnouncementDTO
+
+         AnnouncementDTO --> CTRL : announcementDTO
+       deactivate AnnouncementDTO
+       CTRL -> AnnouncementMapper : toDomain(announcementDTO)
+         activate AnnouncementMapper
+
+          AnnouncementMapper --> CTRL : announcement
+         deactivate AnnouncementMapper
+       CTRL -> AnREPO : addAnnouncement(announcement)
+       activate AnREPO
+       deactivate AnREPO
+     CTRL --> UI : show success message
+    deactivate CTRL
+     UI --> Agent : Shows success
+
+else announcement is rejected
+
+
+UI --> Agent : asks to input an email to send to the owner
+       deactivate UI
+    Agent -> UI : inputs message
+       activate UI
+       UI -> CTRL : deleteAgentFromRequest(request,message
+        activate CTRL
+        deactivate CTRL
+       UI --> Agent : Show success message
+else Agent chooses to exit
+
+Agent -> UI : inputs exit option
+     UI -> UI : exit = true
+     activate UI
+     deactivate UI
+     UI --> Agent : leaves to AgentUI
+
+        end
+
+       end
+
+     end
+@enduml

@@ -1,0 +1,55 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title US004 - System sequence diagram
+
+autonumber
+
+actor "Owner" as Owner
+participant ":System" as System
+
+activate Owner
+    Owner -> System: Requests to list a property
+    activate System
+        Owner <-- System : Shows request options (sale or rent)
+    deactivate System
+        Owner -> System : Selects option
+    activate System
+        System --> Owner: Requests property type
+    deactivate System
+    Owner -> System: Selects property type
+    activate System
+        System --> Owner: Requests data
+    deactivate System
+    Owner -> System: Sends area, location, \ndistance from city centre, photos and requested price
+    activate System
+        System --> Owner: Requests data
+    deactivate System
+    opt Property is Apartment or House
+        Owner --> System: Sends info on available equipment, the  number of bedrooms \nand bathrooms and parking spaces
+         activate System
+          System --> Owner : Saves the data
+         deactivate System
+        opt Property is House
+            Owner --> System: Sends info about basement, \ninhabitable loft, and sun exposure
+           activate System
+             System --> Owner : Saves the data
+
+        end
+    end
+        activate System
+        System --> Owner: Requests to select an agent
+        deactivate System
+
+    Owner --> System: Selects an agent
+    activate System
+        System --> Owner: Asks for data confirmation
+    deactivate System
+    Owner --> System: Confirms the data and submits the request
+    activate System
+        System --> Owner: Shows success message
+    deactivate System
+
+@enduml

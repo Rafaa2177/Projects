@@ -1,0 +1,69 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "SystemAdministrator" as Admin
+participant "LegacyFileUI" as UI
+participant "LegacyFileController" as Controller
+participant ":Repositories" as Repository
+participant "repositories\n:Repositories" as Repositories
+participant "legacyFilesRepository\n:LegacyFileRepository" as LegacyFileRepository
+
+
+activate Admin
+
+        Admin -> UI : asks to import information from a legacy system
+
+        activate UI
+
+        UI -> Controller** : create
+
+            UI --> Admin : asks to select witch file to import
+        deactivate UI
+
+    Admin -> UI : selects intended file
+    activate UI
+
+    alt file is CSV & not empty
+
+                UI -> Controller : importInformation()
+
+                    activate Controller
+
+
+                    Controller -> Repository : getInstance()
+                    activate Repository
+
+                        Repository --> Controller: repositories
+                    deactivate Repository
+
+                    Controller -> Repositories : getLegacyFileRepository()
+                    activate Repositories
+
+                        Repositories --> Controller: legacyFileRepository
+                    deactivate Repositories
+
+                    Controller -> LegacyFileRepository : addLegacyFileCopy()
+                    activate LegacyFileRepository
+
+                        LegacyFileRepository --> Controller : importInformation
+                    deactivate LegacyFileRepository
+
+                    Controller --> UI : importInformation
+                deactivate Controller
+                UI -->Admin: file imported with success
+
+
+    else file isn´t CSV or is empty
+
+
+    UI --> Admin : choose another type of file
+deactivate UI
+    end alt
+deactivate Admin
+
+@enduml

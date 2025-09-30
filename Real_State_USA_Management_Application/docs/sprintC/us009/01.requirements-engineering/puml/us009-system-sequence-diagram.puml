@@ -1,0 +1,59 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Alternative One
+
+autonumber
+
+actor "Client" as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System : initiates the process to schedule a visit to a property
+    activate System
+
+        System --> Employee : displays the list of properties and asks to choose one
+    deactivate System
+
+    Employee -> System : chooses property
+    activate System
+
+        System --> Employee : requests visit data (date and time slot for the visit)
+    deactivate System
+
+    Employee -> System : types requested data
+    activate System
+
+alt If there are no visits already scheduled in this date and time
+
+        System --> Employee : asks the client if he wants to write a message
+    deactivate System
+
+    Employee -> System :selects option
+    activate System
+
+alt wants to write a message
+
+        System --> Employee : asks to write the message
+    deactivate System
+
+    Employee -> System : writes message
+        activate System
+
+end alt
+
+    System --> Employee : asks to confirm visit data and possible message
+        deactivate System
+
+    Employee -> System : confirm data
+        activate System
+
+    System --> Employee : shows operation success message
+        deactivate System
+
+end alt
+
+@enduml

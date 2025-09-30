@@ -1,0 +1,111 @@
+@startuml
+
+
+skinparam packageStyle rectangle
+skinparam shadowing true
+
+skinparam classAttributeIconSize 0
+title US008 - Class Diagram
+
+class Agent {
+   -taxNumber: int
+   -emailAddress: String
+   -phoneNumber: int
+   -passportNumber:
+   +getEmail()
+}
+
+class AnnouncementRequest {
+  -requestType: string
+  -owner: User
+  -property: Property
+  -house: House
+  -apartment: Residence
+  -price: double
+  -rentPrice: doule
+  -commission: Commission
+  -date: String
+  -agent: Agent
+  -habitationType: HabitationType
+
+}
+
+class Announcement {
+   -owner: User
+   -agent: Agent
+   -commission: Commission
+   -price: rentPrice
+   -date: String
+   -property: Property
+   -businessType: RequestType
+   propertyType: PropertyType
+   +
+}
+
+class Commission {
+  -value: decimal
+  -percentage: decimal
+}
+
+class PublishAnnouncementUI {
+
+}
+
+class PublishAnnouncementController {
+ -List<AnnouncementRequestDTO) requestListDTO
+ +createRequestListDTO()
+ +saveCommission()
+ +createAnnouncement(request)
+ +getAgentEmail()
+}
+
+class Repositories {
+  -requestRepsitory: RequestRepository
+  -announcementRepository: AnnouncementRepository
+  +getRequestRepository()
+  +getAnnouncementRepository()
+}
+
+class RequestRepository{
+  -List<AdvertisementRequest> requests: AdvertisementRequest
+  +getRequests()
+}
+
+class AnnouncementRepository {
+  -List<Announcement> announcements:
+  +addAnnouncement(announcement)
+}
+
+class Announcement {
+}
+
+class AnnouncementDTO {
+}
+
+class AnnouncementMapper {
+  +toDomain(announcementDTO)
+}
+
+class AnnouncementRequestMapper {
+  +toDTO(request)
+}
+
+class CurrentUser {
+  -email: String
+  +getEmail()
+}
+
+PublishAnnouncementUI ..> PublishAnnouncementController
+Agent --> PublishAnnouncementUI
+PublishAnnouncementController ..> Repositories
+Repositories --> RequestRepository
+Repositories --> AnnouncementRepository
+RequestRepository "1"-->"0..*" AnnouncementRequest: Stores
+PublishAnnouncementController ---> Announcement
+AnnouncementRequest --> AnnouncementRequestMapper
+PublishAnnouncementController --> CurrentUser: getAgentEmail()
+Agent --> Commission: sets
+AnnouncementRequestMapper -->"1" AnnouncementDTO
+AnnouncementDTO --> AnnouncementMapper
+AnnouncementMapper --> Announcement
+@enduml

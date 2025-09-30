@@ -1,0 +1,35 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Alternative One
+
+autonumber
+
+actor "NetWorkManager" as Employee
+participant "System" as System
+
+activate Employee
+Employee -> System : Select display deals option
+activate System
+System --> Employee : Ask the algorithm option
+deactivate System
+
+
+Employee -> System : Selects the Algorithm option
+activate System
+System --> Employee : Ask the Order option
+deactivate System
+
+Employee -> System : Selects the Order option
+activate System
+System --> Employee : Ask to confirm the operation
+deactivate System
+
+Employee -> System : Confirms the operation
+activate System
+System --> Employee : Shows the deals made
+deactivate System
+deactivate Employee
+@enduml

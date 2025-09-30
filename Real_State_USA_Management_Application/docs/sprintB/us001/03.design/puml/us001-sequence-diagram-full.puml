@@ -1,0 +1,88 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Unregisted User" as UUSER
+participant ":DisplayTheListPropertiesUI" as UI
+participant ":DisplayTheListPropertyController" as CTRL
+participant "Repositories" as repositories
+participant "repositories:\nRepositories" as repositoriesr
+participant "PropertyRepository" as propertyRepository
+
+
+activate UUSER
+
+        UUSER -> UI : Enter as an unregisted user
+
+        activate UI
+            create CTRL
+            UI -> CTRL : create
+
+
+
+
+
+
+
+            UI --> UUSER : Requests type of property
+            UUSER -> UI : Selects the type of property
+            UI --> UUSER : Requests type of habitation
+            UUSER -> UI : Selects type of habitation
+            UI --> UUSER : Requests type of business
+            UUSER -> UI : Selects type of business
+            UI --> UUSER : Requests number of bedrooms
+            UUSER -> UI : Selects number of bedrooms
+            UI --> UUSER : Requests the sort criteria
+            UUSER -> UI : Selects the sort criteria
+
+
+
+            UI -> CTRL : getListOfAllProperties(propertyType, businessType, numberOfBedrooms, sortCriteria)
+       deactivate UI
+       activate CTRL
+
+
+
+                CTRL -> repositories : getInstance()
+                activate repositories
+
+                    repositories --> CTRL: repositories
+                deactivate repositories
+
+
+                CTRL -> repositoriesr : getPropertyRepository()
+                activate repositoriesr
+
+                repositoriesr--> CTRL: PropertyRepository
+                deactivate repositoriesr
+
+
+
+
+
+
+
+
+
+
+            CTRL -> propertyRepository : getListOfAllHabitations(habitationType, businessType, numberOfBedrooms, sortCriteria)
+            activate propertyRepository
+
+
+            propertyRepository --> propertyRepository : FilterListOfAllProperties
+            propertyRepository --> propertyRepository :Filter Criteria
+            propertyRepository --> CTRL : filteredListOfAllProperties
+            deactivate propertyRepository
+            CTRL --> UI : filteredListOfAllProperties
+            deactivate CTRL
+            UI --> UUSER : Shows list of properties acording the Unregisted User
+
+'Repositories is a class
+'repositories: Repositories é um objeto da classe
+'Pq quero retornar o meu repositorio que está na classes repositories
+'
+@enduml
