@@ -1,0 +1,165 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+title System Sequence Diagram - US 2000a
+
+'hide footbox
+actor Operator as Actor
+participant RegisterCandidateUI as UI <<presentation>>
+participant AddUserController as Controller1 <<application>>
+participant RegisterCandidateController as Controller <<application>>
+participant "candidate:Candidate" as Domain2 <<domain>>
+participant Jobs4uUserBuilder as Builder <<builder>>
+participant "jobs4uUser:Jobs4uUser" as Domain <<domain>>
+participant PersistenceContext as Persistence <<persistence>>
+participant RepositoryFactory as Factory <<factory>>
+participant ":UserManagementService" as usrMgmtSvc
+participant ":SystemUserBuilder" as sysUserBuilder
+participant ":SystemUser" as sysUsr
+database UserRepository as UserRepository <<repository>>
+database CandidateRepository as CandidateRepository <<repository>>
+
+
+
+activate Actor
+Actor -> UI: ask to register a new user
+activate UI
+    UI -> Controller1: create
+
+
+   UI --> Actor : request user information(Username, Password \nFirstName, LastName, Email, phoneNumber, address)
+
+
+   Actor -> UI : types the request information of the user
+
+
+
+    UI -> Controller1: regCandidate(username,password,firstName,lastName,email)
+    activate Controller1
+
+
+    Controller1 -> Builder : create
+
+
+    Controller1 -> Builder : withSystemUser(email)
+    Controller1 -> Builder : withAddress(address)
+    Controller1 -> Builder : withPhone(phoneNumber)
+    Controller1 -> Builder : build()
+    activate Builder
+
+
+       Builder -> usrMgmtSvc : registerNewUser(username, password, firstName, lastName, email, roles, createdOn)
+       activate usrMgmtSvc
+
+
+       usrMgmtSvc -> sysUserBuilder : with(username, password, name, email)
+       usrMgmtSvc -> sysUserBuilder : withRoles(roles);
+       usrMgmtSvc -> sysUserBuilder : build()
+       activate sysUserBuilder
+
+
+       sysUserBuilder -> sysUsr : create(this.username, this.password, this.name, this.email, this.roles, this.createdOn)
+          activate sysUsr
+
+          sysUsr -> sysUserBuilder : systemUser
+          deactivate sysUsr
+       sysUserBuilder -> usrMgmtSvc : systemUser
+       deactivate sysUserBuilder
+
+       usrMgmtSvc -> UserRepository : save(systemUser)
+       activate UserRepository
+
+       UserRepository -> usrMgmtSvc : systemUser
+       deactivate UserRepository
+
+       usrMgmtSvc -> Builder : systemUser
+       deactivate usrMgmtSvc
+
+       Builder -> Domain : create(systemUser, address, phone)
+       activate Domain
+
+          Domain -> Builder : jobs4uUser
+          deactivate Domain
+
+          Builder -> Controller1 : jobs4uUser
+
+
+
+
+    Controller1 -> Persistence : repositories()
+    activate Persistence
+    Persistence -> Factory : create
+    Persistence -> Controller1 : factory
+    deactivate Persistence
+
+    Controller1 -> Factory : jobs4uUsers()
+    activate Factory
+    Factory -> UserRepository : create
+    Factory -> Controller1 : jobs4uUserRepository
+    deactivate Factory
+
+    Controller1 -> UserRepository : save(jobs4uuser)
+
+
+    UserRepository ->Controller1 : jobs4uuser
+    deactivate Controller1
+    deactivate Builder
+
+
+
+
+    UI -> Controller: registerCandidate(jobs4uuser, address, phoneNumber)
+    activate Controller
+
+
+
+
+    Controller -> Persistence : repositories()
+    activate Persistence
+
+    Persistence -> Factory : create
+
+    Persistence --> Controller : factory
+    deactivate Persistence
+
+    Controller -> Factory : candidates()
+    activate Factory
+    Factory -> CandidateRepository : create
+    Factory -> Controller : candidateRepository
+    deactivate Factory
+    Controller -> Domain2 : create()
+    Controller -> CandidateRepository : save(candidate)
+    CandidateRepository --> Controller : candidate
+
+
+
+
+
+    Controller --> UI : candidate
+    deactivate Controller
+    UI --> Actor : displayCandidateInformation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@enduml

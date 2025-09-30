@@ -1,0 +1,31 @@
+@startuml Domain Model Jobs4U
+
+skinparam Linetype ortho
+hide methods
+left to right direction
+
+package "<<aggregate>> Users"{
+    class User <<entity>> <<root>>{}
+    class Name <<value object>>{}
+    class Email <<identity>>{}
+    class Password <<value object>>{}
+    class PhoneNumber <<value object>>{}
+    enum Role <<value object>>{
+        - Customer
+        - Operator
+        - CustomerManager
+        - Candidate
+        - Admin
+    }
+     
+    class Customer <<entity>>{}
+}
+
+Customer "1" --> "1" User: is
+
+User "1" --> "1" Email
+User "1" --> "1" Password
+User "1" --> "1" Name
+User "1" --> "1" PhoneNumber
+User "1" --> "1" Role
+@enduml

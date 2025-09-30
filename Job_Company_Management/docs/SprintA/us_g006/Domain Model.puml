@@ -1,0 +1,174 @@
+@startuml Domain Model Jobs4U
+
+skinparam Linetype ortho
+hide methods
+left to right direction
+
+package "<<aggregate>> JobOpening"{
+    class JobOpening <<entity>> <<root>>{}
+
+    class JobReference <<value object>> <<identity>>{}
+
+    class Title <<value object>>{}
+
+    enum ContractType <<value object>>{
+        - FullTime
+        - PartTime 
+    }
+
+    enum Mode  <<value object>>{
+        - Remote
+        - OnSite
+        - Hybrid
+    }
+
+    class Address <<value object>>{}
+
+    class Company <<value object>>{}
+
+    class NumberOfVacancies <<value object>>{}
+
+    class Description <<value object>>{}
+
+    enum JobOpeningStatus <<value object>>{
+        - Open
+        - Closed
+    }
+    enum ApplicationProcess <<value object>>{
+        - Screening
+        - Interviews
+        - Analysis
+        - Result
+    }
+}
+
+package "<<aggregate>> JobRequirement"{
+    class Requirement <<entity>> <<root>>{}
+
+    class EvaluationQuestion <<value object>> <<identity>>{}
+
+    class EvaluationCriteria <<value object>>{}
+}
+
+package "<<aggregate>> JobApplication"{
+    class JobApplication <<entity>> <<root>>{}
+    class JobApplicationReference <<value object>> <<identity>>{}
+    enum ApplicationStatus <<value object>>{
+        - Pending
+        - Accepted
+        - Rejected
+    }
+    class Result <<value object>>{}
+}
+
+package "<<aggregate>> JobApplicationFiles"{
+    class JobApplicationFiles <<entity>> <<root>>{}
+    class contentEmail <<value object>>{}
+    'class attachmentFiles <<value object>>{}
+    class contentAttachment <<value object>>{}
+}
+
+package "<<aggregate>> DataOfApplicationAndCandidate"{
+    class DataOfApplicationAndCandidate <<entity>> <<root>>{}
+    class CandidateName <<value object>>{}
+    class CandidateEmail <<value object>>{}
+    class CandidatePhone <<value object>>{}
+    class CandidateJobReference <<value object>>{}
+}
+
+package "<<aggregate>> Interview"{
+    class Interview <<entity>> <<root>>{}
+    class Date <<value object>>{}
+    class InterviewGrade <<value object>>{}
+}
+
+package "<<aggregate>> Forms"{
+    class FormsQuestion <<entity>> <<root>>{}
+    class InterviewQuestion <<identity>> <<value object>>{}
+    class InterviewAnswer <<value object>>{}
+    class GradeSystem <<value object>>{}
+    class Answer <<value object>>{}
+    class Grade <<value object>>{}
+}
+
+package "<<aggregate>> Users"{
+    class User <<entity>> <<root>>{}
+    class Name <<value object>>{}
+    class Email <<identity>>{}
+    class Password <<value object>>{}
+    class PhoneNumber <<value object>>{}
+    enum Role <<value object>>{
+        - Customer
+        - Operator
+        - CustomerManager
+        - Candidate
+        - Admin
+    }
+     
+    class Candidate <<entity>>{}
+    class Customer <<entity>>{}
+}
+
+class Ranking <<value object>>{}
+
+JobOpening "1" --> "1" JobReference
+JobOpening "1" --> "1" Title
+JobOpening "1" --> "1" ContractType
+JobOpening "1" --> "1" Mode
+JobOpening "1" --> "1" Address
+JobOpening "1" --> "1" Company
+JobOpening "1" --> "1" NumberOfVacancies
+JobOpening "1" --> "1" Description
+JobOpening "1" --> "1*" Requirement : has
+JobOpening "1" --> "1" JobOpeningStatus
+JobOpening "1" --> "1" ApplicationProcess
+
+Requirement "1" --> "1" EvaluationQuestion
+Requirement "1" --> "1" EvaluationCriteria
+
+JobApplication "1" --> "1" JobApplicationReference
+JobApplication "1" --> "1" ApplicationStatus
+JobApplication "1" --> "1" Result
+JobApplication "1" --> "1" JobApplicationFiles: has
+JobApplication "0*" --> "1" JobOpening: belongs to
+JobApplication "1" --> "0..1" Interview: has
+JobApplication "0*" --> "1" Ranking: belongs to
+
+JobApplicationFiles "1" --> "1" contentEmail
+'JobApplicationFiles "1" --> "0*" attachmentFiles
+JobApplicationFiles "1" --> "0..1" contentAttachment
+JobApplicationFiles "1" --> "1" DataOfApplicationAndCandidate: has
+
+DataOfApplicationAndCandidate "1" --> "1" CandidateName
+DataOfApplicationAndCandidate "1" --> "1" CandidateEmail
+DataOfApplicationAndCandidate "1" --> "1" CandidatePhone
+DataOfApplicationAndCandidate "1" --> "1" CandidateJobReference
+
+Interview "1" --> "1" InterviewGrade
+Interview "1" --> "1*" FormsQuestion: has
+Interview "1" --> "1" Date
+
+FormsQuestion "1" --> "1" InterviewQuestion
+FormsQuestion "1" --> "1" InterviewAnswer
+FormsQuestion "1" --> "1*" GradeSystem: has
+
+GradeSystem "1" --> "1*" Answer
+GradeSystem "1" --> "1" Grade
+
+
+Customer "1" <-- "0*" JobOpening: belongs to 
+Customer "1" --> "1" User: is
+
+
+
+Candidate "1" --> "0*" JobApplication: has many
+Candidate "1" --> "0*" User: is
+
+User "1" --> "1" Email
+User "1" --> "1" Password
+User "1" --> "1" Name
+User "1" --> "1" PhoneNumber
+User "1" --> "1" Role
+User "1" --> "0*" JobOpening: manages many
+
+@enduml

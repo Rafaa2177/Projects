@@ -1,0 +1,64 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+title System Sequence Diagram - US 1006
+
+'hide footbox
+actor CustomerManager as Actor
+participant DisplayCandidateInfoUI as UI <<presentation>>
+participant DisplayCandidateInfoController as Controller <<application>>
+participant PersistenceContext as Persistence <<persistence>>
+participant RepositoryFactory as Factory <<factory>>
+database CandidateRepository as CandidateRepository <<repository>>
+
+activate Actor
+Actor -> UI: ask to display all personal data of a candidate
+activate UI
+
+
+    UI -> Controller: create()
+    activate Controller
+    UI -> Controller : allCandidates()
+
+
+    Controller -> Persistence : repositories()
+    activate Persistence
+
+    Persistence -> Factory : create
+
+    Persistence --> Controller : factory
+    deactivate Persistence
+
+    Controller -> Factory : findAll()
+    activate Factory
+    Factory -> CandidateRepository : create
+    Factory --> Controller : candidates
+    deactivate Factory
+
+   Controller --> UI : list
+   deactivate Controller
+
+   UI --> Actor : display the list of all candidates Id
+   UI -> Actor : selects the Id of one candidate
+
+   UI -> Controller : findByID(Id)
+   activate Controller
+
+   Controller -> CandidateRepository : findById(id)
+   activate CandidateRepository
+
+   CandidateRepository --> Controller :candidate
+   deactivate CandidateRepository
+
+
+   Controller --> UI : candidate
+   deactivate Controller
+
+   UI --> Actor : display the personal data of the selected candidate
+
+
+@enduml

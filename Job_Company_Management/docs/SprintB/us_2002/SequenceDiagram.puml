@@ -1,0 +1,88 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+title System Sequence Diagram - US 2000c
+
+'hide footbox
+actor Operator as Actor
+participant RegisterAtmCandidate as UI <<presentation>>
+participant RegisterAtmCandidateController as Controller <<application>>
+participant PersistenceContext as Persistence <<persistence>>
+participant RepositoryFactory as Factory <<factory>>
+database CandidateRepository as CandidateRepository <<repository>>
+database JobOpeningRepository as JobOpeningRepository <<repository>>
+
+activate Actor
+
+Actor -> UI: ask to import all candidates \nfrom the shared folder
+activate UI
+
+    UI -> Controller: create()
+    UI -> Controller: importAllCandidates()
+    activate Controller
+
+
+    Controller -> Persistence : repositories()
+        activate Persistence
+
+        Persistence -> Factory : create
+        Persistence --> Controller : factory
+        deactivate Persistence
+
+        Controller -> Factory : candidates()
+        activate Factory
+
+        Factory -> CandidateRepository : create
+        Factory --> Controller : candidateRepository
+        deactivate Factory
+
+        Controller -> Factory : jobopenings()
+        activate Factory
+
+        Factory -> JobOpeningRepository : create
+        Factory --> Controller : jobOpeningRepository
+        deactivate Factory
+
+    loop for each candidate in each file
+        Controller -> CandidateRepository : exists(email)
+        activate CandidateRepository
+
+        CandidateRepository -> CandidateRepository : findByEmail(email)
+        CandidateRepository --> Controller : true/false
+        deactivate CandidateRepository
+
+        alt candidate does not exist
+
+            Controller -> Controller : createCandidate(username, password, firstName, \nlastName, email, roles, phoneNumber)
+            note left
+            the creation of the candidate is
+            the same as the one in US 2000a
+            end note
+
+            Controller -> CandidateRepository : save(candidate)
+        end
+
+        Controller -> Controller : candidate
+
+        Controller -> JobOpeningRepository : findByReference(jobOpeningReference)
+        activate JobOpeningRepository
+
+        JobOpeningRepository -> Controller : jobOpening
+        deactivate JobOpeningRepository
+
+        Controller -> Controller : createJobApplication(candidate, jobOpening)
+    end
+
+   Controller --> UI :
+   deactivate Controller
+
+   UI -> UI : show()
+
+   UI --> Actor : shows a sucess message for all applications created
+
+
+@enduml

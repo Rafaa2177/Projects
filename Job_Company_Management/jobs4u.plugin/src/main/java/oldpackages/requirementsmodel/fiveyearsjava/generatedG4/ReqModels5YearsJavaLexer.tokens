@@ -1,0 +1,9 @@
+YEARS_EXPERIENCE=1
+PROGRAMMING_LANGUAGES=2
+JAVA=3
+AT_LEAST_5_YEARS=4
+COLLON=5
+WS=6
+'years-experience'=1
+'programming-languages'=2
+':'=5

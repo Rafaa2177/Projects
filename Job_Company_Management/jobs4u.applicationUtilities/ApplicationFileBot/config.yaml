@@ -1,0 +1,5 @@
+input_directory: /media/sf_sem4pi-23-24-2dc4/jobs4u.applicationUtilities/ApplicationFileBot/data
+output_directory: /media/sf_sem4pi-23-24-2dc4/jobs4u.applicationUtilities/ApplicationFileBot/candidates
+num_workers: 3
+check_interval: 5
+max_attachments: 15

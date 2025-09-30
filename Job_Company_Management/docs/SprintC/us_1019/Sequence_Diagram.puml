@@ -1,0 +1,128 @@
+@startuml US1013
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Sequence Diagram (SD) - US1013 - Rank Candidate Applications
+
+actor "Customer Manager" as CM
+participant ":ListRankedCandidateUI" as LRC
+participant ":ListRankedCandidateController" as LRCC
+participant ":PersistencyContext" as PC
+participant ":AppSettings" as AS
+participant ":RepositoryFactory" as RF
+participant ":CustomerManagerRepository" as CMR
+participant ":CustomerManager" as CMM
+participant ":JobOpeningRepository" as JOR
+participant ":RankingRepository" as RR
+
+
+activate CM
+
+    CM --> LRC : show()
+    activate LRC
+
+    LRC -> LRCC : create()
+    activate LRCC
+
+    LRCC -> PC : repositories()
+    activate PC
+
+    PC -> AS :  getRepositoryFactory()
+    activate AS
+
+    AS -> RF : create()
+
+    AS -> PC
+    deactivate AS
+
+    PC -> LRCC
+    deactivate PC
+
+    LRCC -> RF : customerManagers()
+    activate RF
+
+    RF -> CMR : create()
+
+    RF -> LRCC : customerManagerRepository
+    deactivate RF
+
+    LRCC -> RF : jobopenings()
+    activate RF
+
+    RF -> JOR : create()
+
+    RF -> LRCC : jobOpeningRepository
+    deactivate RF
+
+    LRCC -> RF : rankings()
+    activate RF
+
+    RF -> RR : create()
+
+    RF -> LRCC : rankingRepository
+    deactivate RF
+
+    LRCC -> LRC
+    deactivate LRCC
+
+    LRC -> LRC : doShow()
+
+    LRC -> LRCC : listCustomersByManager()
+    activate LRCC
+
+    LRCC -> CMR : findByEmail(email)
+    activate CMR
+
+    CMR -> LRCC : manager
+    deactivate CMR
+
+    LRCC -> CMM : customers()
+    activate CMM
+
+    CMM -> LRCC : customersList
+    deactivate CMM
+
+
+    LRCC -> LRC : customersList
+    deactivate LRCC
+
+    LRC --> CM : shows the customers list and requests to select one
+
+    CM --> LRC : selects one value
+
+    LRC -> LRCC : listJobOpeningsByCustomer(customer)
+    activate LRCC
+
+    LRCC -> JOR : findByCustomer(customer)
+    activate JOR
+
+    JOR -> LRCC : jobOpeningsList
+    deactivate JOR
+
+    LRCC -> LRC : jobOpeningsList
+    deactivate LRCC
+
+    LRC --> CM : shows the job openings list and requests to select one
+
+    CM --> LRC : selects one value
+
+    LRC -> LRCC : listRankedCandidates(jobOpening)
+    activate LRCC
+
+    LRCC -> RR : findByJobOpening()
+    activate RR
+
+    RR -> LRCC : rankedCandidatesList
+    deactivate RR
+
+    LRCC -> LRC : rankedCandidatesList
+    deactivate LRCC
+
+    LRC --> CM : displays the list candidates sorted by\nrank (interview points)
+
+    deactivate LRC
+
+deactivate CM
+
+@enduml

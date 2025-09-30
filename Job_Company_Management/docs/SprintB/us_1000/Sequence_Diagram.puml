@@ -1,0 +1,160 @@
+@startuml Sequence Diagram US1000
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Sequence Diagram US1000
+
+actor "Admin" as ADM
+participant ":Jobs4uBootstrap" as jobs4uBoot
+participant ":BaseDemoBootstrap" as BaseDemoBoot
+participant ":BackofficeUsersBootstrapper" as BackofficeUsersBoot
+participant ":UsersBootstrapperBase" as UsersBootBase
+
+participant ":AddUserController" as addUsrCtrl
+participant ":AddJobs4uUserController" as addJobs4uUserCtrl
+participant ":Jobs4uUserBuilder" as jobs4uUserBuilder
+
+participant ":AuthzRegistry" as authzReg
+participant ":UserManagementService" as usrMgmtSvc
+participant ":SystemUserBuilder" as sysUserBuilder
+
+
+participant ":PersistencyContext" as PC
+participant ":AppSettings" as APPS
+participant ":RepositoryFactory" as RF
+
+participant ":Jobs4uUserRepository" as jobs4uUsrRepo
+participant ":UserRepository" as userRepo
+
+participant ":SystemUser" as sysUsr
+participant ":Jobs4uUser" as jobs4uUsr
+
+
+
+activate ADM
+
+    ADM --> jobs4uBoot : wants to create an Jobs4uUser
+    activate jobs4uBoot
+
+    jobs4uBoot -> BaseDemoBoot : execute()
+    activate BaseDemoBoot
+
+    BaseDemoBoot -> BackofficeUsersBoot : execute()
+    activate BackofficeUsersBoot
+
+    BackofficeUsersBoot -> UsersBootBase : registerJob4uUser(username,password,\n firstName, lastName, email,\n roles, address, phone)
+    activate UsersBootBase
+
+    UsersBootBase -> addJobs4uUserCtrl : addJobs4uUser(username,password,\n firstName, lastName, email,\n roles, address, phone)
+    activate addJobs4uUserCtrl
+
+    addJobs4uUserCtrl -> jobs4uUserBuilder : create()
+    addJobs4uUserCtrl -> jobs4uUserBuilder : withInfo(username, password, firstName, lastName, email, roles)
+    addJobs4uUserCtrl -> jobs4uUserBuilder : withAddress(address)
+    addJobs4uUserCtrl -> jobs4uUserBuilder : withPhone(phone)
+    addJobs4uUserCtrl -> jobs4uUserBuilder : build()
+    activate jobs4uUserBuilder
+
+    jobs4uUserBuilder -> authzReg : userService()
+    activate authzReg
+
+    authzReg -> usrMgmtSvc : create(userRepo, policy, encoder)
+    activate usrMgmtSvc
+
+    usrMgmtSvc -> authzReg : userService
+    deactivate usrMgmtSvc
+
+    authzReg -> jobs4uUserBuilder : userService
+    deactivate authzReg
+
+    jobs4uUserBuilder -> usrMgmtSvc : registerNewUser(username, password, firstName, lastName, email, roles, createdOn)
+    activate usrMgmtSvc
+
+    usrMgmtSvc -> sysUserBuilder : create(this.policy, this.encoder)
+    usrMgmtSvc -> sysUserBuilder : with(username, password, name, email)
+    usrMgmtSvc -> sysUserBuilder : withRoles(roles);
+    usrMgmtSvc -> sysUserBuilder : build()
+    activate sysUserBuilder
+
+    sysUserBuilder -> sysUsr : create(this.username, this.password, this.name, this.email, this.roles, this.createdOn)
+    activate sysUsr
+
+    sysUsr -> sysUserBuilder : systemUser
+    deactivate sysUsr
+
+    sysUserBuilder -> usrMgmtSvc : systemUser
+    deactivate sysUserBuilder
+
+    usrMgmtSvc -> userRepo : save(systemUser)
+    activate userRepo
+
+    userRepo -> usrMgmtSvc : systemUser
+    deactivate userRepo
+
+    usrMgmtSvc -> jobs4uUserBuilder : systemUser
+    deactivate usrMgmtSvc
+
+    jobs4uUserBuilder -> jobs4uUsr : create(systemUser, address, phone)
+    activate jobs4uUsr
+
+    jobs4uUsr -> jobs4uUserBuilder : jobs4uUser
+    deactivate jobs4uUsr
+
+    jobs4uUserBuilder -> addJobs4uUserCtrl : jobs4uUser
+
+    deactivate jobs4uUserBuilder
+
+    addJobs4uUserCtrl -> PC : repositories()
+    activate PC
+
+    PC -> APPS : getRepositoryFactory()
+    activate APPS
+
+    APPS -> RF : getRepositoryFactory()
+    activate RF
+
+    RF -> APPS : repositoryFactory
+    deactivate RF
+
+    APPS -> PC : repositoryFactory
+    deactivate APPS
+
+    PC -> RF : jobs4uUsers()
+    activate RF
+
+    RF -> PC : jobs4uUserRepository
+    deactivate RF
+
+
+    PC -> addJobs4uUserCtrl : jobs4uUserRepository
+    deactivate PC
+
+    addJobs4uUserCtrl -> jobs4uUserRepository : save(jobs4uUser)
+    activate jobs4uUserRepository
+
+    jobs4uUserRepository -> addJobs4uUserCtrl : jobs4uUser
+    deactivate jobs4uUserRepository
+
+    addJobs4uUserCtrl -> UsersBootBase : jobs4uUser
+    deactivate addJobs4uUserCtrl
+
+    UsersBootBase -> BackofficeUsersBoot : jobs4uUser
+    deactivate UsersBootBase
+
+    BackofficeUsersBoot -> BaseDemoBoot
+    deactivate BackofficeUsersBoot
+
+    BaseDemoBoot -> jobs4uBoot
+    deactivate BaseDemoBoot
+
+    jobs4uBoot -> ADM : Jobs4uUser created
+    deactivate jobs4uBoot
+
+
+
+
+
+deactivate ADM
+
+@enduml

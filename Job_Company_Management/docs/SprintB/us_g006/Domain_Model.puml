@@ -1,0 +1,123 @@
+@startuml Domain Model Jobs4U
+
+skinparam Linetype ortho
+hide methods
+
+package "<<aggregate>> JobOpening"{
+    class JobOpening <<entity>> <<root>>{}
+
+    class JobReference <<value object>> <<identity>>{}
+
+    class Title <<value object>>{}
+
+    enum ContractType <<value object>>{
+        - FullTime
+        - PartTime 
+    }
+
+    enum Mode  <<value object>>{
+        - Remote
+        - OnSite
+        - Hybrid
+    }
+
+    class NumberOfVacancies <<value object>>{}
+
+    class Description <<value object>>{}
+
+    enum JobOpeningStatus <<value object>>{
+        - Open
+        - Closed
+    }
+    enum ApplicationProcess <<value object>>{
+        - Screening
+        - Interviews
+        - Analysis
+        - Result
+    }
+    class RequirementId <<value object>>{}
+    class InterviewId <<value object>>{}
+}
+
+package "<<aggregate>> JobApplication"{
+    class JobApplication <<entity>> <<root>>{}
+    enum ApplicationStatus <<value object>>{
+        - Pending
+        - Accepted
+        - Rejected
+    }
+    class CandidateFilesPath <<value object>>{}
+    class idApplication <<identity>>{}
+}
+
+package "<<aggregate>> Job4uUsers"{
+    class Job4uUser <<entity>> <<root>>{}
+    class Id <<identity>>{}
+    class Address <<value object>>{}
+    class PhoneNumber <<value object>>{}
+    class SystemUser {
+        - username
+        - firstName
+        - lastName
+        - email
+        - password
+        - roles
+    }
+}
+
+package "<<aggregate>> CustomerManager"{
+    class CustomerManager <<entity>>{}
+    class idCustomerManager <<identity>>{}
+}
+
+package "<<aggregate>> Customer"{
+    class Customer <<entity>>{}
+    class idCustomer <<identity>>{}
+}
+
+package "<<aggregate>> Candidate"{
+    class Candidate <<entity>>{}
+    class idCandidate <<identity>>{}
+}
+
+package "<<aggregate>> Ranking"{
+    class Ranking <<value object>>{}
+}
+
+JobOpening "1" --> "1" JobReference
+JobOpening "1" --> "1" Title
+JobOpening "1" --> "1" ContractType
+JobOpening "1" --> "1" Mode
+JobOpening "1" --> "1" NumberOfVacancies
+JobOpening "1" --> "1" Description
+JobOpening "1" --> "1" JobOpeningStatus
+JobOpening "1" --> "1" ApplicationProcess
+JobOpening "1" --> "0..1" RequirementId
+JobOpening "0*" --> "1" Ranking: has
+JobOpening "1" --> "0..1" InterviewId
+
+JobApplication "1" --> "1" ApplicationStatus
+JobApplication "1" --> "1" CandidateFilesPath
+JobApplication "0*" --> "1" JobOpening: belongs to
+JobApplication "1" --> "1" idApplication
+JobApplication "1" --> "1" Candidate: has
+
+Customer "1" <-- "0*" JobOpening: belongs to 
+Customer "1" --> "1" Job4uUser: is
+Customer "1" --> "1" Address: has
+Customer "1" --> "1" idCustomer
+
+Candidate "1" --> "0*" Job4uUser: is
+Candidate "1" --> "1" idCandidate
+
+Job4uUser "1" --> "1" Id
+Job4uUser "1" --> "1" PhoneNumber
+Job4uUser "1" --> "1" Address
+Job4uUser "1" --> "1" SystemUser
+
+CustomerManager "1" --> "0*" JobOpening: manages many
+CustomerManager "1" --> "1" Job4uUser: is
+CustomerManager "1" --> "0*" Customer: create
+CustomerManager "1" --> "1" idCustomerManager
+
+@enduml

@@ -1,0 +1,9 @@
+EDUCATION_LEVEL=1
+DRIVER_LICENSE=2
+BACHELOR=3
+LICENSE=4
+COLLON=5
+WS=6
+'education-level'=1
+'driver-license'=2
+':'=5

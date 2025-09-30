@@ -1,0 +1,117 @@
+@startuml US1013
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Sequence Diagram (SD) - US1013 - Rank Candidate Applications
+
+actor "Customer Manager" as CM
+participant ":ManageJobOpeningPhasesUI" as ManageJobOpeningPhasesUI
+participant ":ManageJobOpeningPhasesController" as ManageJobOpeningPhasesController
+participant ":PersistencyContext" as PC
+participant ":AppSettings" as AS
+participant ":RepositoryFactory" as RF
+participant ":JobOpeningRepository" as JOR
+participant ":JobApplicationRepository" as JAR
+participant ":RankingRepository" as RR
+participant ":Phase" as Phase
+
+
+
+activate CM
+
+    CM --> ManageJobOpeningPhasesUI : show()
+    activate ManageJobOpeningPhasesUI
+
+    ManageJobOpeningPhasesUI -> ManageJobOpeningPhasesController : create()
+    activate ManageJobOpeningPhasesController
+
+    ManageJobOpeningPhasesController -> PC : repositories()
+    activate PC
+
+    PC -> AS :  getRepositoryFactory()
+    activate AS
+
+    AS -> RF : create()
+
+    AS -> PC
+    deactivate AS
+
+    PC -> ManageJobOpeningPhasesController
+    deactivate PC
+
+    ManageJobOpeningPhasesController -> RF : jobopenings()
+    activate RF
+
+    RF -> JOR : create()
+
+    RF -> ManageJobOpeningPhasesController : jobOpeningRepository
+    deactivate RF
+
+    ManageJobOpeningPhasesController -> RF : jobapplications()
+    activate RF
+
+    RF -> JAR : create()
+
+    RF -> ManageJobOpeningPhasesController : jobApplicationRepository
+    deactivate RF
+
+    ManageJobOpeningPhasesController -> RF : rankings()
+    activate RF
+
+    RF -> RR : create()
+
+    RF -> ManageJobOpeningPhasesController : rankingRepository
+    deactivate RF
+
+    ManageJobOpeningPhasesController -> ManageJobOpeningPhasesUI
+    deactivate ManageJobOpeningPhasesController
+
+    ManageJobOpeningPhasesUI -> ManageJobOpeningPhasesUI : doShow()
+
+    ManageJobOpeningPhasesUI -> ManageJobOpeningPhasesController : listJobOpenings()
+    activate ManageJobOpeningPhasesController
+
+    ManageJobOpeningPhasesController -> JOR : findAll()
+    activate JOR
+
+    JOR -> ManageJobOpeningPhasesController : jobopenings
+    deactivate JOR
+
+    ManageJobOpeningPhasesController -> ManageJobOpeningPhasesUI : jobopenings
+    deactivate ManageJobOpeningPhasesController
+
+    ManageJobOpeningPhasesUI --> CM : displays job openings and requests to select one
+
+    CM --> ManageJobOpeningPhasesUI : selects one
+
+    ManageJobOpeningPhasesUI -> ManageJobOpeningPhasesUI : managePhase(jobOpening);
+
+    ManageJobOpeningPhasesUI -> CM : display options between next phase and previous phase
+
+    CM --> ManageJobOpeningPhasesUI : selects option
+
+    ManageJobOpeningPhasesUI -> ManageJobOpeningPhasesController : nextPhase(jobOpening);
+    activate ManageJobOpeningPhasesController
+
+    ManageJobOpeningPhasesController -> Phase : moveToNextPhase(jobOpening, jobApplicationRepository, rankingRepository);
+    activate Phase
+
+    Phase -> Phase : moveToApplication();
+
+    Phase -> ManageJobOpeningPhasesController
+    deactivate Phase
+
+    ManageJobOpeningPhasesController -> JobOpeningRepository : save(jobOpening)
+
+    ManageJobOpeningPhasesController -> ManageJobOpeningPhasesUI
+
+    deactivate ManageJobOpeningPhasesController
+
+    ManageJobOpeningPhasesUI -> CM : displays success message and asks if wants to manage another phase
+
+    deactivate ManageJobOpeningPhasesUI
+
+deactivate CM
+
+@enduml

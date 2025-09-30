@@ -1,0 +1,124 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+title System Sequence Diagram - US 1009
+
+'hide footbox
+actor CustomerManager as Actor
+participant AddInterviewsUI as UI <<presentation>>
+participant AddJobInterviewsController as Controller <<application>>
+participant JobOpening as JobOpening
+participant JobOpeningRepository as JobOpeningRepository
+participant Plugin as plugin <<external>>
+
+participant ":PersistencyContext" as PC
+participant ":AppSettings" as APPS
+participant ":RepositoryFactory" as RF
+
+
+activate Actor
+
+    Actor -> UI: asks to select an Interview Model for a Job Opening
+    activate UI
+
+    UI -> Controller: create
+    activate Controller
+
+        Controller -> PC : repositories()
+        activate PC
+
+        PC -> APPS : getRepositoryFactory()
+        activate APPS
+
+        APPS -> RF : getRepositoryFactory()
+        activate RF
+
+        RF -> APPS : repositoryFactory
+        deactivate RF
+
+        APPS -> PC : repositoryFactory
+        deactivate APPS
+
+        PC -> RF : jobopenings()
+        activate RF
+
+        RF -> PC : jobOpeningRepository
+        deactivate RF
+
+        PC -> Controller : jobOpeningRepository
+        deactivate PC
+
+        Controller -> UI : jobOpeningRepository
+    deactivate Controller
+
+    UI -> UI: selectJobOpening()
+    activate UI
+
+        UI -> Controller: listJobOpenings()
+        activate Controller
+
+            Controller -> JobOpeningRepository : findAll()
+            activate JobOpeningRepository
+
+            JobOpeningRepository -> Controller : jobOpenings
+            deactivate JobOpeningRepository
+
+            Controller -> UI : jobOpenings
+        deactivate Controller
+
+        UI --> Actor : asks user to select a jobOpening
+    deactivate UI
+
+    Actor -> UI : selects a jobOpening
+    activate UI
+
+    UI -> Controller : listJobInterviews()
+    activate Controller
+
+        Controller -> plugin : getInterviewsModels(jobOpening)
+        activate plugin
+
+        plugin -> Controller : InterviewsModels
+        deactivate plugin
+
+        Controller -> UI : InterviewsModels
+    deactivate Controller
+
+   UI -> Actor : asks user to select a jobRequirement
+    deactivate UI
+
+   Actor -> UI : selects a jobRequirement
+    activate UI
+
+   UI -> Controller : addJobInterviews(jobOpening, jobRequirement)
+   activate Controller
+
+   Controller -> JobOpening : setRequirementId(jobRequirement)
+   Controller -> JobOpeningRepository : save(jobOpening)
+   deactivate Controller
+
+   UI -> Controller : generateRequirementTemplate(jobRequirement)
+   activate Controller
+
+   Controller -> plugin : getInterviewModel(jobRequirementId)
+   activate plugin
+
+   plugin -> Controller : path
+   deactivate plugin
+
+   Controller -> UI : path
+   deactivate Controller
+
+    UI -> Actor : shows path to the generated template
+    deactivate UI
+
+
+
+
+    
+
+@enduml

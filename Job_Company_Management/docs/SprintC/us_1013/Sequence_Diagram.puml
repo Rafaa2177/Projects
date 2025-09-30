@@ -1,0 +1,128 @@
+@startuml US1013
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Sequence Diagram (SD) - US1013 - Rank Candidate Applications
+
+actor "Customer Manager" as CM
+participant ":RankCandidateUI" as RankCandidateUI
+participant ":RankCandidateController" as RankCandidateController
+participant ":PersistencyContext" as PC
+participant ":AppSettings" as AS
+participant ":RepositoryFactory" as RF
+participant ":JobOpeningRepository" as JOR
+participant ":JobApplicationRepository" as JAR
+participant ":RankingRepository" as RR
+participant ":Ranking" as Ranking
+participant ":JobOpening" as JobOpening
+
+
+activate CM
+
+    CM --> RankCandidateUI : show()
+    activate RankCandidateUI
+
+    RankCandidateUI -> RankCandidateController : create()
+    activate RankCandidateController
+
+    RankCandidateController -> PC : repositories()
+    activate PC
+
+    PC -> AS :  getRepositoryFactory()
+    activate AS
+
+    AS -> RF : create()
+
+    AS -> PC
+    deactivate AS
+
+    PC -> RankCandidateController
+    deactivate PC
+
+    RankCandidateController -> RF : jobopenings()
+    activate RF
+
+    RF -> JOR : create()
+
+    RF -> RankCandidateController : jobOpeningRepository
+    deactivate RF
+
+    RankCandidateController -> RF : jobapplications()
+    activate RF
+
+    RF -> JAR : create()
+
+    RF -> RankCandidateController : jobApplicationRepository
+    deactivate RF
+
+    RankCandidateController -> RF : rankings()
+    activate RF
+
+    RF -> RR : create()
+
+    RF -> RankCandidateController : rankingRepository
+    deactivate RF
+
+    RankCandidateController -> RankCandidateUI
+    deactivate RankCandidateController
+
+    RankCandidateUI -> RankCandidateUI : doShow()
+
+    RankCandidateUI -> RankCandidateController : listJobOpenings()
+    activate RankCandidateController
+
+    RankCandidateController -> JOR : findAll()
+    activate JOR
+
+    JOR -> RankCandidateController : jobopenings
+    deactivate JOR
+
+    RankCandidateController -> RankCandidateUI : jobopenings
+    deactivate RankCandidateController
+
+    RankCandidateUI --> CM : displays job openings and requests to select one
+
+    CM --> RankCandidateUI : selects one
+
+    RankCandidateUI -> RankCandidateController : listJobApplicationsByJO(jobReference)
+    activate RankCandidateController
+
+    RankCandidateController -> JAR : findByJobOpening(jobReference)
+    activate JAR
+
+    JAR -> RankCandidateController : jobapplications
+    deactivate JAR
+
+    RankCandidateController -> RankCandidateUI : jobapplications
+    deactivate RankCandidateController
+
+    RankCandidateUI --> CM : displays job applications and requests to select\n one to rank
+    
+    CM --> RankCandidateUI : selects one and ranks it
+
+    RankCandidateUI -> RankCandidateController : rankApplication(jobApplication, ranking, jobOpening)
+    activate RankCandidateController
+
+    RankCandidateController -> Ranking : create(jobApplication, ranking, jobOpening)
+    activate Ranking
+
+    Ranking -> RankCandidateController : ranking
+    deactivate Ranking
+
+    RankCandidateController -> RR : save(ranking)
+
+    RankCandidateController -> JobOpening : addRanking(ranking)
+
+    RankCandidateController -> JOR : save(jobOpening)
+
+    RankCandidateController -> RankCandidateUI : 
+    deactivate RankCandidateController
+
+    RankCandidateUI -> CM : displays success message and asks if wants \nto rank another
+
+    deactivate RankCandidateUI
+
+deactivate CM
+
+@enduml

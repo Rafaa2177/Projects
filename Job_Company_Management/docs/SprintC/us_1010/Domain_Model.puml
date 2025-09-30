@@ -1,0 +1,41 @@
+@startuml Domain Model Jobs4U
+
+skinparam Linetype ortho
+hide methods
+
+title Recruitment Process Phases
+
+class Waiting {}
+
+class Application {}
+
+class Screening {}
+
+class Interview {}
+
+class Analysis {}
+
+class Result {}
+
+class Closed {}
+
+Waiting --> Application
+Application --> Screening
+Screening --> Interview
+Screening --> Analysis
+Interview --> Analysis
+Analysis --> Result
+Result --> Closed
+
+
+/' 
+Wainting: 
+Application: Caso não exista alguma referencia "jobOpening_reference" na tabela JobApplication
+Screening: Caso não exista alguma referencia "jobOpening_reference" na tabela JobApplication em que o campo "screening" seja true or false, ou seja, tem de ser null
+Interview: Caso não exista alguma referencia "jobOpening_reference" na tabela JobApplication em que o campo "interview_grade" seja numerico, ou seja, tem de ser null
+Analysis: Caso não exista alguma referencia "jobOpening_reference" na tabela Ranking
+Result: Caso não exista alguma referencia "jobOpening_reference" na tabela JobApplication em que o campo "result" seja true or false, ou seja, tem de ser null
+Closed: 
+'/
+
+@enduml

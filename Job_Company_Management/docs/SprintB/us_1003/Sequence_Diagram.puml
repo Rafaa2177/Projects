@@ -1,0 +1,72 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Sequence Diagram (SD)
+
+actor "Customer Manager" as CM
+participant ":ListJobOpeningUI" as JO
+participant ":ListJobOpeningController" as JOC
+participant ":PersistencyContext" as PC
+participant ":AppSettings" as AS
+participant ":RepositoryFactory" as RF
+participant ":JobOpening" as J
+participant ":JobOpeningRepository" as JOR
+
+
+activate CM
+
+    CM --> JO : list job openings
+    activate JO
+
+    JO -> JOC : create()
+    activate JOC
+
+    JOC -> PC : repositories()
+    activate PC
+
+    PC -> AS :  getRepositoryFactory()
+    activate AS
+
+    AS -> RF : create()
+    activate RF
+
+    RF -> AS
+    deactivate RF
+
+    AS -> PC
+    deactivate AS
+
+    PC -> JOC
+    deactivate PC
+
+    JOC -> RF : jobopenings()
+    activate RF
+
+    RF -> JOR : create
+
+    RF -> JOC : jobOpeningRepository
+    deactivate RF
+
+    JOC -> JO
+    deactivate JOC
+
+    JO -> JOC : listJobOpenings()
+    activate JOC
+
+    JOC -> JOR : findAll()
+    activate JOR
+
+    JOR -> JOC : jobOpeningList
+    deactivate JOR
+
+    JOC -> JO : jobOpeningList
+    deactivate JOC
+
+    JO --> CM : displays job openings
+    deactivate JO
+
+deactivate CM
+
+@enduml

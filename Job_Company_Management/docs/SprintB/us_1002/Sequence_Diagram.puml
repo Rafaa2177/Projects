@@ -1,0 +1,133 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Sequence Diagram (SD)
+
+actor "Customer Manager" as CM
+participant ":AddJobOpeningUI" as JO
+participant ":AddJobOpeningController" as JOC
+participant ":PersistencyContext" as PC
+participant ":AppSettings" as AS
+participant ":RepositoryFactory" as RF
+participant ":JobOpening" as J
+participant ":JobOpeningRepository" as JOR
+participant ":CustomerRepository" as CR
+
+
+activate CM
+
+    CM --> JO : show()
+    activate JO
+
+    JO -> JOC : create()
+    activate JOC
+
+    JOC -> PC : repositories()
+    activate PC
+
+    PC -> AS :  getRepositoryFactory()
+    activate AS
+
+    AS -> RF : create()
+    activate RF
+
+
+
+    RF -> AS
+    deactivate RF
+
+    AS -> PC
+    deactivate AS
+
+    PC -> JOC
+    deactivate PC
+
+    JOC -> RF : jobopenings()
+    activate RF
+
+    RF -> JOR : create()
+
+    RF -> JOC : jobOpeningRepository
+    deactivate RF
+
+    JOC -> RF : customers()
+    activate RF
+
+    RF -> CR : create()
+
+    RF -> JOC : customerRepository
+    deactivate RF
+
+    JOC -> JO : controller
+    deactivate JOC
+
+    JO -> JO : doShow
+
+    JO --> CM : requests data (title, numberOfVacancies and description)
+
+    CM --> JO : types requested data
+
+    JO --> CM : shows the contract type list and requests to select one
+
+    CM --> JO : selects one value
+
+    JO --> CM : shows the mode list and requests to select one
+
+    CM --> JO : selects one value
+
+    JO --> CM : shows the application process list and requests to select one
+
+    CM --> JO : selects one value
+
+    JO --> CM : shows the job opening status list and requests to select one
+
+    CM --> JO : selects one value
+
+    loop op != 0
+        JO --> CM : shows the requirement list and requests to select one
+
+        CM --> JO : selects one value
+    end loop
+
+    JO -> JOC : listCustomers()
+    activate JOC
+
+    JOC -> CR : findAll()
+    activate CR
+
+    CR -> JOC : customers
+    deactivate CR
+
+    JOC -> JO : customers
+    deactivate JOC
+
+    JO --> CM : shows the customers list and requests to select one
+
+    CM --> JO : selects one customer
+
+    JO -> JOC : addJobOpening(title,description,customer,numberOfVacancies,contractType,mode,process,status,requirements)
+    activate JOC
+
+    JOC -> J : create(title,description,customer,numberOfVacancies,contractType,mode,process,status,requirements)
+    activate J
+
+    J -> JOC : jobOpening
+    deactivate J
+
+    JOC -> JOR : save(jobOpening)
+    activate JOR
+
+    JOR -> JOC
+    deactivate JOR
+
+    JOC -> JO : jobReference
+    deactivate JOC
+
+    JO --> CM : displays operation success
+    deactivate JO
+
+deactivate CM
+
+@enduml

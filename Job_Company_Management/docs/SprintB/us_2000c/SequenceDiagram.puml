@@ -1,0 +1,48 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+title System Sequence Diagram - US 2000c
+
+'hide footbox
+actor Operator as Actor
+participant ListCandidatesUI as UI <<presentation>>
+participant ListCandidatesController as Controller <<application>>
+participant PersistenceContext as Persistence <<persistence>>
+participant RepositoryFactory as Factory <<factory>>
+database CandidateRepository as CandidateRepository <<repository>>
+
+activate Actor
+Actor -> UI: ask to list all candidates
+activate UI
+    UI -> Controller: create()
+    UI -> Controller: getAllCandidateEmails()
+    activate Controller
+
+    Controller -> Persistence : repositories()
+        activate Persistence
+        Persistence -> Factory : create
+        Persistence --> Controller : factory
+        deactivate Persistence
+
+        Controller -> Factory : findAll()
+        activate Factory
+        Factory -> CandidateRepository : create
+        Factory --> Controller : candidates
+        deactivate Factory
+
+
+
+
+   Controller --> UI : emails
+   deactivate Controller
+
+   UI -> UI : show()
+
+   UI --> Actor : display the list of all the candidates
+
+
+@enduml

@@ -1,0 +1,14 @@
+{
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "cSpell.words": [
+        "Oliveira",
+        "Rafaela",
+        "Semikina",
+        "Tiago"
+    ],
+    "files.associations": {
+        "functions.h": "c",
+        "string.h": "c"
+    }
+}
